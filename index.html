@@ -211,36 +211,6 @@ body.nodk #dock,body.nodk #emq{display:none!important}
  #hint{bottom:88px!important}
  .dk b{width:38px;height:38px;font-size:19px}.dk{width:52px}
 }
-/* ===== Gọn hơn nữa trên điện thoại quay ngang ===== */
-@media(pointer:coarse) and (max-height:520px){
- :root{--mm:100px}
- #dock{top:6px;right:calc(var(--mm) + 14px);gap:3px}
- #dk1,#dk2{gap:3px}
- .dk{width:34px}
- .dk b{width:30px;height:30px;font-size:15px;border-width:2px;box-shadow:0 2px 0 rgba(60,30,110,.4),0 2px 6px rgba(0,0,0,.25)}
- .dk small{display:none}
- #dk2{max-width:calc(7*37px + 26px);box-sizing:content-box;background:rgba(30,24,60,.55);border-radius:14px;padding:5px 4px;justify-content:flex-start}
- #dk2 .dk{width:37px}
- #dk2 .dk small{display:block;font-size:7px;max-width:37px;line-height:1.05;font-weight:700}
- .dk i{min-width:14px;height:14px;font-size:8px;line-height:14px;right:-4px;top:-4px}
- #hud{top:6px;left:6px}
- body:not(.full) #hud{padding:3px 9px;border-radius:12px}
- body:not(.full) #cash{font-size:13px;line-height:1.15}
- body:not(.full) #st{font-size:10px}
- body:not(.full) #clk{font-size:10px}
- body:not(.full) #mis{top:56px;left:6px;font-size:10px;padding:2px 8px;max-width:min(42vw,300px)}
- #sbx{top:96px!important;gap:5px!important;left:6px!important}
- #sbx button{height:30px!important;min-width:30px!important;font-size:12px!important;padding:0 6px!important}
- #emq{gap:3px;padding:3px 6px;bottom:8px}
- #emq button{width:28px;height:28px;font-size:14px}
- #joy{width:104px;height:104px;bottom:10px}#joy i{width:46px;height:46px;margin:-23px 0 0 -23px}
- #tc button[data-k=" "]{width:60px!important;height:60px!important;font-size:28px!important;bottom:10px!important;right:calc(14px + env(safe-area-inset-right,0px))!important}
- #tc button[data-k="f"]{width:50px!important;height:50px!important;right:84px!important;bottom:36px!important;font-size:10px!important}
- #tc button[data-k="f"] span{font-size:19px}
- #ptt{width:48px;height:48px;right:140px;bottom:16px;font-size:8px}
- #hint{bottom:70px!important;font-size:11px;padding:4px 10px}
- #apx{right:112px!important;top:44px!important}
-}
 </style></head><body>
 <canvas id="c"></canvas>
 <button id="snd" type="button" style="position:absolute;top:226px;right:8px;width:210px;z-index:4;border:0;border-radius:10px;padding:5px 0;font:600 12px system-ui,sans-serif;background:var(--hb);color:var(--hf);cursor:pointer">🔊 Âm thanh: BẬT</button><div id="hud" class="p"><div id="cash">🪙 0 xu</div><div class="bar"><i id="hp"></i></div><div class="bar"><i id="ar"></i></div><div id="car">Đi bộ</div><div id="wp"></div><div id="st"></div></div>
@@ -273,6 +243,8 @@ body.nodk #dock,body.nodk #emq{display:none!important}
 <div class="intro" id="clsrow"><b>Lớp của em:</b></div>
 <div class="intro" id="plist"></div>
 <div class="intro"><button type="button" class="mini" id="bx">💾 Lưu tiến độ ra file</button> <button type="button" class="mini" id="bi">📂 Mở file tiến độ</button> <button type="button" class="mini" id="bxl">📊 Xuất báo cáo Excel cả lớp</button></div>
+<div class="intro" id="remrow" style="display:none"><label style="font-size:14px;cursor:pointer"><input type="checkbox" id="remember" checked style="transform:scale(1.2);margin-right:6px">Nhớ đăng nhập trên máy này <span style="opacity:.8">(máy dùng chung ở trường thì bỏ tick)</span></label></div>
+<div class="intro" id="welcome" style="display:none;background:#e7f7e7;color:#1d5c2a;border-radius:12px;padding:8px 12px"></div>
 <div class="intro" id="smsg"></div>
 <div style="font-weight:800;font-size:18px">Chọn nhân vật của em 🐱🐶🐰🐼</div>
 <div id="pre"></div>
@@ -5812,7 +5784,44 @@ $('go').onclick=()=>{if(wd&&cash<150)return;if(!wd){const nm0=($('nm').value||''
  for(const k in PR)PR[k]=0;
  $('ov').style.display='none';state='play';
  if(wd){wd=false;cash-=150;saveEdu();say('Đã đổi đồ! -150 xu',2000)}else say('Chào '+(EDU.name||'em')+'! Hãy tới các trạm học màu sắc trên bản đồ (nhấn F) để nhận sao và xu. Nhấn F gần xe để lên xe. Giữ chuột trái (hoặc chạm kéo) để xoay camera ngắm nhân vật.',8000)};
-{const g0=$('go').onclick;$('go').onclick=()=>{if(wd||!CL.on()){g0();return}CL.start('login').then(ok=>{if(ok)g0()})};$('reg').onclick=()=>{if(!wd&&CL.on())CL.start('reg').then(ok=>{if(ok)g0()})};$('gbtn').onclick=()=>{if(!wd&&CL.on())CL.google().then(ok=>{if(ok)g0()})}}
+{const g0=$('go').onclick;
+ const remember=()=>{try{if(CL.ok&&CL.key&&CL.uid)localStorage.setItem('ttt3d_auto',JSON.stringify({key:CL.key,uid:CL.uid}))}catch(e){}};
+ const enter=()=>{remember();g0()};
+ $('go').onclick=()=>{if(wd||!CL.on()){g0();return}CL.start('login').then(ok=>{if(ok)enter()})};
+ $('reg').onclick=()=>{if(!wd&&CL.on())CL.start('reg').then(ok=>{if(ok)enter()})};
+ $('gbtn').onclick=()=>{if(!wd&&CL.on())CL.google().then(ok=>{if(ok)enter()})};
+ /* ===== TỰ VÀO LẠI: Firebase đã nhớ phiên đăng nhập trong trình duyệt, ta chỉ cần dùng lại ===== */
+ const tmo2=ms=>new Promise((_,no)=>setTimeout(()=>no(new Error('timeout')),ms));
+ const setPers=async()=>{try{const a=await MP.auth(),cb=$('remember');await a.setPersistence(cb&&!cb.checked?firebase.auth.Auth.Persistence.SESSION:firebase.auth.Auth.Persistence.LOCAL)}catch(e){}};
+ const logout=async()=>{try{localStorage.removeItem('ttt3d_auto')}catch(e){}try{const a=await MP.auth();await a.signOut()}catch(e){}location.reload()};
+ CL.logout=logout;
+ CL.resume=async()=>{
+  let st=null;try{st=JSON.parse(localStorage.getItem('ttt3d_auto')||'null')}catch(e){}
+  if(!st||!st.key||!st.uid)return false;
+  const auth=await Promise.race([MP.auth(),tmo2(12000)]);
+  const user=await Promise.race([new Promise(ok=>{const un=auth.onAuthStateChanged(u=>{un();ok(u)})}),tmo2(8000)]);
+  if(!user||user.uid!==st.uid)return false;
+  const db=await MP.db(),ref=db.ref('profiles/'+st.key),sn=await Promise.race([ref.once('value'),tmo2(9000)]),v=sn.val();
+  if(!v||typeof v.n!='string'||!v.n||typeof v.c!='string'||!v.c)return false;
+  const nm=v.n.slice(0,30),cls=normCls(v.c);
+  if(typeof v.d=='string'){let cd=null;try{cd=JSON.parse(v.d)}catch(e){}if(cd){const lt=DB.p[nm]?(DB.p[nm].t|0):0;if(!DB.p[nm]||(cd.t|0)>=lt)DB.p[nm]=cleanProfile(cd)}}
+  try{$('nm').value=nm;const ci=$('clsin');if(ci){ci.value=cls;if(ci.oninput)ci.oninput()}}catch(e){}
+  Object.assign(CL,{ok:true,key:st.key,nm,cls,uid:st.uid,ref,bref:db.ref('board/'+st.key),d:1,err:0,first:1});
+  return true};
+ window.__ttt3dAuto=async()=>{
+  if(wd||!CL.on())return;
+  const w=$('welcome');
+  try{
+   const ok=await CL.resume();
+   if(!ok)return;
+   w.style.display='';w.innerHTML='👋 Chào lại <b></b> (lớp '+CL.cls+')! Đang vào game… <a href="#" id="notme" style="margin-left:8px">Không phải em? Đăng xuất</a>';
+   w.querySelector('b').textContent=CL.nm;
+   $('notme').onclick=e=>{e.preventDefault();logout()};
+   setTimeout(()=>{if(CL.ok)g0()},900)
+  }catch(e){}
+ };
+ window.__ttt3dPers=setPers;
+}
 /* ===== V5: giờ giấc + trống trường, chọn lớp, nhiệm vụ, bảng vàng, trò chơi giờ ra chơi ===== */
 const V5=(()=>{
  const V={sel:'',tm:390,last:390,rec:false,ys:[],lk:'',hemi:null,sun:null,tab:'q'};
@@ -6746,7 +6755,7 @@ cull(c=>!inYard(c.x,c.y));
   V.light(true)};
  return V})();
 
-startInit();try{if(!CL.on())$('nofb').style.display='block'}catch(e){}try{if(CL.on()){$('pinrow').style.display='';$('reg').style.display='';$('grow').style.display='';CL.pre();$('go').textContent='Đăng nhập & bắt đầu';$('nm').placeholder='Nhập tên của em'}}catch(e){}try{$('ar').parentNode.style.display='none'}catch(e){}
+startInit();try{if(!CL.on())$('nofb').style.display='block'}catch(e){}try{if(CL.on()){$('pinrow').style.display='';$('reg').style.display='';$('grow').style.display='';CL.pre();$('go').textContent='Đăng nhập & bắt đầu';$('nm').placeholder='Nhập tên của em';$('remrow').style.display='';$('remember').onchange=()=>{if(window.__ttt3dPers)window.__ttt3dPers()};if(window.__ttt3dPers)window.__ttt3dPers().then(()=>{if(window.__ttt3dAuto)window.__ttt3dAuto()})}}catch(e){}try{$('ar').parentNode.style.display='none'}catch(e){}
 for(const s of shops){let n=0;while(solid(s.x,s.y)&&n++<50){s.x+=rnd(-20,20);s.y+=rnd(-20,20)}}
 
 /* ===== Toàn màn hình + tự xoay ngang trên điện thoại =====
