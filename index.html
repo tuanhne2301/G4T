@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b1b2f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>GAME 4 TEEN</title>
 <script src="config.js"></script>
 <script>
@@ -204,6 +210,36 @@ body.nodk #dock,body.nodk #emq{display:none!important}
  #joy{width:124px;height:124px;bottom:16px}#joy i{width:54px;height:54px;margin:-27px 0 0 -27px}
  #hint{bottom:88px!important}
  .dk b{width:38px;height:38px;font-size:19px}.dk{width:52px}
+}
+/* ===== Gọn hơn nữa trên điện thoại quay ngang ===== */
+@media(pointer:coarse) and (max-height:520px){
+ :root{--mm:100px}
+ #dock{top:6px;right:calc(var(--mm) + 14px);gap:3px}
+ #dk1,#dk2{gap:3px}
+ .dk{width:34px}
+ .dk b{width:30px;height:30px;font-size:15px;border-width:2px;box-shadow:0 2px 0 rgba(60,30,110,.4),0 2px 6px rgba(0,0,0,.25)}
+ .dk small{display:none}
+ #dk2{max-width:calc(7*37px + 26px);box-sizing:content-box;background:rgba(30,24,60,.55);border-radius:14px;padding:5px 4px;justify-content:flex-start}
+ #dk2 .dk{width:37px}
+ #dk2 .dk small{display:block;font-size:7px;max-width:37px;line-height:1.05;font-weight:700}
+ .dk i{min-width:14px;height:14px;font-size:8px;line-height:14px;right:-4px;top:-4px}
+ #hud{top:6px;left:6px}
+ body:not(.full) #hud{padding:3px 9px;border-radius:12px}
+ body:not(.full) #cash{font-size:13px;line-height:1.15}
+ body:not(.full) #st{font-size:10px}
+ body:not(.full) #clk{font-size:10px}
+ body:not(.full) #mis{top:56px;left:6px;font-size:10px;padding:2px 8px;max-width:min(42vw,300px)}
+ #sbx{top:96px!important;gap:5px!important;left:6px!important}
+ #sbx button{height:30px!important;min-width:30px!important;font-size:12px!important;padding:0 6px!important}
+ #emq{gap:3px;padding:3px 6px;bottom:8px}
+ #emq button{width:28px;height:28px;font-size:14px}
+ #joy{width:104px;height:104px;bottom:10px}#joy i{width:46px;height:46px;margin:-23px 0 0 -23px}
+ #tc button[data-k=" "]{width:60px!important;height:60px!important;font-size:28px!important;bottom:10px!important;right:calc(14px + env(safe-area-inset-right,0px))!important}
+ #tc button[data-k="f"]{width:50px!important;height:50px!important;right:84px!important;bottom:36px!important;font-size:10px!important}
+ #tc button[data-k="f"] span{font-size:19px}
+ #ptt{width:48px;height:48px;right:140px;bottom:16px;font-size:8px}
+ #hint{bottom:70px!important;font-size:11px;padding:4px 10px}
+ #apx{right:112px!important;top:44px!important}
 }
 </style></head><body>
 <canvas id="c"></canvas>
@@ -1137,6 +1173,7 @@ function pose(u,s){const T=u.T||(u.T={}),ph=u.ph===undefined?(u.ph=Math.random()
  if(u.lids){if(u.bk>0){u.bk--;const v=Math.sin(Math.PI*(1-u.bk/7));for(const m of u.lids){m.scale.y=1.2*v;m.visible=v>.08}}else{if(Math.random()<.007)u.bk=7;if(u.lids[0].visible)for(const m of u.lids)m.visible=false}}
  const tg={ll:s,lr:-s,al:-s,ar:s,kl:-Math.max(0,-s)*1.1,kr:-Math.max(0,s)*1.1,ell:.12+Math.max(0,-s)*.9,elr:.12+Math.max(0,s)*.9};
  u.am+=(Math.abs(s)-u.am)*.12||0;if(!(u.am>=0))u.am=Math.abs(s);
+ if(u.spr){u.ll.rotation.x=u.lr.rotation.x=0;u.spr=0}
  const idle=1-cl(u.am*3,0,1),br=Math.sin(fc*.055+ph)*.022*idle;
  for(const n in tg){const c=T[n]===undefined?tg[n]:T[n];T[n]=c+(tg[n]-c)*.4;u[n].rotation.z=T[n]+((n=='al'||n=='ell')?br:(n=='ar'||n=='elr')?-br:0)}
  const g=u.g;if(g){const dead=Math.abs(g.rotation.z)>.3;
@@ -3344,7 +3381,7 @@ const DIVE=(()=>{let on=0,btn=null,ob=null,of=null,vig=null,bub=null,bp=null,air
 const MP_URL=MP_CFG.apiKey&&MP_CFG.databaseURL?MP_CFG.databaseURL:'';
 const MP=(()=>{
  const EMO=['👋','😀','👍','❤️','🎉','❓'],MAXR=40,SHOW=1600,STALE=25000;
- let uid,db=null,pr=null,me=null,booted=0,conn=0,btn=null,pan=null,lst=null,cnt=0,lastSend=0,lastBeat=0,sent={},lookS='',lastSig='',bub=null,bubT=0;
+ let uid,db=null,pr=null,me=null,booted=0,conn=0,btn=null,pan=null,lst=null,cnt=0,lastSend=0,lastBeat=0,sent={},sentX={},lookS='',lastSig='',bub=null,bubT=0;
  try{uid=sessionStorage.getItem('ttt3d_uid');if(!uid){uid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4);sessionStorage.setItem('ttt3d_uid',uid)}}catch(e){uid=Math.random().toString(36).slice(2,10)}
  const R=new Map();
  const enabled=()=>{try{return localStorage.getItem('ttt3d_mp')!=='0'}catch(e){return true}};
@@ -3358,7 +3395,8 @@ const MP=(()=>{
  const cleanLook=js=>{try{const o=JSON.parse(js),L=Object.assign({},LOOK);for(const k in LOOK){if(!(k in o))continue;const v=o[k],t=typeof LOOK[k];if(t=='number'&&typeof v=='number'&&isFinite(v))L[k]=v;else if(t=='string'&&typeof v=='string'&&v.length<24)L[k]=v;else if(t=='boolean'&&typeof v=='boolean')L[k]=v}return L}catch(e){return Object.assign({},LOOK)}};
  const mkModel=r=>{let m;try{m=mkPerson(cleanLook(r.l),false)}catch(e){m=mkPerson(Object.assign({},PRE[0][1]),false)}
   const g=new THREE.Group();g.add(m);r.m=m;r.vs=null;r.tg=spr(nameT(r.n),24,6);r.tg.position.y=25;g.add(r.tg);r.g=g;scene.add(g)};
- const drop=k=>{const r=R.get(k);if(!r)return;if(r.g)scene.remove(r.g);R.delete(k);ui()};
+ const clr=(r,k)=>{if(r[k]){scene.remove(r[k]);r[k]=null}};
+ const drop=k=>{const r=R.get(k);if(!r)return;if(r.g)scene.remove(r.g);clr(r,'mg');clr(r,'cg');clr(r,'pg');R.delete(k);ui()};
  const upsert=(k,v)=>{if(k==uid||!v||typeof v!='object')return;let r=R.get(k);const nw=!r;
   if(!r){if(R.size>=MAXR)return;r={k,x:0,y:0,a:0,cx:null,cy:null,ca:0,s:0,d:0,i:0,c:0,v:0,vs:null,n:'Bạn',l:'',e:'',seen:0,g:null};R.set(k,r)}
   r.seen=performance.now();
@@ -3366,32 +3404,37 @@ const MP=(()=>{
   if(typeof v.l=='string'&&v.l!==r.l){r.l=v.l;if(r.g){scene.remove(r.g);r.g=null}}
   if('x'in v)r.x=num(v.x,-30000,30000,r.x);if('y'in v)r.y=num(v.y,-30000,30000,r.y);if('a'in v)r.a=num(v.a,-10,10,r.a);
   if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);
+  {const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);r.mt=(typeof v.m=='string'&&V5.mountOk(v.m))?v.m:'';r.pt=(typeof v.p=='string'&&V5.petOk(v.p))?v.p:'';
+   const km=typeof v.k=='string'?v.k:'';r.ck=(/^[a-z0-9_]{1,12}$/.test(km)&&km!='cop'&&(has(CARS.SPEC,km)||has(CARS.BIKES,km)))?km:'';r.cc=(typeof v.kc=='string'&&/^#[0-9a-fA-F]{6}$/.test(v.kc))?v.kc:'#d0d0d8'}
   if(typeof v.e=='string'&&v.e!==r.e){r.e=v.e;if(!nw||performance.now()-r.seen<2000){const ix=parseInt(v.e);if(ix>=0&&ix<EMO.length)bubble(r,EMO[ix])}}
   if(nw)ui()};
  const bubble=(r,e)=>{if(r.bb){r.g&&r.g.remove(r.bb);r.bb=null}if(!r.g)return;r.bb=spr(emoT(e),11,11);r.bb.position.y=36;r.g.add(r.bb);r.bt=performance.now()+4200};
  const loadFB=()=>new Promise((ok,no)=>{if(window.firebase&&firebase.database)return ok();const add=(src,cb)=>{const q=document.createElement('script');q.src=src;q.onload=cb;q.onerror=no;document.head.appendChild(q)};
   add('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js',ok)))});
  const payload=()=>{const c=ply.car,o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((c?c.a:ply.a)*100)/100,s:ply.sw2?1:0,d:Math.round(ply.dd||0),i:INT.cur?1:0,c:c?1:0,v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
+ const payX=()=>{const c=ply.car,t=ply.mt;let m='',p='',k='',kc='';if(t&&t.id&&!c)m=String(t.id).slice(0,24);try{if(!c)p=String(V5.petKey()||'').slice(0,30)}catch(e){}if(c&&c.model){k=String(c.model).slice(0,12);kc=/^#[0-9a-fA-F]{6}$/.test(String(c.col))?String(c.col):''}return{m,p,k,kc}};
  const getDb=async()=>{if(db)return db;await loadFB();if(!(firebase.apps&&firebase.apps.length))firebase.initializeApp(MP_CFG);db=firebase.database();return db};
  const getAuth=async()=>{await getDb();return firebase.auth()};
  const boot=async()=>{booted=1;try{await getDb();if(CL.uid)uid=CL.uid;pr=db.ref('players');me=pr.child(uid);
   try{lookS=JSON.stringify(LOOK)}catch(e){lookS=''}
-  db.ref('.info/connected').on('value',sn=>{conn=sn.val()?1:0;if(conn){try{me.onDisconnect().remove()}catch(e){}{const r=me.set(payload());if(r&&r.catch)r.catch(()=>{})}sent=payload()}ui()});
+  db.ref('.info/connected').on('value',sn=>{conn=sn.val()?1:0;if(conn){try{me.onDisconnect().remove()}catch(e){}{const r=me.set(payload());if(r&&r.catch)r.catch(()=>{})}sent=payload();sentX={}}ui()});
   pr.on('child_added',sn=>upsert(sn.key,sn.val()));pr.on('child_changed',sn=>upsert(sn.key,sn.val()));pr.on('child_removed',sn=>drop(sn.key));
   addEventListener('pagehide',()=>{try{me.remove()}catch(e){}})}catch(e){console.warn('Chơi chung: không kết nối được',e);booted=-1;ui()}};
  const stop=()=>{try{if(me)me.remove()}catch(e){}for(const k of[...R.keys()])drop(k);try{if(pr){pr.off();db.ref('.info/connected').off()}}catch(e){}pr=null;me=null;db=null;booted=0;conn=0;ui()};
  const send=(force)=>{if(!me||!conn)return;const now=performance.now();if(!force&&now-lastSend<450)return;const p=payload(),d={};let ch=0;
   for(const k of['n','x','y','a','s','d','i','c','v'])if(p[k]!==sent[k]){d[k]=p[k];ch=1}
   try{const l=JSON.stringify(LOOK);if(l!==lookS){lookS=l;d.l=l;ch=1}}catch(e){}
+  {const x=payX(),dx={};let cx=0;for(const k in x)if(x[k]!==sentX[k]){dx[k]=x[k]===''?null:x[k];cx=1}
+   if(cx){Object.assign(sentX,x);try{const r=me.update(dx);if(r&&r.catch)r.catch(e=>{if(!send._w){send._w=1;console.warn('Chưa đồng bộ được thú/xe: hãy dán Rules mới vào Firebase',e)}})}catch(e){}}}
   if(!ch){if(now-lastBeat<6000&&!force)return;d.h=p.h}
   lastBeat=now;lastSend=now;Object.assign(sent,d);try{const r=me.update(d);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
  const emo=ix=>{if(!me||!conn)return;const v=ix+'.'+(++cnt);try{const r=me.update({e:v});if(r&&r.catch)r.catch(()=>{})}catch(e){}if(ply&&ply.m){if(bub)ply.m.remove(bub);bub=spr(emoT(EMO[ix]),11,11);bub.position.y=36;ply.m.add(bub);bubT=performance.now()+4200}};
  const ui=()=>{if(!btn)return;const on=booted>0&&conn&&enabled();btn.style.display=MP_URL&&state=='play'?'':'none';btn.textContent=on?'🌐 '+(R.size+1):'🌐';btn.style.background=on?'#2e9a4a':booted<0?'#a33':'var(--hb,#6a5acd)';
-  const vm=k=>{try{return VOICE.muted(k)}catch(e){return false}},von=(()=>{try{return VOICE.on}catch(e){return 0}})(),sig=[booted,conn,enabled(),von,pan&&pan.style.display,[...R.values()].map(r=>r.n+(r.v?'v'+r.v:'')+(vm(r.k)?'m':'')).join('|')].join('~');if(sig===lastSig)return;lastSig=sig;
+  const vm=k=>{try{return VOICE.muted(k)}catch(e){return false}},von=(()=>{try{return VOICE.on}catch(e){return 0}})(),sig=[booted,conn,enabled(),von,pan&&pan.style.display,[...R.values()].map(r=>r.n+(r.v?'v'+r.v:'')+(vm(r.k)?'m':'')).join('|'),(()=>{try{return PARTY.sig()}catch(e){return ''}})()].join('~');if(sig===lastSig)return;lastSig=sig;
   if(pan&&pan.style.display!='none'){const on2=booted>0&&conn&&enabled();let h='<div style="font-weight:700;margin-bottom:6px">🌐 Chơi chung '+(on2?'· '+(R.size+1)+' bạn đang online':booted<0?'· không kết nối được':enabled()?'· đang kết nối…':'· đang tắt')+'</div>';
-   if(on2){h+='<div style="max-height:130px;overflow:auto;margin-bottom:6px;opacity:.95">⭐ '+cleanName(EDU.name)+' (em)';for(const r of R.values())h+='<br>• '+r.n.replace(/[&<]/g,'')+(r.v?' 🎤':'')+(von&&r.v?' <button data-mu="'+r.k+'" style="border:0;border-radius:8px;background:#3a3870;color:#fff;cursor:pointer">'+(vm(r.k)?'🔇 Bật nghe':'🔈 Tắt tiếng')+'</button> <button data-rp="'+r.k+'" style="border:0;border-radius:8px;background:#6b2a3a;color:#fff;cursor:pointer">⚠ Báo cáo</button>':'');h+='</div><div id="mpe" style="display:flex;gap:4px;margin-bottom:6px">'+EMO.map((e,i)=>'<button data-e="'+i+'" style="font-size:20px;width:38px;height:38px;border:0;border-radius:10px;background:#3a3870;cursor:pointer">'+e+'</button>').join('')+'</div>'}
+   if(on2){try{h+=PARTY.html()}catch(e){}h+='<div style="max-height:130px;overflow:auto;margin-bottom:6px;opacity:.95">⭐ '+cleanName(EDU.name)+' (em)';for(const r of R.values())h+='<br>• '+r.n.replace(/[&<]/g,'')+(r.v?' 🎤':'')+(PARTY.has(r.k)?' <span style="color:#8fe08f">👥 cùng nhóm</span>':' <button data-iv="'+r.k+'" style="border:0;border-radius:8px;background:#2e6a4a;color:#fff;cursor:pointer">👥 Mời nhóm</button>')+(von&&r.v?' <button data-mu="'+r.k+'" style="border:0;border-radius:8px;background:#3a3870;color:#fff;cursor:pointer">'+(vm(r.k)?'🔇 Bật nghe':'🔈 Tắt tiếng')+'</button> <button data-rp="'+r.k+'" style="border:0;border-radius:8px;background:#6b2a3a;color:#fff;cursor:pointer">⚠ Báo cáo</button>':'');h+='</div><div id="mpe" style="display:flex;gap:4px;margin-bottom:6px">'+EMO.map((e,i)=>'<button data-e="'+i+'" style="font-size:20px;width:38px;height:38px;border:0;border-radius:10px;background:#3a3870;cursor:pointer">'+e+'</button>').join('')+'</div>'}
    h+='<button id="mpt" style="border:0;border-radius:10px;padding:6px 10px;background:#5b5f7a;color:#fff;font:600 13px system-ui;cursor:pointer">'+(enabled()?'Tắt chơi chung':'Bật chơi chung')+'</button>';lst.innerHTML=h;
-   for(const b of lst.querySelectorAll('[data-e]'))b.onclick=e=>{e.stopPropagation();emo(+b.dataset.e)};for(const b of lst.querySelectorAll('[data-mu]'))b.onclick=e=>{e.stopPropagation();VOICE.toggleMute(b.dataset.mu);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-rp]'))b.onclick=e=>{e.stopPropagation();VOICE.report(b.dataset.rp);lastSig='';ui()};const t=lst.querySelector('#mpt');if(t)t.onclick=e=>{e.stopPropagation();try{localStorage.setItem('ttt3d_mp',enabled()?'0':'1')}catch(x){}if(enabled()){booted=0}else stop();ui()}}};
+   for(const b of lst.querySelectorAll('[data-e]'))b.onclick=e=>{e.stopPropagation();emo(+b.dataset.e)};for(const b of lst.querySelectorAll('[data-mu]'))b.onclick=e=>{e.stopPropagation();VOICE.toggleMute(b.dataset.mu);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-rp]'))b.onclick=e=>{e.stopPropagation();VOICE.report(b.dataset.rp);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-iv]'))b.onclick=e=>{e.stopPropagation();PARTY.invite(b.dataset.iv)};const pmb=lst.querySelector('[data-pm]');if(pmb)pmb.onclick=e=>{e.stopPropagation();PARTY.toggleMic()};const plb=lst.querySelector('[data-pl]');if(plb)plb.onclick=e=>{e.stopPropagation();PARTY.leave()};const t=lst.querySelector('#mpt');if(t)t.onclick=e=>{e.stopPropagation();try{localStorage.setItem('ttt3d_mp',enabled()?'0':'1')}catch(x){}if(enabled()){booted=0}else stop();ui()}}};
  const mkUI=()=>{try{btn=document.createElement('button');btn.type='button';btn.id='mpb';btn.textContent='🌐';btn.title='Chơi chung với các bạn';btn.style.cssText=SBCSS+'display:none;font-size:14px;font-weight:700';
   btn.addEventListener('click',e=>{e.stopPropagation();pan.style.display=pan.style.display=='none'?'block':'none';ui()});sideBox().appendChild(btn);
   pan=document.createElement('div');pan.style.cssText='position:fixed;left:56px;top:214px;z-index:8;display:none;background:rgba(12,12,18,.95);color:#fff;border-radius:12px;padding:10px 12px;min-width:200px;font:13px system-ui,sans-serif;box-shadow:0 4px 18px #0008';
@@ -3401,20 +3444,31 @@ const MP=(()=>{
   if(bub&&performance.now()>bubT){ply.m.remove(bub);bub=null}
   const now=performance.now();for(const r of[...R.values()])if(now-r.seen>STALE)drop(r.k);ui()};
  const frame=()=>{if(!MP_URL||!R.size)return;const now=performance.now(),px=ply.car?ply.car.x:ply.x,py=ply.car?ply.car.y:ply.y;
-  const L=[];for(const r of R.values()){const near=!INT.cur&&!r.i&&Math.abs(r.x-px)<SHOW&&Math.abs(r.y-py)<SHOW;if(!near){if(r.g)r.g.visible=false;continue}L.push(r)}
+  const L=[];for(const r of R.values()){const near=!INT.cur&&!r.i&&Math.abs(r.x-px)<SHOW&&Math.abs(r.y-py)<SHOW;if(!near){r.cx=null;if(r.g)r.g.visible=false;if(r.mg)r.mg.visible=false;if(r.cg)r.cg.visible=false;if(r.pg)r.pg.visible=false;continue}L.push(r)}
   L.sort((a,b)=>Math.hypot(a.x-px,a.y-py)-Math.hypot(b.x-px,b.y-py));
-  L.forEach((r,ix)=>{if(ix>=24){if(r.g)r.g.visible=false;return}
+  L.forEach((r,ix)=>{if(ix>=24){r.cx=null;if(r.g)r.g.visible=false;if(r.mg)r.mg.visible=false;if(r.cg)r.cg.visible=false;if(r.pg)r.pg.visible=false;return}
    if(!r.g){mkModel(r);r.cx=null}const g=r.g;g.visible=true;
    if(r.cx==null||Math.hypot(r.x-r.cx,r.y-r.cy)>500){r.cx=r.x;r.cy=r.y;r.ca=r.a}
    const dx=r.x-r.cx,dy=r.y-r.cy,mv=Math.hypot(dx,dy);r.cx+=dx*.18;r.cy+=dy*.18;let da=((r.a-r.ca+Math.PI*3)%(Math.PI*2))-Math.PI;r.ca+=da*.2;
-   const sw=r.s&&!r.c,dd=(sw?r.d:0),y=.9+Math.max(GHy(r.cx,r.cy),-5)-dd;
+   /* thú cưỡi / xe / thú dắt của bạn */
+   {const mk=(!r.c&&r.mt)?r.mt:'';if(mk!==r.mk){clr(r,'mg');r.mk=mk;r.mo=null;if(mk){try{const o=V5.mkMountR(mk);if(o){scene.add(o.grp);r.mg=o.grp;r.mo=o}}catch(e){}}}
+    const cm=r.c?(r.ck||'sedan'):'',ck=cm?cm+'|'+r.cc:'';if(ck!==r.cky){clr(r,'cg');r.cky=ck;if(cm){try{const cg=mkCar(r.cc,false,cm);if(cg.userData.rider)cg.userData.rider.visible=false;scene.add(cg);r.cg=cg}catch(e){}}}
+    const pk=(!r.c&&r.pt)?r.pt:'';if(pk!==r.pk){clr(r,'pg');r.pk=pk;if(pk){try{const o=V5.mkPetR(pk);if(o){scene.add(o);r.pg=o}}catch(e){}}}}
+   const mo=r.mg?r.mo:null,cgr=r.cg||null;
+   const sw=r.s&&!r.c&&!mo,dd=(sw?r.d:0),y=mo?(mo.env=='w'?-1.4:GHy(r.cx,r.cy)):.9+Math.max(GHy(r.cx,r.cy),-5)-dd;
    const m=r.m,u=m.userData;m.rotation.set(0,0,0);m.visible=!r.c;g.position.set(r.cx,y,r.cy);m.rotation.y=-r.ca;
    const sp=Math.sin(fc*.3)*Math.min(mv/1.6*2,1.5)*.9;pose(u,sp);
    if(sw){m.rotation.z=-1.2;m.position.y=-2.4;u.al.rotation.z=2.2+Math.sin(fc*.2+r.cx)*.8;u.ar.rotation.z=2.2-Math.sin(fc*.2+r.cx)*.8}else m.position.y=0;
-   r.tg.position.y=r.c?14:25;
+   const mvg=mv>.8;
+   if(mo){V5.mountStepR(mo,r.cx,r.cy,r.ca,mvg);r.mg.visible=true;V5.mountPoseT(m,u,mo,mvg)}
+   if(cgr){const bk=cgr.userData.bk,spd=mv*.18;cgr.visible=true;cgr.position.set(r.cx,Math.max(0,GHy(r.cx,r.cy)),r.cy);cgr.rotation.y=-r.ca;const wh=cgr.userData.wh;if(wh)for(const w of wh)w.g.rotation.z-=spd/w.r;
+    if(bk){r.ph=(r.ph||0)+spd*.07;if(bk.kind=='bike'){const pd=cgr.userData.ped;if(pd)for(let i=0;i<2;i++){const a=r.ph+i*PI;pd[i].position.set(bk.bb[0]+1.6*Math.cos(a),bk.bb[1]+1.6*Math.sin(a),i?1.3:-1.3)}}
+     const Rd=CARS.rider(bk,m.scale.x,r.ph),ca2=Math.cos(r.ca),sa2=Math.sin(r.ca);m.visible=true;m.position.set(Rd.pos[0]*ca2,Rd.pos[1]-.9,Rd.pos[0]*sa2);m.rotation.set(0,-r.ca,Rd.phi);putRider(u,Rd)}}
+   if(r.pg){r.pg.visible=true;V5.petStepR(r.pg,r.cx,r.cy,r.ca,mvg)}
+   r.tg.position.y=(cgr&&!(cgr.userData.bk))?14:25+(mo?mo.seat:0);if(r.bb)r.bb.position.y=36+(mo?mo.seat:0);
    if(r.v==2&&!r.vs){r.vs=spr(emoT('🔊'),9,9);r.vs.position.set(9,32,0);g.add(r.vs)}else if(r.v!=2&&r.vs){g.remove(r.vs);r.vs=null}
    if(r.bb&&now>r.bt){g.remove(r.bb);r.bb=null}})};
- return{tick,frame,db:getDb,auth:getAuth,get count(){return R.size},get uid(){return uid},emo,sendNow:()=>send(true),_R:R}})();
+ return{tick,frame,db:getDb,auth:getAuth,get ready(){return booted>0&&conn&&enabled()},refresh(){lastSig='';ui()},get count(){return R.size},get uid(){return uid},emo,sendNow:()=>send(true),_R:R}})();
 
 /* ===== Nói chuyện bằng giọng nói với các bạn ở gần (WebRTC, không tốn phí) =====
    - Hai máy nối trực tiếp với nhau; Firebase chỉ chuyển "lời chào" kết nối (vài giây rồi xóa).
@@ -3422,22 +3476,27 @@ const MP=(()=>{
    - Mặc định tắt: em bấm 🎤 để bật (trình duyệt hỏi quyền micro), rồi GIỮ nút (hoặc phím T) để nói.
    - Thầy/cô tắt toàn trường bằng cách đặt config/voice = false trong Realtime Database. */
 const VOICE=(()=>{const RANGE=200,MAXP=4,CFG={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
- let on=0,talk=0,stream=null,db=null,inbox=null,uid='',lastCfg=0;const P=new Map(),muted=new Set(),cool=new Map(),reported=new Set();
+ let on=0,talk=0,stream=null,db=null,inbox=null,uid='',lastCfg=0,actx=null,anl=null,abuf=null,lastLoud=0;const P=new Map(),muted=new Set(),cool=new Map(),reported=new Set();
  const rm=p=>{try{const r=db.ref(p).remove();if(r&&r.catch)r.catch(()=>{})}catch(e){}},put=(p,v)=>{try{const r=db.ref(p).set(v);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
  const gather=pc=>new Promise(ok=>{if(pc.iceGatheringState=='complete')return ok();const f=()=>{if(pc.iceGatheringState=='complete'){pc.removeEventListener('icegatheringstatechange',f);ok()}};pc.addEventListener('icegatheringstatechange',f);setTimeout(ok,2500)});
  const pos=()=>({x:ply.car?ply.car.x:ply.x,y:ply.car?ply.car.y:ply.y});
+ const pset=()=>{try{return PARTY.others()}catch(e){return new Set()}},pmic=()=>{try{return PARTY.micOn()}catch(e){return false}};
+ /* mỗi kết nối chỉ gửi tiếng khi cần: bạn cùng nhóm (mic mở sẵn) hoặc khi em giữ nút nói */
+ const want=k=>!!talk||(pmic()&&pset().has(k));
+ const gate=(e,k)=>{if(!e.snd||!stream)return;const w=want(k);if(e.sw===w)return;e.sw=w;const t=stream.getAudioTracks()[0];try{const p=e.snd.replaceTrack(w?t:null);if(p&&p.catch)p.catch(()=>{})}catch(x){}};
+ const upd=()=>{if(!stream)return;let any=talk?1:0;if(!any&&pmic()&&pset().size)any=1;stream.getAudioTracks().forEach(t=>t.enabled=!!any);for(const[k,e]of P)gate(e,k)};
  const rpos=r=>({x:r.cx!=null?r.cx:r.x,y:r.cy!=null?r.cy:r.y});
  const kill=(k,quiet)=>{const e=P.get(k);if(!e)return;try{e.pc.close()}catch(x){}if(e.aud){try{e.aud.pause();e.aud.srcObject=null}catch(x){}}P.delete(k);if(!quiet)cool.set(k,Date.now()+8000);rm('voice/'+uid+'/'+k);rm('voice/'+k+'/'+uid)};
  const newPeer=(k,init)=>{const pc=new RTCPeerConnection(CFG),e={pc,aud:null,init,t:Date.now(),ok:0,dc:0,ans:0,sdp:''};P.set(k,e);
-  stream.getAudioTracks().forEach(t=>pc.addTrack(t,stream));
+  stream.getAudioTracks().forEach(t=>{e.snd=pc.addTrack(t,stream);e.sw=true});gate(e,k);
   pc.ontrack=ev=>{try{const a=new Audio();a.autoplay=true;a.srcObject=ev.streams&&ev.streams[0]?ev.streams[0]:new MediaStream([ev.track]);a.volume=0;e.aud=a;const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(x){}};
   pc.onconnectionstatechange=()=>{const st=pc.connectionState;if(st=='connected'){e.ok=1;e.dc=0;rm('voice/'+uid+'/'+k);rm('voice/'+k+'/'+uid)}else if(st=='disconnected'){if(!e.dc)e.dc=Date.now()}else if(st=='failed'||st=='closed')kill(k)};
   return e};
  const offer=async k=>{const e=newPeer(k,1);try{const o=await e.pc.createOffer();await e.pc.setLocalDescription(o);await gather(e.pc);put('voice/'+k+'/'+uid,{k:'o',s:e.pc.localDescription.sdp,u:Date.now()})}catch(x){kill(k)}};
- const nearOk=(k,f)=>{const r=MP._R.get(k);if(!r||r.i||r.v<1)return false;const a=pos(),b=rpos(r);return Math.hypot(a.x-b.x,a.y-b.y)<RANGE*f};
+ const nearOk=(k,f)=>{const r=MP._R.get(k);if(!r||r.v<1)return false;if(pset().has(k))return true;if(r.i)return false;const a=pos(),b=rpos(r);return Math.hypot(a.x-b.x,a.y-b.y)<RANGE*f};
  const sig=async(from,v)=>{if(!on||!v||typeof v!='object')return;if(Date.now()-(+v.u||0)>120000){rm('voice/'+uid+'/'+from);return}
   if(typeof v.s!='string'||v.s.length>14000)return;
-  if(v.k=='o'){if(muted.has(from)||!nearOk(from,1.4))return;if(P.size>=MAXP&&!P.has(from))return;const old=P.get(from);if(old){if(old.sdp===v.s)return;kill(from,true)}
+  if(v.k=='o'){if(muted.has(from)||!nearOk(from,1.4))return;if(P.size>=MAXP+5&&!P.has(from))return;const old=P.get(from);if(old){if(old.sdp===v.s)return;kill(from,true)}
    const e=newPeer(from,0);e.sdp=v.s;try{await e.pc.setRemoteDescription({type:'offer',sdp:v.s});const a=await e.pc.createAnswer();await e.pc.setLocalDescription(a);await gather(e.pc);put('voice/'+from+'/'+uid,{k:'a',s:e.pc.localDescription.sdp,u:Date.now()})}catch(x){kill(from)}}
   else if(v.k=='a'){const e=P.get(from);if(e&&e.init&&!e.ans&&e.pc.signalingState=='have-local-offer'){e.ans=1;try{await e.pc.setRemoteDescription({type:'answer',sdp:v.s})}catch(x){kill(from)}}}};
  const cfgOk=async()=>{try{const sn=await db.ref('config/voice').once('value');return sn.val()!==false}catch(e){return true}};
@@ -3448,26 +3507,80 @@ const VOICE=(()=>{const RANGE=200,MAXP=4,CFG={iceServers:[{urls:'stun:stun.l.goo
    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
   catch(e){say(e&&e.name=='NotAllowedError'?'Em chưa cho phép dùng micro. Hãy cho phép micro cho trang này rồi thử lại nhé.':'Không bật được micro ('+((e&&e.name)||'lỗi')+').',4500);return}
   stream.getAudioTracks().forEach(t=>t.enabled=false);uid=MP.uid;lastCfg=Date.now();
+  try{const AC=window.AudioContext||window.webkitAudioContext;actx=new AC();if(actx.resume)actx.resume();const src=actx.createMediaStreamSource(stream);anl=actx.createAnalyser();anl.fftSize=512;src.connect(anl);abuf=new Uint8Array(anl.fftSize)}catch(e){anl=null}
   try{const sn=await db.ref('voice/'+uid).once('value'),v=sn.val()||{};for(const k in v)rm('voice/'+uid+'/'+k)}catch(e){}
   inbox=db.ref('voice/'+uid);inbox.on('child_added',sn=>sig(sn.key,sn.val()));inbox.on('child_changed',sn=>sig(sn.key,sn.val()));
   on=1;try{MP.sendNow()}catch(e){}
   say('🎤 Đã bật nói chuyện! Giữ nút 🎤 (hoặc phím T) để nói. Em chỉ nghe được các bạn đứng gần trong khoảng 20 m.',5500)};
- const disable=msg=>{for(const k of[...P.keys()])kill(k,true);try{if(inbox)inbox.off()}catch(e){}inbox=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}on=0;talk=0;try{MP.sendNow()}catch(e){}if(msg)say(msg,3500)};
- const setTalk=b=>{b=b?1:0;if(!on||!stream||b===talk)return;talk=b;stream.getAudioTracks().forEach(t=>t.enabled=!!b);try{MP.sendNow()}catch(e){}};
+ const disable=msg=>{for(const k of[...P.keys()])kill(k,true);try{if(inbox)inbox.off()}catch(e){}inbox=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}try{if(actx)actx.close()}catch(e){}actx=null;anl=null;on=0;talk=0;try{MP.sendNow()}catch(e){}if(msg)say(msg,3500)};
+ const setTalk=b=>{b=b?1:0;if(!on||!stream||b===talk)return;talk=b;upd();try{MP.sendNow()}catch(e){}};
  const loop=()=>{if(!on)return;
-  if(state!='play'||INT.cur){setTalk(0);for(const k of[...P.keys()])kill(k,true);return}
+  if(state!='play'){setTalk(0);for(const k of[...P.keys()])kill(k,true);return}
+  const ps=pset();if(INT.cur){setTalk(0);for(const k of[...P.keys()])if(!ps.has(k))kill(k,true)}
   if(Date.now()-lastCfg>60000){lastCfg=Date.now();cfgOk().then(ok=>{if(!ok&&on)disable('Thầy/cô vừa tạm tắt tính năng nói chuyện.')});}
-  const a=pos(),cand=[];for(const r of MP._R.values()){if(r.i||r.v<1)continue;const b=rpos(r);cand.push({k:r.k,d:Math.hypot(a.x-b.x,a.y-b.y)})}
-  const dist=new Map(cand.map(c=>[c.k,c.d])),want=cand.filter(c=>c.d<RANGE&&!muted.has(c.k)).sort((x,y)=>x.d-y.d).slice(0,MAXP).map(c=>c.k);
+  const a=pos(),cand=[];for(const r of MP._R.values()){if(r.v<1)continue;const isp=ps.has(r.k);if(!isp&&(r.i||INT.cur))continue;const b=rpos(r);cand.push({k:r.k,p:isp,d:isp?0:Math.hypot(a.x-b.x,a.y-b.y)})}
+  const dist=new Map(cand.map(c=>[c.k,c.d])),wantL=[...cand.filter(c=>c.p&&!muted.has(c.k)).map(c=>c.k),...cand.filter(c=>!c.p&&c.d<RANGE&&!muted.has(c.k)).sort((x,y)=>x.d-y.d).slice(0,MAXP).map(c=>c.k)];
   for(const[k,e]of[...P]){const d=dist.get(k);if(d==null||d>RANGE*1.3||muted.has(k)||(e.dc&&Date.now()-e.dc>8000)||(!e.ok&&Date.now()-e.t>25000))kill(k);else if(e.aud){try{e.aud.volume=Math.max(0,Math.min(1,.15+.85*(1-d/RANGE)))}catch(x){}}}
-  for(const k of want)if(!P.has(k)&&!((cool.get(k)||0)>Date.now())&&uid<k)offer(k)};
+  for(const k of wantL)if(!P.has(k)&&!((cool.get(k)||0)>Date.now())&&uid<k)offer(k);
+  upd()};
+ setInterval(()=>{if(!on||!anl)return;try{anl.getByteTimeDomainData(abuf);let m=0;for(let i=0;i<abuf.length;i++){const d=Math.abs(abuf[i]-128);if(d>m)m=d}if(m>9)lastLoud=Date.now()}catch(e){}},120);
  setInterval(loop,400);
  addEventListener('keydown',e=>{if((e.key=='t'||e.key=='T')&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName||''))&&state=='play')setTalk(1)});
  addEventListener('keyup',e=>{if(e.key=='t'||e.key=='T')setTalk(0)});addEventListener('blur',()=>setTalk(0));
  document.addEventListener('visibilitychange',()=>{if(document.hidden)setTalk(0)});addEventListener('pagehide',()=>{if(on)for(const k of[...P.keys()])kill(k,true)});
- return{get on(){return on},get st(){return on?(talk?2:1):0},get talking(){return !!talk},get peers(){return P.size},setTalk,toggle(){if(on)disable('Đã tắt nói chuyện.');else enable()},disable,
+ return{ensure(){return on?Promise.resolve():enable()},get on(){return on},get st(){return on?((talk||(pmic()&&pset().size&&Date.now()-lastLoud<700))?2:1):0},get talking(){return !!talk},get peers(){return P.size},setTalk,toggle(){if(on)disable('Đã tắt nói chuyện.');else enable()},disable,
   muted:k=>muted.has(k),toggleMute(k){if(muted.has(k))muted.delete(k);else{muted.add(k);kill(k,true)}},
   report(k){const r=MP._R.get(k);if(!r||reported.has(k)||!db)return;reported.add(k);muted.add(k);kill(k,true);try{const q=db.ref('reports').push({a:uid,b:k,n:String(r.n||'').slice(0,30),t:Date.now()});if(q&&q.catch)q.catch(()=>{})}catch(e){}say('Đã báo cáo bạn '+r.n+' cho thầy/cô và tắt tiếng bạn ấy.',3500)}}})();
+
+
+/* ===== Nhóm nói chuyện từ xa (không cần ở gần, mic mở sẵn, không cần giữ nút) =====
+   - Một bạn bấm "Mời nhóm" ở bảng 🌐, bạn kia thấy lời mời và bấm Đồng ý thì vào nhóm (tối đa 6 bạn).
+   - Dùng lại đường nói chuyện WebRTC (miễn phí); Firebase chỉ lưu danh sách nhóm và lời mời vài chục giây.
+   - Trong nhóm mic mở sẵn; bấm nút 👥 bên trái để tắt/bật mic. Rời nhóm hoặc thoát game là tự rời. */
+const PARTY=(()=>{const MAXM=6;let db=null,uid='',pid='',mem={},prev={},mref=null,mq=null,pb=null,box=null,starting=0,cur=null,qi=[],lastInv=new Map(),invRef=null,micOff=0,joinT=0,boxT=0;
+ const okId=s=>typeof s=='string'&&/^[A-Za-z0-9_\-]{4,24}$/.test(s);
+ const clean=n=>String(n==null?'Bạn':n).replace(/[\u0000-\u001f<>&]/g,'').trim().slice(0,16)||'Bạn';
+ const refresh=()=>{try{MP.refresh()}catch(e){}paint()};
+ const others=()=>{const o=new Set();if(pid)for(const k in mem)if(k!==uid)o.add(k);return o};
+ const rmInv=from=>{try{const r=invRef.child(from).remove();if(r&&r.catch)r.catch(()=>{})}catch(e){}};
+ const paint=()=>{try{if(!pb){pb=document.createElement('button');pb.type='button';pb.style.cssText=SBCSS+'display:none;font-size:14px;font-weight:700';pb.onclick=e=>{e.stopPropagation();toggleMic()};sideBox().appendChild(pb)}
+  const n=Object.keys(mem).length;pb.style.display=pid&&state=='play'?'':'none';pb.textContent='👥 '+n+(micOff?' 🔇':' 🎙');pb.style.background=micOff?'#a33':'#2e7d4a';pb.title=micOff?'Mic đang tắt. Bấm để bật':'Mic đang mở. Bấm để tắt'}catch(e){}};
+ const toggleMic=()=>{if(!pid)return;micOff=micOff?0:1;say(micOff?'🔇 Em đã tắt mic trong nhóm.':'🎙 Em đã bật mic trong nhóm, các bạn nghe được em nói.',2200);refresh()};
+ const join=async p=>{if(pid===p)return true;if(pid)await leave(true);
+  try{const sn=await db.ref('parties/'+p+'/m').once('value'),v=sn.val()||{};if(Object.keys(v).length>=MAXM&&!v[uid]){say('Nhóm này đã đủ '+MAXM+' bạn rồi.',3000);return false}}catch(e){}
+  mref=db.ref('parties/'+p+'/m/'+uid);
+  try{await mref.set({n:clean(EDU.name),t:Date.now()})}catch(e){mref=null;say('Chưa vào nhóm được. Thầy/cô cần dán Rules mới vào Firebase.',4500);return false}
+  pid=p;joinT=Date.now();try{mref.onDisconnect().remove()}catch(e){}
+  mq=db.ref('parties/'+p+'/m');mq.on('value',sn=>{if(pid!==p)return;mem=sn.val()||{};
+   for(const k in mem)if(!(k in prev)&&k!==uid&&Date.now()-joinT>1500)say('👥 '+clean(mem[k].n)+' đã vào nhóm.',2200);
+   for(const k in prev)if(!(k in mem)&&k!==uid)say('👥 '+clean(prev[k].n)+' đã rời nhóm.',2200);
+   prev=Object.assign({},mem);refresh()});
+  micOff=0;refresh();return true};
+ const leave=async quiet=>{const had=pid;try{if(mq)mq.off()}catch(e){}try{if(mref){await mref.remove();mref.onDisconnect().cancel()}}catch(e){}pid='';mem={};prev={};mref=null;mq=null;if(!quiet&&had)say('Đã rời nhóm nói chuyện.',2000);refresh()};
+ const invite=async k=>{if(!db||!MP.ready){say('Chưa kết nối chơi chung, em chờ một chút nhé.',2500);return}
+  const r=MP._R.get(k);if(!r)return;if(pid&&mem[k]){say(r.n+' đã ở trong nhóm rồi.',2000);return}
+  if(pid&&Object.keys(mem).length>=MAXM){say('Nhóm đã đủ '+MAXM+' bạn.',2500);return}
+  const now=Date.now();if((lastInv.get(k)||0)>now-8000){say('Em vừa mời bạn này rồi, chờ một chút nhé.',2200);return}lastInv.set(k,now);
+  await VOICE.ensure();if(!VOICE.on)return;
+  if(!pid){const p=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-5);if(!(await join(p)))return}
+  const ref=db.ref('invites/'+k+'/'+uid);
+  try{await ref.set({n:clean(EDU.name),g:pid,t:Date.now()});say('📨 Đã gửi lời mời tới '+r.n+'. Chờ bạn ấy đồng ý nhé.',3200);setTimeout(()=>{try{const q=ref.remove();if(q&&q.catch)q.catch(()=>{})}catch(e){}},90000)}
+  catch(e){say('Chưa gửi được lời mời. Thầy/cô cần dán Rules mới vào Firebase.',4500)}};
+ const hideBox=()=>{if(box){box.remove();box=null}cur=null;clearTimeout(boxT)};
+ const showNext=()=>{if(cur||!qi.length)return;cur=qi.shift();const c=cur;
+  box=document.createElement('div');box.style.cssText='position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:30;background:rgba(30,30,60,.96);color:#fff;border-radius:16px;padding:12px 16px;font:600 14px system-ui,sans-serif;box-shadow:0 6px 24px #0008;text-align:center;max-width:88vw';
+  box.innerHTML='👥 <b>'+c.n+'</b> mời em vào nhóm nói chuyện.<br><span style="font-weight:400;opacity:.85;font-size:12px">Vào nhóm thì mic của em sẽ mở sẵn, em và các bạn nghe nhau dù ở xa.</span><div style="margin-top:8px;display:flex;gap:8px;justify-content:center"><button data-y style="border:0;border-radius:12px;padding:8px 16px;background:#2e9a4a;color:#fff;font:700 14px system-ui;cursor:pointer">✔ Đồng ý</button><button data-n style="border:0;border-radius:12px;padding:8px 16px;background:#8a3a4a;color:#fff;font:700 14px system-ui;cursor:pointer">✖ Từ chối</button></div>';
+  box.addEventListener('pointerdown',e=>e.stopPropagation());box.addEventListener('click',e=>e.stopPropagation());
+  box.querySelector('[data-n]').onclick=()=>{rmInv(c.from);hideBox();showNext()};
+  box.querySelector('[data-y]').onclick=async()=>{rmInv(c.from);hideBox();await VOICE.ensure();if(!VOICE.on){say('Em cần cho phép micro để vào nhóm nói chuyện.',3500);showNext();return}const ok=await join(c.g);if(ok)say('👥 Em đã vào nhóm. Mic đang mở, bấm nút 👥 bên trái để tắt/bật.',4200);showNext()};
+  document.body.appendChild(box);try{SND.p('click')}catch(e){}boxT=setTimeout(()=>{rmInv(c.from);hideBox();showNext()},60000)};
+ const gotInv=(from,v)=>{if(!v||typeof v!='object'||from===uid)return;if(!(+v.t>Date.now()-600000)||!okId(v.g)){rmInv(from);return}
+  if(v.g===pid){rmInv(from);return}if(qi.some(q=>q.from===from)||(cur&&cur.from===from))return;qi.push({from,n:clean(v.n),g:v.g});showNext()};
+ const start=async()=>{starting=1;try{db=await MP.db();uid=MP.uid;invRef=db.ref('invites/'+uid);invRef.on('child_added',sn=>gotInv(sn.key,sn.val()),()=>{});invRef.on('child_changed',sn=>gotInv(sn.key,sn.val()),()=>{})}catch(e){starting=0;db=null}};
+ const tick=()=>{if(!MP_URL)return;if(!db&&!starting&&state=='play'&&MP.ready&&MP.uid)start();if(pb)pb.style.display=pid&&state=='play'?'':'none'};
+ const html=()=>{if(!pid)return'';const ks=Object.keys(mem);const names=ks.map(k=>k===uid?'⭐ '+clean(EDU.name)+' (em)':'• '+clean(mem[k]&&mem[k].n)).join('<br>');
+  return '<div style="background:#26305a;border-radius:10px;padding:6px 8px;margin-bottom:6px"><b>👥 Nhóm nói chuyện ('+ks.length+'/'+MAXM+')</b><br>'+names+'<div style="margin-top:6px"><button data-pm style="border:0;border-radius:8px;background:'+(micOff?'#a33':'#2e7d4a')+';color:#fff;cursor:pointer;padding:4px 8px">'+(micOff?'🔇 Bật mic':'🎙 Tắt mic')+'</button> <button data-pl style="border:0;border-radius:8px;background:#6b2a3a;color:#fff;cursor:pointer;padding:4px 8px">🚪 Rời nhóm</button></div></div>'};
+ return{tick,invite,leave:()=>leave(),toggleMic,html,others,has:k=>!!(pid&&mem[k]),micOn:()=>!!pid&&!micOff,sig:()=>pid+'|'+Object.keys(mem).join(',')+'|'+micOff,get active(){return !!pid}}})();
 
 /* ---- hiệu ứng bơi: gợn sóng, bọt nước, tư thế bơi ---- */
 const SWF=(()=>{let tex=null;try{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');const gr=g.createRadialGradient(32,32,16,32,32,31);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(.7,'rgba(255,255,255,.9)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);tex=new THREE.CanvasTexture(c)}catch(e){}
@@ -3580,6 +3693,7 @@ function update(){
  if(!ply.car)walk();else{ply.x=ply.car.x;ply.y=ply.car.y;ply.mv=0}
  try{DIVE.tick()}catch(e){console.error(e)}
  try{MP.tick()}catch(e){console.error(e)}
+ try{PARTY.tick()}catch(e){console.error(e)}
  for(const c of veh){if(c.t=='civ')civAI(c);else if(c.t=='cop')copAI(c);else if(c.t=='player'){if(AP.on&&AP.mode=='car'&&c===AP.car)apCar(c);else drive(c)}else{c.v*=.93;moveCar(c)}}
  collide();carHitPlayers();extra();
  if(ply.car&&ply.car.hp<=0){const c=ply.car;ply.car=null;cull(o=>o!==c);ply.hp-=25;shake=20;say('Xe nổ tung!')}
@@ -5921,6 +6035,39 @@ V.clockText=()=>hm(V.tm);
   const wg=ud&&ud.wings;if(wg&&wg.length>1&&u.fl){const f=Math.sin(fc*.5)*.7;wg[0].rotation.x=f;wg[1].rotation.x=-f}
   const hv=(u.fl?u.fl+Math.sin(fc*.09)*1.2:0)+(u.aq?2.2+Math.sin(fc*.07)*.8:0);
   pet.position.set(u.x,(ply.z||0)+(INT.cur||u.x<-15000?0:GHy(u.x,u.y))+(mv&&!hv?Math.abs(Math.sin(fc*.35))*1.2:0)+jump+hv,u.y);pet.rotation.y=-u.h;u.lb.rotation.y=u.h};
+ /* ---- cỡ thú cưỡi: phóng to theo cỡ thật để nhân vật ngồi vừa lưng (nhân vật cao ~16, hông ở độ cao ~4,5) ---- */
+ const MREL={voi:1.8,voiphi:1.9,hama:1.35,tegiac:1.4,caoco:1.3,trau:1,trauchau:1.05,bo:.95,bototr:1.05,boxa:.9,yak:.95,ngua:1,nguavan:.95,lacda:1.05,lama:.8,llama:.8,nai:.9,huou:.85,tuanloc:.9,lua:.8,mang:.7,cuu:.65,cuuden:.65,cuunui:.7,de:.6,denui:.65,denuilua:.65,ibex:.7,heo:.65,lonrung:.7,lonbuou:.7,ho:.85,sutu:.85,baosan:.75,bao:.7,baogam:.7,baotuyet:.7,puma:.7,linhmieu:.5,gauden:.85,gautrang:1,gauchoi:.7,gautruc:.6,soi:.65,linhcau:.65,gnu:.85,oryx:.9,gazelle:.65,linhduong:.7,sduong:.65,cayhuong:.45,dadieu:.9,gatieu:.8,casau:1.2,
+  trex:2.1,tricera:1.7,stego:1.6,ankylo:1.2,parasau:1.8,mosa:2.4,
+  caheo:.9,caheo2:.9,caheoden:.9,caheomui:.9,camap:1.5,camapden:1.2,camapvoi:2,orca:1.8,cavoi:2.3,cadua:.9,duoimanta:1.1,rua:.8,rua2:.8,ruaxanh:.8,ruanuoc:.5,haicau:.6,haicauxam:.6};
+ V.mountFit=id=>{const sp=ANIM.BYID[id],env=mEnv(sp),g=ANIM.make(id),grp=new THREE.Group();grp.add(g);let f=env=='w'?2.6:2.4,seat=env=='w'?7:9;
+  try{const b=new THREE.Box3().setFromObject(g),z=new THREE.Vector3();b.getSize(z);const len=Math.max(z.x,z.z);
+   if(isFinite(len)&&len>.2&&isFinite(z.y)&&z.y>.2){const rel=MREL[id]||(sp.b=='dino'||sp.dino?1.8:1),LT=Math.max(18,Math.min(54,26*rel));f=Math.max(.9,Math.min(14,LT/len));
+    if(env=='w'){g.position.y=-b.min.y-z.y*.3;seat=Math.max(5,Math.min(22,z.y*f*.62))}
+    else{g.position.y=-b.min.y;const fr=(sp.p&&sp.p.neck)?.56:(sp.b=='theropod'?.62:.82);seat=Math.max(7,Math.min(26,z.y*f*fr))}}}catch(e){}
+  grp.scale.setScalar(f);return{grp,g,env,seat}};
+ /* ---- đồng bộ chơi chung: dựng bản sao thú cưỡi / thú dắt của bạn online ---- */
+ V.petKey=()=>petId;
+ V.petOk=id=>{id=String(id||'');if(!/^[A-Za-z0-9_:\-]{1,30}$/.test(id))return false;if(id.slice(0,2)=='a:'){const k=id.slice(2);return Object.prototype.hasOwnProperty.call(ANIM.BYID,k)&&!!ANIM.BYID[k]}return Object.prototype.hasOwnProperty.call(PETS,id)&&!!PIT(id)};
+ V.mountOk=id=>{id=String(id||'');if(!/^[A-Za-z0-9_\-]{1,24}$/.test(id)||!Object.prototype.hasOwnProperty.call(ANIM.BYID,id))return false;const sp=ANIM.BYID[id];return !!(sp&&mEnv(sp))};
+ V.mkMountR=id=>{if(!V.mountOk(id))return null;return V.mountFit(id)};
+ V.mountStepR=(o,x,y,a,moving)=>{const w=o.env=='w';o.grp.position.set(x,w?-1.4+Math.sin(fc*.08)*.5:GHy(x,y)+(moving?Math.abs(Math.sin(fc*.3))*.5:0),y);o.grp.rotation.y=-a;
+  const ud=o.g.userData,lg=ud&&ud.legs;if(lg&&lg.length){const sw=moving?Math.sin(fc*.42)*.6:0;lg.forEach((l,i)=>{l.rotation.z=(lg.length<4?i==0:(i==0||i==3))?sw:-sw})}
+  const wg=ud&&ud.wings;if(wg&&wg.length>1){const f=Math.sin(fc*.3)*.4;wg[0].rotation.x=f;wg[1].rotation.x=-f}};
+ V.mountPoseT=(m,u,t,moving)=>{m.position.y=t.seat-4.1+(t.env=='w'?Math.sin(fc*.08)*.5:(moving?Math.abs(Math.sin(fc*.3))*.5:0));V.sitPose(u)};
+ V.sitPose=u=>{u.ar.rotation.z=u.al.rotation.z=.95;u.ell.rotation.z=u.elr.rotation.z=.45;u.ll.rotation.z=u.lr.rotation.z=.75;u.kl.rotation.z=u.kr.rotation.z=-.7;u.ll.rotation.x=.4;u.lr.rotation.x=-.4;u.spr=1};
+ const rname=id=>{if(String(id).slice(0,2)=='a:'){const s=ANIM.BYID[id.slice(2)];return s?s.n:'Bé cưng'}const it=PIT(id);return it?it[3].replace(/ đi theo em/,''):'Bé cưng'};
+ V.mkPetR=id=>{if(!V.petOk(id))return null;let m=null,fl=0,aq=0;
+  if(id.slice(0,2)=='a:'){const sp=ANIM.BYID[id.slice(2)];m=ANIM.make(id.slice(2));fl=(sp.m=='fly'||sp.m=='flit')?7:0;aq=V.isAq(sp)?1:0}else m=PETS[id]();
+  if(!m)return null;const o=new THREE.Group();o.add(m);
+  if(aq){m.position.y=3.6;try{const bb=new THREE.Mesh(new THREE.SphereGeometry(4.6,14,10),new THREE.MeshBasicMaterial({color:0x9fdcff,transparent:true,opacity:.28,depthWrite:false}));bb.position.y=3.6;o.add(bb)}catch(e){}}
+  const lb=plbl(rname(id));lb.position.y=(fl||aq)?13:9;o.add(lb);o.userData={x:null,y:0,h:0,m,lb,fl,aq};return o};
+ V.petStepR=(o,px,py,pa,moving)=>{const u=o.userData,tx=px-Math.cos(pa)*11+Math.sin(pa)*6,ty=py-Math.sin(pa)*11-Math.cos(pa)*6;if(u.x==null){u.x=tx;u.y=ty}
+  const dx=tx-u.x,dy=ty-u.y,d=Math.hypot(dx,dy);if(d>70){u.x=tx;u.y=ty}else{u.x+=dx*.09;u.y+=dy*.09}
+  const mv=d>.6;if(mv){const th=Math.atan2(dy,dx);u.h+=Math.atan2(Math.sin(th-u.h),Math.cos(th-u.h))*.2}
+  const ud=u.m.userData,lg=ud&&ud.legs;if(lg&&lg.length){const sw=mv?Math.sin(fc*.42)*.6:0;lg.forEach((l,i)=>{l.rotation.z=(lg.length<4?i==0:(i==0||i==3))?sw:-sw})}
+  const wg=ud&&ud.wings;if(wg&&wg.length>1&&u.fl){const f=Math.sin(fc*.5)*.7;wg[0].rotation.x=f;wg[1].rotation.x=-f}
+  const hv=(u.fl?u.fl+Math.sin(fc*.09)*1.2:0)+(u.aq?2.2+Math.sin(fc*.07)*.8:0);
+  o.position.set(u.x,(u.x<-15000?0:GHy(u.x,u.y))+(mv&&!hv?Math.abs(Math.sin(fc*.35))*1.2:0)+hv,u.y);o.rotation.y=-u.h;u.lb.rotation.y=u.h};
  /* tab Thú cưng: đặt tên, cho ăn, chơi cùng */
  V.X.p=box=>{const x=X();if(!x.pn)x.pn={};if(!x.pf)x.pf={};const own=ITEMS.filter(i=>i[1]=='pt'&&x.inv[i[0]]);
   box.appendChild(h('div','opacity:.85;margin-bottom:6px','Mua thú cưng ở tab 🛍 Cửa hàng → 🐾 Thú cưng. Ở đây em đặt tên, cho ăn (3 xu) và chơi cùng bé. Cho ăn đủ 10 lần, bé sẽ tìm được xu tặng em!'));
@@ -6220,11 +6367,7 @@ V.clockText=()=>hm(V.tm);
   if(env=='w'&&!inW){let okk=0;for(let d=10;d<=90&&!okk;d+=5){const nx=ply.x+Math.cos(ply.a)*d,ny=ply.y+Math.sin(ply.a)*d;if(!(nx>=0&&nx<=S&&ny>=0&&ny<=S)&&NAT.waterAt(nx,ny)&&!solidS(nx,ny)){ply.x=nx;ply.y=ny;okk=1}}
    if(!okk){say('🌊 Thú cưỡi dưới nước cần có nước! Em hãy đứng gần mép hồ, sông, biển hay đầm lầy, quay mặt về phía nước rồi gọi bé nhé.',4200);return false}}
   try{apStop&&AP.on&&apStop('')}catch(e){}
-  const g=ANIM.make(id),grp=new THREE.Group();grp.add(g);let f=env=='w'?1.7:1.6,seat=env=='w'?3.2:5.5;
-  try{const b=new THREE.Box3().setFromObject(g),z=new THREE.Vector3();b.getSize(z);const len=Math.max(z.x,z.z);
-   if(isFinite(len)&&len>.2&&isFinite(z.y)&&z.y>.2){f=Math.max(.9,Math.min(3.2,(env=='w'?11:9)/len));
-    if(env=='w'){g.position.y=-b.min.y-z.y*.3;seat=Math.max(2.4,Math.min(7,z.y*f*.5))}else{g.position.y=-b.min.y;seat=Math.max(3,Math.min(9,z.y*f*((sp.p&&sp.p.neck)?.7:.88)))}}}catch(e){}
-  grp.scale.setScalar(f);scene.add(grp);if(mtG)scene.remove(mtG);mtG=grp;mtId=id;
+  const fit=V.mountFit(id),grp=fit.grp,seat=fit.seat;scene.add(grp);if(mtG)scene.remove(mtG);mtG=grp;mtId=id;
   ply.mt={id,env,k:env=='w'?1.9:1.6,seat};try{SND.p(env=='w'?'splash':'click')}catch(e){}
   say('🐎 Em đang cưỡi '+sp.e+' '+sp.n+(env=='w'?' trên mặt nước. Bấm F để xuống.':'. Bé không lội xuống nước được. Bấm F để xuống.'),3600);
   try{V.ev('mt')}catch(e){}return true};
@@ -6232,8 +6375,8 @@ V.clockText=()=>hm(V.tm);
  V.mountToggle=()=>{if(state!='play')return;if(ply.mt){V.dismount();return}const x=X(),id=x.eq&&x.eq.cm;
   if(!id||!x.cm||!x.cm[id]){say('Em chưa có thú cưỡi. Đến gần một con vật, bấm F rồi chọn 🪢 Bắt. Sau đó chọn bé ở Tùy chọn → Xe & Thú nhé!',4200);return}V.mount(id)};
  V.mountPose=(m,u)=>{const t=ply.mt;if(!t)return;
-  if(t.env=='w')m.position.y=-1.4+t.seat+Math.sin(fc*.08)*.5;else m.position.y+=t.seat-.9+(ply.mv>.3?Math.abs(Math.sin(fc*.3))*.5:0);
-  u.ar.rotation.z=1.2;u.al.rotation.z=1.2;u.ll.rotation.z=u.lr.rotation.z=1.1;u.kl.rotation.z=u.kr.rotation.z=-1.1};
+  if(t.env=='w')m.position.y=-1.4+t.seat-4.1+Math.sin(fc*.08)*.5;else m.position.y+=t.seat-4.1+(ply.mv>.3?Math.abs(Math.sin(fc*.3))*.5:0);
+  V.sitPose(u)};
  V.mountTick=()=>{const t=ply.mt;if(!t){if(mtG){scene.remove(mtG);mtG=null}return}
   if(INT.cur||ply.car||ply.boat||state=='dead'||state=='busted'){V.dismount(1);return}
   const out=ply.x>=0&&ply.x<=S&&ply.y>=0&&ply.y<=S,w=!out&&NAT.waterAt(ply.x,ply.y);
@@ -6606,6 +6749,31 @@ cull(c=>!inYard(c.x,c.y));
 startInit();try{if(!CL.on())$('nofb').style.display='block'}catch(e){}try{if(CL.on()){$('pinrow').style.display='';$('reg').style.display='';$('grow').style.display='';CL.pre();$('go').textContent='Đăng nhập & bắt đầu';$('nm').placeholder='Nhập tên của em'}}catch(e){}try{$('ar').parentNode.style.display='none'}catch(e){}
 for(const s of shops){let n=0;while(solid(s.x,s.y)&&n++<50){s.x+=rnd(-20,20);s.y+=rnd(-20,20)}}
 
+/* ===== Toàn màn hình + tự xoay ngang trên điện thoại =====
+   - Chạm lần đầu trên điện thoại: vào toàn màn hình (ẩn thanh trình duyệt) và khóa xoay ngang (Android Chrome/Brave/Edge).
+   - iPhone/iPad Safari không cho web làm việc này; cách duy nhất là Chia sẻ → "Thêm vào MH chính" rồi mở game từ biểu tượng.
+   - Nút ⛶ trong mục "Thêm" để bật/tắt thủ công; em tắt thì lần sau không tự bật nữa. */
+const FS=(()=>{const el=document.documentElement,LS='ttt3d_fs';
+ const isFs=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+ const can=()=>!!(el.requestFullscreen||el.webkitRequestFullscreen);
+ const standalone=()=>{try{return matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
+ const ios=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform=='MacIntel'&&navigator.maxTouchPoints>1);
+ const touch=()=>{try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}};
+ const pref=()=>{try{return localStorage.getItem(LS)!=='0'}catch(e){return true}};
+ const setPref=v=>{try{localStorage.setItem(LS,v?'1':'0')}catch(e){}};
+ const lock=()=>{try{const o=screen.orientation;if(o&&o.lock){const p=o.lock('landscape');if(p&&p.catch)p.catch(()=>{})}}catch(e){}};
+ const enter=()=>{try{if(isFs()){lock();return}if(!can())return;const f=el.requestFullscreen||el.webkitRequestFullscreen;const p=f.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock()}catch(e){}};
+ const exit=()=>{try{try{screen.orientation.unlock()}catch(e){}const f=document.exitFullscreen||document.webkitExitFullscreen;if(f&&isFs())f.call(document)}catch(e){}};
+ let done=0;
+ const first=()=>{if(done)return;if(!touch()||standalone()||!pref()||!can()){done=1;return}if(isFs()){done=1;return}done=1;enter()};
+ document.addEventListener('pointerup',first,{capture:true});
+ document.addEventListener('touchend',first,{capture:true});
+ const upd=()=>{try{const e=document.querySelector('#dk_fs b');if(e&&e.firstChild)e.firstChild.nodeValue=isFs()?'🗗':'⛶'}catch(x){}};
+ document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
+ return{toggle(){if(standalone()){say('Game đang chạy toàn màn hình rồi.',2200);return}
+   if(!can()){say(ios()?'📱 iPhone/iPad: bấm nút Chia sẻ của Safari → "Thêm vào MH chính", rồi mở game từ biểu tượng trên màn hình để chơi toàn màn hình.':'Trình duyệt này chưa hỗ trợ toàn màn hình.',7000);return}
+   if(isFs()){setPref(0);exit();say('Đã thoát toàn màn hình.',1800)}else{setPref(1);enter();say('Đã vào toàn màn hình và xoay ngang.',1800)}},isFs,standalone}})();
+
 /* ===== UI2: thanh biểu tượng tròn kiểu Play Together + chế độ gọn / đầy đủ ===== */
 const UI2=(()=>{const LS='ttt3d_ui_full';let full=0,more=0;try{full=localStorage.getItem(LS)=='1'?1:0}catch(e){}
  const dock=document.createElement('div');dock.id='dock';const d1=document.createElement('div');d1.id='dk1';const d2=document.createElement('div');d2.id='dk2';dock.appendChild(d1);dock.appendChild(d2);
@@ -6628,6 +6796,7 @@ const UI2=(()=>{const LS='ttt3d_ui_full';let full=0,more=0;try{full=localStorage
  mk(d2,'ms','🔄','Đổi nhiệm vụ','c6',()=>{PR['x']=1});
  mk(d2,'rp','📊','Báo cáo','c6',()=>{if(play())openReport()});
  mk(d2,'hp','❓','Hướng dẫn','c6',()=>{document.body.classList.toggle('hlp')});
+ mk(d2,'fs','⛶','Toàn màn hình','c6',()=>FS.toggle());
  mk(d2,'fu','🗔','Gọn / Đủ','c6',()=>{full=full?0:1;try{localStorage.setItem(LS,full?'1':'0')}catch(e){};sync()});
  document.body.appendChild(dock);
  {const p=document.createElement('button');p.id='ptt';p.type='button';p.innerHTML='<span>🎤</span>Giữ để nói';document.body.appendChild(p);
