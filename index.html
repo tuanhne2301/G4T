@@ -422,8 +422,8 @@ body{letter-spacing:.005em}
 .mpr{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.08)}
 .mpr.me{opacity:.9}
 .mpn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px}
-.mpr button{flex:none;width:40px;height:36px;border:0;border-radius:10px;font-size:17px;background:#3a5a9a;color:#fff;cursor:pointer;touch-action:manipulation;padding:0}
-.mpr button[data-iv]{background:#2e6a4a}.mpr button[data-mu]{background:#3a3870}.mpr button[data-mu].off{background:#a33a4a}.mpr button.rp{background:#6b2a3a;width:34px}
+.mpr button{flex:none;width:36px;height:36px;border:0;border-radius:10px;font-size:17px;background:#3a5a9a;color:#fff;cursor:pointer;touch-action:manipulation;padding:0}
+.mpr button[data-go]{background:#c9772a}.mpr button[data-iv]{background:#2e6a4a}.mpr button[data-mu]{background:#3a3870}.mpr button[data-mu].off{background:#a33a4a}.mpr button.rp{background:#6b2a3a;width:34px}
 .mpg{flex:none;color:#8fe08f;font-size:13px;width:40px;text-align:center}
 .mpa{width:100%;border:0;border-radius:10px;padding:8px;background:#3a3870;color:#fff;font:600 13px system-ui;cursor:pointer;margin-bottom:4px}
 /* ===== hồ sơ trong Tùy chọn ===== */
@@ -4799,13 +4799,13 @@ const MP=(()=>{
   const vm=k=>{try{return VOICE.muted(k)}catch(e){return false}},von=(()=>{try{return VOICE.on}catch(e){return 0}})(),sig=[booted,conn,enabled(),von,pan&&pan.style.display,(pan&&pan._q||''),[...R.values()].map(r=>r.n+(r.v?'v'+r.v:'')+(vm(r.k)?'m':'')).join('|'),(()=>{try{return PARTY.sig()}catch(e){return ''}})()].join('~');if(sig===lastSig)return;lastSig=sig;
   if(pan&&pan.style.display!='none'){const on2=booted>0&&conn&&enabled();let h='<div style="font-weight:700;margin-bottom:6px">🌐 Chơi chung '+(on2?'· '+(R.size+1)+' bạn đang online':booted<0?'· không kết nối được':enabled()?'· đang kết nối…':'· đang tắt')+'</div>';
    if(on2){try{h+=PARTY.html()}catch(e){}{const esc=t=>String(t).replace(/[&<>"]/g,''),rs=[...R.values()].sort((a,b)=>String(a.n).localeCompare(String(b.n),'vi')),qq=(pan._q||'').trim().toLowerCase(),sh=qq?rs.filter(r=>String(r.n).toLowerCase().includes(qq)):rs,allM=rs.length>0&&rs.every(r=>vm(r.k));
-   h+='<div class="mpl">'+(rs.length?'<div class="mph">ℹ️ xem thông tin · 👥 mời nhóm · 🔈 tắt tiếng bạn làm ồn</div>':'')+'<div class="mpr me"><span class="mpn">⭐ '+esc(cleanName(EDU.name))+' (em)</span></div>';
-   for(const r of sh)h+='<div class="mpr"><span class="mpn">'+esc(r.n)+(r.v?' 🎤':'')+'</span><button data-pi="'+r.k+'" title="Xem thông tin">ℹ️</button>'+(PARTY.has(r.k)?'<span class="mpg" title="Cùng nhóm">👥✓</span>':'<button data-iv="'+r.k+'" title="Mời vào nhóm">👥</button>')+'<button data-mu="'+r.k+'" class="'+(vm(r.k)?'off':'')+'" title="'+(vm(r.k)?'Bật nghe lại':'Tắt tiếng bạn này')+'">'+(vm(r.k)?'🔇':'🔈')+'</button>'+(von&&r.v?'<button data-rp="'+r.k+'" class="rp" title="Báo cáo bạn này">⚠</button>':'')+'</div>';
+   h+='<div class="mpl">'+(rs.length?'<div class="mph">🏃 chạy tới · ℹ️ xem · 👥 mời nhóm · 🔈 tắt tiếng</div>':'')+'<div class="mpr me"><span class="mpn">⭐ '+esc(cleanName(EDU.name))+' (em)</span></div>';
+   for(const r of sh)h+='<div class="mpr"><span class="mpn">'+esc(r.n)+(r.v?' 🎤':'')+'</span><button data-go="'+r.k+'" title="Chạy tới bạn này">🏃</button><button data-pi="'+r.k+'" title="Xem thông tin">ℹ️</button>'+(PARTY.has(r.k)?'<span class="mpg" title="Cùng nhóm">👥✓</span>':'<button data-iv="'+r.k+'" title="Mời vào nhóm">👥</button>')+'<button data-mu="'+r.k+'" class="'+(vm(r.k)?'off':'')+'" title="'+(vm(r.k)?'Bật nghe lại':'Tắt tiếng bạn này')+'">'+(vm(r.k)?'🔇':'🔈')+'</button>'+(von&&r.v?'<button data-rp="'+r.k+'" class="rp" title="Báo cáo bạn này">⚠</button>':'')+'</div>';
    if(qq&&!sh.length)h+='<div class="mph">Không thấy bạn nào tên “'+esc(qq)+'”</div>';
    h+='</div>';if(rs.length>2)h+='<button data-ma="1" class="mpa">'+(allM?'🔈 Bật nghe tất cả':'🔇 Tắt tiếng tất cả')+'</button>'}
    h+='<div id="mpe" style="display:flex;flex-wrap:wrap;gap:4px;margin:6px 0">'+EMO.map((e,i)=>'<button data-e="'+i+'" style="font-size:20px;width:38px;height:38px;border:0;border-radius:10px;background:#3a3870;cursor:pointer">'+e+'</button>').join('')+'</div>'}
    h+='<button id="mpt" style="border:0;border-radius:10px;padding:6px 10px;background:#5b5f7a;color:#fff;font:600 13px system-ui;cursor:pointer">'+(enabled()?'Tắt chơi chung':'Bật chơi chung')+'</button>';const _ol=lst.querySelector('.mpl'),_st=_ol?_ol.scrollTop:0;lst.innerHTML=h;{const nl=lst.querySelector('.mpl');if(nl)nl.scrollTop=_st;if(qi)qi.style.display=(on2&&R.size>5)?'block':'none'}
-   for(const b of lst.querySelectorAll('[data-pi]'))b.onclick=e=>{e.stopPropagation();pan.style.display='none';try{PC.show(R.get(b.dataset.pi))}catch(x){}};for(const b of lst.querySelectorAll('[data-e]'))b.onclick=e=>{e.stopPropagation();emo(+b.dataset.e)};for(const b of lst.querySelectorAll('[data-mu]'))b.onclick=e=>{e.stopPropagation();VOICE.toggleMute(b.dataset.mu);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-ma]'))b.onclick=e=>{e.stopPropagation();const ids=[...R.values()].map(r=>r.k),all=ids.every(k=>vm(k));VOICE.muteAll(ids,!all);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-rp]'))b.onclick=e=>{e.stopPropagation();VOICE.report(b.dataset.rp);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-iv]'))b.onclick=e=>{e.stopPropagation();PARTY.invite(b.dataset.iv)};const pmb=lst.querySelector('[data-pm]');if(pmb)pmb.onclick=e=>{e.stopPropagation();PARTY.toggleMic()};const plb=lst.querySelector('[data-pl]');if(plb)plb.onclick=e=>{e.stopPropagation();PARTY.leave()};const t=lst.querySelector('#mpt');if(t)t.onclick=e=>{e.stopPropagation();try{localStorage.setItem('ttt3d_mp',enabled()?'0':'1')}catch(x){}if(enabled()){booted=0}else stop();ui()}}};
+   for(const b of lst.querySelectorAll('[data-go]'))b.onclick=e=>{e.stopPropagation();pan.style.display='none';goTo(b.dataset.go)};for(const b of lst.querySelectorAll('[data-pi]'))b.onclick=e=>{e.stopPropagation();pan.style.display='none';try{PC.show(R.get(b.dataset.pi))}catch(x){}};for(const b of lst.querySelectorAll('[data-e]'))b.onclick=e=>{e.stopPropagation();emo(+b.dataset.e)};for(const b of lst.querySelectorAll('[data-mu]'))b.onclick=e=>{e.stopPropagation();VOICE.toggleMute(b.dataset.mu);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-ma]'))b.onclick=e=>{e.stopPropagation();const ids=[...R.values()].map(r=>r.k),all=ids.every(k=>vm(k));VOICE.muteAll(ids,!all);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-rp]'))b.onclick=e=>{e.stopPropagation();VOICE.report(b.dataset.rp);lastSig='';ui()};for(const b of lst.querySelectorAll('[data-iv]'))b.onclick=e=>{e.stopPropagation();PARTY.invite(b.dataset.iv)};const pmb=lst.querySelector('[data-pm]');if(pmb)pmb.onclick=e=>{e.stopPropagation();PARTY.toggleMic()};const plb=lst.querySelector('[data-pl]');if(plb)plb.onclick=e=>{e.stopPropagation();PARTY.leave()};const t=lst.querySelector('#mpt');if(t)t.onclick=e=>{e.stopPropagation();try{localStorage.setItem('ttt3d_mp',enabled()?'0':'1')}catch(x){}if(enabled()){booted=0}else stop();ui()}}};
  const mkUI=()=>{try{btn=document.createElement('button');btn.type='button';btn.id='mpb';btn.textContent='🌐';btn.title='Chơi chung với các bạn';btn.style.cssText=SBCSS+'display:none;font-size:14px;font-weight:700';
   btn.addEventListener('click',e=>{e.stopPropagation();pan.style.display=pan.style.display=='none'?'block':'none';ui()});sideBox().appendChild(btn);
   pan=document.createElement('div');pan.className='mpp';pan.style.cssText='position:fixed;left:56px;top:214px;z-index:8;display:none;background:rgba(12,12,18,.95);color:#fff;border-radius:12px;padding:10px 12px;min-width:200px;font:13px system-ui,sans-serif;box-shadow:0 4px 18px #0008';
@@ -4840,13 +4840,76 @@ const MP=(()=>{
    r.tg.position.y=(cgr&&!(cgr.userData.bk))?14:25+(mo?mo.seat:0);if(r.bb)r.bb.position.y=36+(mo?mo.seat:0);
    if(r.v==2&&!r.vs){r.vs=spr(emoT('🔊'),9,9);r.vs.position.set(9,32,0);g.add(r.vs)}else if(r.v!=2&&r.vs){g.remove(r.vs);r.vs=null}
    if(r.bb&&now>r.bt){g.remove(r.bb);r.bb=null}})};
- return{tick,frame,db:getDb,auth:getAuth,get ready(){return booted>0&&conn&&enabled()},refresh(){lastSig='';ui()},get count(){return R.size},get uid(){return uid},emo,act,sendNow:()=>send(true),_R:R}})();
+ let trk=null;
+ const goTo=k=>{const r=R.get(k);if(!r||state!='play')return false;if(r.i){say('🏠 '+r.n+' đang ở trong nhà/phòng. Em chờ bạn ra ngoài nhé!',3000);return false}
+  const g=ply.car||ply,d=Math.hypot(r.x-g.x,r.y-g.y);if(d<30){say('Em đang đứng ngay cạnh '+r.n+' rồi! 😄',2200);return true}
+  apStart(r.x,r.y);if(!(AP.on||AP.plan))return false;trk={k,x:r.x,y:r.y};say('🏃 Đang chạy tới '+r.n+' (cách khoảng '+Math.round(d/10)+' m). Bấm nút ✖ hoặc phím di chuyển để dừng.',3800);return true};
+ setInterval(()=>{if(!trk)return;const r=R.get(trk.k);if(!r||(!AP.on&&!AP.plan)){trk=null;return}if(r.i){apStop('🏠 '+r.n+' vừa vào trong nhà. Em dừng lại nhé.');trk=null;return}
+  const g=ply.car||ply,d=Math.hypot(r.x-g.x,r.y-g.y);if(d<26){apStop('✅ Em đã tới chỗ '+r.n+'!');try{SND.p('ring')}catch(e){}trk=null;return}
+  if(Math.hypot(r.x-trk.x,r.y-trk.y)>60){const keep={k:trk.k,x:r.x,y:r.y};apStart(r.x,r.y);trk=(AP.on||AP.plan)?keep:null}},1000);
+ return{tick,goTo,frame,db:getDb,auth:getAuth,get ready(){return booted>0&&conn&&enabled()},refresh(){lastSig='';ui()},get count(){return R.size},get uid(){return uid},emo,act,sendNow:()=>send(true),_R:R}})();
 
 /* ===== Nói chuyện bằng giọng nói với các bạn ở gần (WebRTC, không tốn phí) =====
    - Hai máy nối trực tiếp với nhau; Firebase chỉ chuyển "lời chào" kết nối (vài giây rồi xóa).
    - Chỉ nghe/nói với bạn trong khoảng 20 m (200 đơn vị), tối đa 4 bạn gần nhất, nhỏ dần theo khoảng cách.
    - Mặc định tắt: em bấm 🎤 để bật (trình duyệt hỏi quyền micro), bật xong là nói được ngay (mic mở sẵn, phím T để tắt/bật tiếng).
    - Thầy/cô tắt toàn trường bằng cách đặt config/voice = false trong Realtime Database. */
+/* ===== CHAT CHUNG: tin nhắn hiện giữa màn hình 5 giây, mở ô chat để xem lại ===== */
+const CHAT=(()=>{
+ const MAXL=120,KEEP=40;let db=null,ref=null,started=0,hist=true,unread=0,open=0,last=0,tt=0,warned=0,tid=0;const seen=new Set(),rows=[];
+ const st=document.createElement('style');st.textContent=`
+#chtoast{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:70;max-width:min(520px,38vw);padding:8px 14px;border-radius:16px;background:rgba(14,32,74,.92);border:2px solid rgba(255,255,255,.35);color:#fff;font:600 15px/1.35 var(--ff,system-ui),sans-serif;box-shadow:0 6px 18px rgba(0,0,0,.35);display:none;pointer-events:none;word-break:break-word;text-align:left}
+#chtoast.on{display:block;animation:chin .18s ease-out}#chtoast b{color:#ffd27a;margin-right:4px}
+@keyframes chin{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%)}}
+#chpan{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:75;width:min(440px,94vw);max-height:48vh;display:none;flex-direction:column;background:rgba(12,28,66,.96);border:2px solid rgba(255,255,255,.3);border-radius:18px;color:#fff;font:14px/1.4 var(--ff,system-ui),sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);overflow:hidden}
+#chpan.on{display:flex}
+#chpan .chh{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.08);font-weight:700}#chpan .chh span{flex:1}
+#chpan .chh button{border:0;border-radius:10px;width:34px;height:34px;font-size:18px;background:#3a3870;color:#fff;cursor:pointer}
+#chl{flex:1;min-height:90px;overflow:auto;padding:8px 12px;-webkit-overflow-scrolling:touch}
+#chl .cm{padding:3px 0;word-break:break-word}#chl .cm b{color:#ffd27a;cursor:pointer}#chl .cm.me b{color:#8fe08f;cursor:default}#chl .cm i{opacity:.5;font-style:normal;font-size:11px;margin-left:6px}
+#chl .cm button{border:0;background:#2e6a4a;color:#fff;border-radius:8px;font-size:13px;margin-left:6px;padding:1px 7px;cursor:pointer}#chl .emp{opacity:.6;padding:10px 0}
+#chq{display:flex;gap:5px;overflow-x:auto;padding:4px 10px;-webkit-overflow-scrolling:touch}#chq button{flex:none;border:0;border-radius:14px;padding:6px 11px;background:#3a5a9a;color:#fff;font:13px system-ui;cursor:pointer;white-space:nowrap}
+#chf{display:flex;gap:6px;padding:8px 10px 10px}#chf input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font:15px system-ui}
+#chf button{border:0;border-radius:12px;padding:0 16px;background:linear-gradient(160deg,#ffcf6b,#ff9a3c);color:#2a1600;font:700 15px system-ui;cursor:pointer}
+#chbtn{position:relative}#chbtn i{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:#e8454b;color:#fff;font:700 11px/18px system-ui;text-align:center;font-style:normal;display:none}
+@media(max-width:700px),(max-height:480px){#chtoast{top:64px;max-width:46vw;font-size:13.5px;padding:6px 11px}#chpan{bottom:60px;max-height:62vh}}
+@media(max-height:480px){#chpan{width:min(520px,60vw)}}`;document.head.appendChild(st);
+ const toast=document.createElement('div');toast.id='chtoast';document.body.appendChild(toast);
+ const pan=document.createElement('div');pan.id='chpan';
+ pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
+ document.body.appendChild(pan);
+ const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi');
+ const btn=document.createElement('button');btn.type='button';btn.id='chbtn';btn.innerHTML='💬<i></i>';btn.title='Chat (phím Enter)';
+ const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const BAD=/(?<![\p{L}])(đ[mụ]m?|đ[mc]m|đéo|địt|vcl|vkl|cặc|lồn|buồi|óc chó|chó chết|mẹ mày|khốn nạn|mất dạy|đồ ngu|thằng ngu|con ngu)(?![\p{L}])/giu;
+ const clean=t=>String(t||'').normalize('NFC').replace(/[\u0000-\u001f<>]/g,' ').replace(/\s+/g,' ').trim().slice(0,MAXL).replace(BAD,m=>'*'.repeat(m.length));
+ const hm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+ const muted=u=>{try{return VOICE.muted(u)}catch(e){return false}};
+ const badge=()=>{const b=btn.querySelector('i');b.style.display=unread>0&&!open?'block':'none';b.textContent=unread>9?'9+':unread};
+ const paint=()=>{const me=MP.uid;lEl.innerHTML=rows.length?rows.map(r=>{const self=r.u==me,on=!self&&MP._R.has(r.u);return'<div class="cm'+(self?' me':'')+'"><b data-u="'+esc(r.u)+'">'+esc(self?'Em':r.n)+':</b> '+esc(r.m)+'<i>'+hm(r.t)+'</i>'+(on?'<button data-go="'+esc(r.u)+'" title="Chạy tới bạn này">🏃 Tới</button>':'')+'</div>'}).join(''):'<div class="emp">Chưa có tin nhắn nào. Em hãy chào các bạn nhé! 👋</div>';lEl.scrollTop=lEl.scrollHeight;
+  for(const b of lEl.querySelectorAll('[data-go]'))b.onclick=e=>{e.stopPropagation();setOpen(0);try{MP.goTo(b.dataset.go)}catch(x){}};
+  for(const b of lEl.querySelectorAll('b[data-u]'))b.onclick=e=>{e.stopPropagation();const k=b.dataset.u;if(k!=MP.uid&&MP._R.has(k)){setOpen(0);try{MP.goTo(k)}catch(x){}}};
+  const n=pan.querySelector('#chn');if(n)n.textContent='· '+(MP.count+1)+' bạn đang online'};
+ const setOpen=v=>{open=v?1:0;pan.classList.toggle('on',!!open);if(open){toast.classList.remove('on');unread=0;paint();setTimeout(()=>{try{iEl.focus({preventScroll:true})}catch(e){}},60)}else try{iEl.blur()}catch(e){}badge()};
+ const show=(n,m)=>{if(open)return;toast.innerHTML='<b>'+esc(n)+':</b>'+esc(m);toast.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('on'),5000)};
+ const onMsg=(id,v)=>{if(seen.has(id)||!v||typeof v!='object')return;seen.add(id);if(typeof v.u!='string'||typeof v.m!='string'||typeof v.n!='string')return;
+  const r={u:v.u.slice(0,40),n:cleanName(v.n),m:clean(v.m),t:Number.isFinite(+v.t)?+v.t:Date.now()};if(!r.m||muted(r.u))return;rows.push(r);while(rows.length>KEEP)rows.shift();
+  if(open){paint();return}if(hist)return;if(r.u!=MP.uid)unread++;badge();show(r.u==MP.uid?'Em':r.n,r.m)};
+ const start=async()=>{if(started||!MP.uid)return;started=1;try{db=await MP.db();ref=db.ref('chat').limitToLast(KEEP);hist=true;ref.on('child_added',sn=>onMsg(sn.key,sn.val()),()=>{if(!warned){warned=1;try{say('💬 Chưa đọc được chat. Thầy/cô cần dán Rules mới (mục chat) vào Firebase.',5000)}catch(e){}}});
+   ref.once('value').then(()=>{hist=false}).catch(()=>{hist=false})}catch(e){started=0}};
+ const stop=()=>{try{if(ref)ref.off()}catch(e){}ref=null;db=null;started=0;rows.length=0;seen.clear();unread=0;badge();toast.classList.remove('on');setOpen(0)};
+ const send=txt=>{const m=clean(txt);if(!m)return false;if(!MP.ready||!db){try{say('💬 Em cần bật 🌐 Chơi chung để nhắn tin nhé.',2600)}catch(e){}return false}
+  const now=Date.now();if(now-last<1500){try{say('Em gửi chậm lại một chút nhé 🙂',1600)}catch(e){}return false}last=now;
+  try{const p=db.ref('chat').push({u:MP.uid,n:cleanName(EDU.name),m,t:now}),id=p.key;if(p&&p.catch)p.catch(()=>{if(!warned){warned=1;try{say('💬 Chưa gửi được tin. Thầy/cô cần dán Rules mới (mục chat) vào Firebase.',5000)}catch(e){}}});
+   setTimeout(()=>{try{db&&db.ref('chat/'+id).remove().catch(()=>{})}catch(e){}},15*60*1000)}catch(e){return false}return true};
+ pan.addEventListener('pointerdown',e=>e.stopPropagation());pan.addEventListener('keydown',e=>e.stopPropagation());pan.addEventListener('keyup',e=>e.stopPropagation());
+ $c('chx').onclick=()=>setOpen(0);
+ pan.querySelector('#chf').onsubmit=e=>{e.preventDefault();if(send(iEl.value))iEl.value=''};
+ const qk=['Xin chào các bạn! 👋','Bạn ở đâu vậy?','Cho mình đi cùng nhé','Mình ở đây nè 📍','Cảm ơn bạn! 😊','Giúp mình với!'],q=$c('chq');for(const t of qk){const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>send(t);q.appendChild(b)}
+ btn.onclick=e=>{e.stopPropagation();setOpen(!open)};btn.addEventListener('pointerdown',e=>e.stopPropagation());
+ addEventListener('keydown',e=>{if(e.key=='Enter'&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName||''))&&state=='play'&&MP.uid&&CL.ok){e.preventDefault();setOpen(1)}else if(e.key=='Escape'&&open)setOpen(0)});
+ setInterval(()=>{try{const on=!!(CL.ok&&MP.uid&&state=='play');if(on)start();else if(started&&!MP.uid)stop();if(!on){if(open)setOpen(0);toast.classList.remove('on')}}catch(e){}},700);
+ return{btn,open:setOpen,send,stop}})();
 const VOICE=(()=>{const RANGE=1000,MAXP=5,CFG={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
  let on=0,talk=0,selfMute=0,stream=null,db=null,inbox=null,uid='',lastCfg=0,actx=null,anl=null,abuf=null,lastLoud=0;const P=new Map(),muted=new Set(),cool=new Map(),reported=new Set();
  const rm=p=>{try{const r=db.ref(p).remove();if(r&&r.catch)r.catch(()=>{})}catch(e){}},put=(p,v)=>{try{const r=db.ref(p).set(v);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
@@ -8383,9 +8446,9 @@ const PC=(()=>{
   el.innerHTML='<div class="hd"><div class="av">'+esc((r.n||'?').trim().charAt(0).toUpperCase())+'</div><div><div class="nm">'+esc(r.n)+(inP?'<span class="tg">👥 cùng nhóm</span>':'')+'</div><div class="sub">'+(cls?'Lớp '+esc(cls)+(same?' · cùng lớp với em 🎉':''):'Đang online')+(r.v==2?' · 🎤 đang nói':'')+'</div></div><button class="x" id="pcx">✕</button></div>'
    +'<div class="g">'+(q?'<div class="c"><small>⭐ Sao</small><b>'+q.s+'</b> <small style="display:inline">hạng '+rank(q)+'</small></div><div class="c"><small>✅ Câu trả lời đúng</small><b>'+q.k+'</b></div><div class="c w"><small>💪 Thế mạnh</small><b>'+(mon?mon[1]+' '+mon[0]:'Chưa rõ')+'</b></div>':'<div class="c w"><small>⭐ Thành tích</small><b>'+(V5.bd&&V5.bd.busy?'Đang tải…':'Chưa có dữ liệu bảng vàng')+'</b></div>')
    +'<div class="c"><small>📍 Đang ở</small><b>'+esc(where(r))+'</b></div><div class="c"><small>↔ Cách em</small><b>'+(d<1000?Math.round(d/10)+' m':(d/10000).toFixed(1)+' km')+'</b></div><div class="c w"><small>Hoạt động</small><b>'+how(r)+'</b></div></div>'
-   +'<div class="bt"><button class="p" id="pcw">👋 Vẫy chào</button>'+(inP?'':'<button id="pci">👥 Mời nhóm</button>')+(vOn?'<button id="pcm">'+((()=>{try{return VOICE.muted(r.k)}catch(e){return 0}})()?'🔇 Bật nghe':'🔈 Tắt tiếng')+'</button>':'')+'</div>';
+   +'<div class="bt"><button class="p" id="pcw">👋 Vẫy chào</button>'+'<button id="pcg">🏃 Chạy tới</button>'+(inP?'':'<button id="pci">👥 Mời nhóm</button>')+(vOn?'<button id="pcm">'+((()=>{try{return VOICE.muted(r.k)}catch(e){return 0}})()?'🔇 Bật nghe':'🔈 Tắt tiếng')+'</button>':'')+'</div>';
   const $2=id=>el.querySelector(id);$2('#pcx').onclick=hide;$2('#pcw').onclick=()=>{try{MP.emo(0)}catch(e){}try{say('👋 Em đã vẫy chào '+esc(r.n)+'!',1800)}catch(e){}};
-  if($2('#pci'))$2('#pci').onclick=()=>{try{PARTY.invite(r.k)}catch(e){}};if($2('#pcm'))$2('#pcm').onclick=()=>{try{VOICE.toggleMute(r.k);paint()}catch(e){}}};
+  if($2('#pcg'))$2('#pcg').onclick=()=>{try{hide();MP.goTo(r.k)}catch(e){}};if($2('#pci'))$2('#pci').onclick=()=>{try{PARTY.invite(r.k)}catch(e){}};if($2('#pcm'))$2('#pcm').onclick=()=>{try{VOICE.toggleMute(r.k);paint()}catch(e){}}};
  const hide=()=>{cur=null;el.className='';clearInterval(poll);poll=0};
  const show=r=>{if(!r)return;cur=r;el.className='on';try{SND.p('click')}catch(e){}paint();
   try{const B=V5.bd;if(!B.rows&&!B.busy&&(!B.t||Date.now()-B.t>30000))V5.loadBd()}catch(e){}
@@ -8464,7 +8527,7 @@ const UI2=(()=>{const LS='ttt3d_ui_full';let full=0,more=0;try{full=localStorage
   ico('vc',VOICE.on?'🎙️':'🎤');{const p=document.getElementById('ptt');if(p){p.classList.toggle('on',!!VOICE.on);p.classList.toggle('talk',VOICE.talking);p.classList.toggle('mute',VOICE.selfMuted);if(p.firstChild)p.firstChild.textContent=VOICE.selfMuted?'🔇':'🎤';if(p.lastChild&&p.lastChild.nodeType==3)p.lastChild.textContent=VOICE.selfMuted?'Mic tắt':'Mic mở'}}
   ico('snd',SND.on()?'🔊':'🔇');ico('mus',SND.mus()?'🎵':'🔕');ico('fp',FPV?'🎥':'👁');
   try{const left=carLeft();let bd=document.querySelector('#dk_car b i');if(left>0){if(!bd){bd=document.createElement('i');document.querySelector('#dk_car b').appendChild(bd)}bd.textContent=Math.ceil(left/60000)+'p'}else if(bd)bd.remove()}catch(e){}
-  try{const on=!!(CL.ok&&MP.uid&&state=='play');if(on&&!emb){emb=1;['👋','😀','👍','❤️','🎉','❓'].forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.textContent=e;b.onclick=ev=>{ev.stopPropagation();MP.emo(i)};b.addEventListener('pointerdown',ev=>ev.stopPropagation());emq.appendChild(b)});document.body.appendChild(emq)}emq.style.display=on?'flex':'none'}catch(e){}};
+  try{const on=!!(CL.ok&&MP.uid&&state=='play');if(on&&!emb){emb=1;['👋','😀','👍','❤️','🎉','❓'].forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.textContent=e;b.onclick=ev=>{ev.stopPropagation();MP.emo(i)};b.addEventListener('pointerdown',ev=>ev.stopPropagation());emq.appendChild(b)});emq.insertBefore(CHAT.btn,emq.firstChild);document.body.appendChild(emq)}emq.style.display=on?'flex':'none'}catch(e){}};
  setInterval(sync,300);sync();
  return{sync,set full(v){full=v?1:0;sync()},get full(){return full}}})();
 try{if(!sessionStorage.getItem('ttt3d_rot')){$('rot').classList.add('on');sessionStorage.setItem('ttt3d_rot','1');setTimeout(()=>$('rot').classList.remove('on'),9000)}}catch(e){$('rot').classList.add('on')}
