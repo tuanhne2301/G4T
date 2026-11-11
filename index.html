@@ -1260,6 +1260,7 @@ function build(L,PAL){
  const TPR=[[17.5,1.0,1.4],[16.7,1.8,2.4],[14.8,2.1,2.9],[12.2,2.1,2.9],[10.4,1.9,2.6],[9.3,1.5,2.1]],tr=y=>{for(let i=0;i<TPR.length-1;i++){const a=TPR[i],b=TPR[i+1];if(y<=a[0]&&y>=b[0]){const u=(a[0]-y)/(a[0]-b[0]);return[a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u]}}return[TPR[TPR.length-1][1],TPR[TPR.length-1][2]]};
  const band=(y0,y1,c,g)=>{const a=tr(y0),b=tr(y1),e=g==null?.07:g;body.loft(stackY([[y0,a[0]+e,a[1]+e,0,0],[y1,b[0]+e,b[1]+e,0,0]],20,2),{col:c})};
  const body=new Mesh(),hum=sp<2;
+ const skirtP=tp!=2&&tp!=6&&tp!=4&&tp!=5&&(pt==3||pt==4),pants=tp!=2&&tp!=6&&!skirtP,shortP=pants&&pt==1&&tp!=4&&tp!=5,capri=pants&&pt==2&&tp!=4&&tp!=5,wideP=pants&&pt==5&&tp!=4&&tp!=5,tank=tp==14;
  /* --- thân --- */
  body.loft(stackY([[17.5,1.0,1.4,0,0],[16.7,1.8,2.4,0,0],[14.8,2.1,2.9,0,0],[12.2,2.1,2.9,0,0],[10.4,1.9,2.6,0,0],[9.3,1.5,2.1,0,0]],20,2),{col:(i,j)=>i<=(tp==8?2:3)?TC:BC,cap0:TC,cap1:BC});
  if(tp==2)body.loft(stackY([[12.6,2.2,3.0,0,0],[11,2.9,3.6,0,0],[8.6,3.8,4.5,0,0]],20,2),{col:BC,cap0:BC,cap1:BC});
@@ -1361,7 +1362,7 @@ function build(L,PAL){
  /* --- tay chân --- */
  const long=tp==1||tp==4||tp==5||tp==6||tp==7||tp==11||tp==12||tp==13||tp==16,sleeveRows=(rows,fn)=>rows;
  const armU=[],armF=[],legU=[],legL=[];
- const skirtP=tp!=2&&tp!=6&&tp!=4&&tp!=5&&(pt==3||pt==4),pants=tp!=2&&tp!=6&&!skirtP,shortP=pants&&pt==1&&tp!=4&&tp!=5,capri=pants&&pt==2&&tp!=4&&tp!=5,wideP=pants&&pt==5&&tp!=4&&tp!=5,tank=tp==14;
+ 
  for(const s of[-1,1]){
   const u=new Mesh();
   u.loft(stackY([[.6,.95,.95,0,0],[-.2,1.0,1.0,0,0],[-1.8,.88,.88,0,0],[-3.4,.8,.8,0,0]],12,2),{col:long?TC:tank?AF:((i,j)=>i<2?TC:AF)});
