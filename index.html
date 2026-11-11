@@ -1084,10 +1084,10 @@ const SKIN=['#ffe0c8','#f5c9a0','#dba070','#a8704a','#f6a85a','#e8ecf2','#6a4331
 CLO=['#ff9ab5','#ffd36b','#7fd99a','#7ab8ff','#b79cff','#ffffff','#ff9a6b','#6fdad6','#e5484d','#2b2d3a','#9be15d','#2f5fd0'],PANT=['#5b6fb5','#4a4f6a','#8a6b4e','#6fa8a0','#c97a8f','#e8e4f0','#2b2d3a','#d9c8a0','#e5484d','#3f7d4e','#f2c14e'],
 HATC=['#ff9ab5','#7ab8ff','#ffd36b','#7fd99a','#b79cff','#ffffff','#ff9a6b','#e5484d','#2b2d3a','#8a5a2e','#6fdad6'],
 SHOEC=['#f6f1ff','#ff9ab5','#e5484d','#4d8bff','#ffd36b','#2b2d3a','#7fd99a','#ff9a6b','#b79cff'];
-const OPTS=[['Nhân vật','sp',['Bạn nam','Bạn nữ','Mèo','Chó','Thỏ','Gấu','Gấu trúc','Cáo']],['Màu da / lông','sk',SKIN],['Kiểu tóc','hs',['Tự động','Tóc ngắn','Hai chùm','Tóc dài','Búi cao','Đuôi ngựa','Tóc bob','Tóc dựng','Hai bím tết']],['Màu tóc','hc',HAIRC],['Áo','tp',['Áo thun','Áo hoodie','Váy','Đồng phục','Vest','Áo dài','Sơ mi + váy','Áo khoác','Yếm','Áo sọc','Áo bóng đá','Áo mưa','Áo phao','Áo blouse']],['Màu áo','tc',CLO],['Quần','pt',['Quần dài','Quần short','Quần lửng']],['Màu quần','bc',PANT],['Giày','sc',SHOEC],['Mũ','ht',['Không','Mũ len','Mũ lưỡi trai','Nơ','Mũ tài xế','Nón lá','Mũ rộng vành','Tai mèo','Vương miện','Mũ phù thủy','Mũ cử nhân','Mũ đầu bếp']],['Màu mũ & phụ kiện','hk',HATC],['Kính','gl',['Không','Kính cận','Kính râm','Kính tròn']],['Phụ kiện','bk',['Không','Ba lô','Cánh thiên thần','Cánh bướm','Áo choàng','Khăn quàng','Tai nghe']]];
+const OPTS=[['Nhân vật','sp',['Bạn nam','Bạn nữ','Mèo','Chó','Thỏ','Gấu','Gấu trúc','Cáo']],['Màu da / lông','sk',SKIN],['Kiểu tóc','hs',['Tự động','Tóc ngắn','Hai chùm','Tóc dài','Búi cao','Đuôi ngựa','Tóc bob','Tóc dựng','Hai bím tết']],['Màu tóc','hc',HAIRC],['Áo','tp',['Áo thun','Áo hoodie','Váy','Đồng phục','Vest','Áo dài','Sơ mi + váy','Áo khoác','Yếm','Áo sọc','Áo bóng đá','Áo mưa','Áo phao','Áo blouse','Áo ba lỗ','Áo polo','Áo len cổ lọ','Áo chấm bi']],['Màu áo','tc',CLO],['Quần / váy','pt',['Quần dài','Quần short','Quần lửng','Váy ngắn','Váy dài','Quần ống rộng']],['Màu quần','bc',PANT],['Giày','sc',SHOEC],['Mũ','ht',['Không','Mũ len','Mũ lưỡi trai','Nơ','Mũ tài xế','Nón lá','Mũ rộng vành','Tai mèo','Vương miện','Mũ phù thủy','Mũ cử nhân','Mũ đầu bếp']],['Màu mũ & phụ kiện','hk',HATC],['Kính','gl',['Không','Kính cận','Kính râm','Kính tròn']],['Phụ kiện','bk',['Không','Ba lô','Cánh thiên thần','Cánh bướm','Áo choàng','Khăn quàng','Tai nghe']]];
 const B0={hr:-1,hc:0,tp:0,tc:3,bc:0,ht:0,hk:0,ac:0,sz:1,sk:0,hs:0,pt:0,sc:0,gl:0,bk:0};
 const PRE=[['👦 Bạn nam',Object.assign({},B0,{sp:0,tp:0,tc:3})],['👧 Bạn nữ',Object.assign({},B0,{sp:1,tp:2,tc:0,bc:4})],['🐱 Mèo con',Object.assign({},B0,{sp:2,sk:4,tp:1,tc:1})],['🐶 Cún con',Object.assign({},B0,{sp:3,sk:2,tp:0,tc:6})],['🐰 Thỏ bông',Object.assign({},B0,{sp:4,sk:5,tp:2,tc:4})],['🐼 Gấu trúc',Object.assign({},B0,{sp:6,tp:3,tc:3})]];
-const _rl2=()=>{const o=_rl(),h=o.sp<2,pk=a=>a[Math.floor(R()*a.length)];o.hs=h?Math.floor(R()*9):0;o.tp=h?pk([0,0,1,2,3,7,8,9,10,11,12,13]):pk([0,1,3,7,8,9]);if(o.sp==0&&o.tp==2)o.tp=0;o.tc=Math.floor(R()*12);o.hc=Math.floor(R()*10);o.pt=Math.floor(R()*3);o.bc=Math.floor(R()*11);o.sc=Math.floor(R()*9);o.ht=R()<.55?pk([1,2,3,5,6,7,8,9,10,11]):0;o.hk=Math.floor(R()*11);o.gl=R()<.3?1+Math.floor(R()*3):0;o.bk=R()<.35?1+Math.floor(R()*6):0;o.hr=-1;return o};
+const _rl2=()=>{const o=_rl(),h=o.sp<2,pk=a=>a[Math.floor(R()*a.length)];o.hs=h?Math.floor(R()*9):0;o.tp=h?pk([0,0,1,2,3,7,8,9,10,11,12,13,14,15,16,17]):pk([0,1,3,7,8,9]);if(o.sp==0&&o.tp==2)o.tp=0;o.tc=Math.floor(R()*12);o.hc=Math.floor(R()*10);o.pt=Math.floor(R()*6);o.bc=Math.floor(R()*11);o.sc=Math.floor(R()*9);o.ht=R()<.55?pk([1,2,3,5,6,7,8,9,10,11]):0;o.hk=Math.floor(R()*11);o.gl=R()<.3?1+Math.floor(R()*3):0;o.bk=R()<.35?1+Math.floor(R()*6):0;o.hr=-1;return o};
 const _rl=()=>{const sp=Math.floor(R()*8),o=Object.assign({},B0,{sp,sk:sp<2?Math.floor(R()*4):Math.floor(R()*6),hc:Math.floor(R()*5),tp:Math.floor(R()*4),tc:Math.floor(R()*8),bc:Math.floor(R()*6),ht:R()<.4?1+Math.floor(R()*3):0,hk:Math.floor(R()*7)});if(sp==1&&R()<.5)o.hr=2;return o};
 let _pool=null;const randLook=()=>{if(!_pool){_pool=[];for(let i=0;i<12;i++)_pool.push(_rl())}return Object.assign({},_pool[Math.floor(R()*_pool.length)])};
 const LOOK=Object.assign({},PRE[0][1]);
@@ -1263,6 +1263,13 @@ function build(L,PAL){
  /* --- thân --- */
  body.loft(stackY([[17.5,1.0,1.4,0,0],[16.7,1.8,2.4,0,0],[14.8,2.1,2.9,0,0],[12.2,2.1,2.9,0,0],[10.4,1.9,2.6,0,0],[9.3,1.5,2.1,0,0]],20,2),{col:(i,j)=>i<=(tp==8?2:3)?TC:BC,cap0:TC,cap1:BC});
  if(tp==2)body.loft(stackY([[12.6,2.2,3.0,0,0],[11,2.9,3.6,0,0],[8.6,3.8,4.5,0,0]],20,2),{col:BC,cap0:BC,cap1:BC});
+ if(skirtP&&pt==3)body.loft(stackY([[10.6,2.0,2.8,0,0],[9.4,2.9,3.6,0,0],[7.6,3.6,4.3,0,0]],20,2),{col:BC,cap0:BC,cap1:BC});
+ if(skirtP&&pt==4){body.loft(stackY([[10.6,2.0,2.8,0,0],[8.6,3.0,3.7,0,0],[5.2,3.6,4.4,0,0]],20,2),{col:BC,cap0:BC,cap1:BC});band(10.8,10.2,shade(BC,.7),.12)}
+ if(tp==14){band(17.3,16.9,TC,.12);body.loft(ellip(1.0,1.0,2.0,10,6),{col:AF},{t:[.2,16.9,0]})}
+ if(tp==15){for(const sg of[-1,1])body.box(.45,.9,1.5,shade(TC,.8),{t:[1.5,17.0,sg*1.0],r:[sg*.5,0,0]});body.box(.3,3.2,.35,shade(TC,.7),{t:[2.15,15.2,0]});for(const yy of[16.2,15.0])body.box(.3,.35,.35,'#ffffff',{t:[2.25,yy,0]})}
+ if(tp==16){band(17.5,16.5,shade(TC,.82),.18);band(11.0,10.3,shade(TC,.78),.08)}
+ if(tp==17){const sc=mix(TC,'#ffffff',.72);for(const[y,z]of[[16,-1],[16,1],[14.3,0],[14.3,-1.8],[14.3,1.8],[12.6,-1],[12.6,1],[11,0]])body.loft(ellip(.3,.45,.45,6,4),{col:sc},{t:[2.15,y,z]})}
+
  if(tp==6){body.loft(stackY([[12.5,2.2,3.0,0,0],[9,2.9,3.5,0,0],[4.8,3.2,3.8,0,0]],20,2),{col:BC,cap0:BC,cap1:BC});body.box(.3,.5,1.2,shade(TC,.85),{t:[2.15,16.9,0]})}
  if(tp==5){body.box(.3,.5,1.6,shade(TC,.8),{t:[2.1,17.0,0]});for(const yy of[16.2,14.6,13.0])body.box(.3,.4,.4,'#f5e3a0',{t:[2.2,yy,.8]})}
  if(tp==1){body.loft(ellip(1.5,1.3,2.3,12,8),{col:shade(TC,.92)},{t:[-1.9,16.9,0]});body.box(.35,1.4,3.0,shade(TC,.88),{t:[2.1,12.4,0]})}
@@ -1352,13 +1359,13 @@ function build(L,PAL){
  if(ac==1||gl==1){const rg=s=>tube(Array.from({length:15},(_,k)=>{const a=k/14*TAU;return[3.1,20.2+Math.cos(a)*.95,s*1.25+Math.sin(a)*.95]}),Array.from({length:15},()=>[.09,.09]),6);
   for(const s of[-1,1])body.loft(rg(s),{col:'#3a2f55',closed:true});body.box(.1,.1,.6,'#3a2f55',{t:[3.34,20.4,0]})}
  /* --- tay chân --- */
- const long=tp==1||tp==4||tp==5||tp==6||tp==7||tp==11||tp==12||tp==13,sleeveRows=(rows,fn)=>rows;
+ const long=tp==1||tp==4||tp==5||tp==6||tp==7||tp==11||tp==12||tp==13||tp==16,sleeveRows=(rows,fn)=>rows;
  const armU=[],armF=[],legU=[],legL=[];
- const pants=tp!=2&&tp!=6,shortP=pants&&pt==1&&tp!=4&&tp!=5,capri=pants&&pt==2&&tp!=4&&tp!=5;
+ const skirtP=tp!=2&&tp!=6&&tp!=4&&tp!=5&&(pt==3||pt==4),pants=tp!=2&&tp!=6&&!skirtP,shortP=pants&&pt==1&&tp!=4&&tp!=5,capri=pants&&pt==2&&tp!=4&&tp!=5,wideP=pants&&pt==5&&tp!=4&&tp!=5,tank=tp==14;
  for(const s of[-1,1]){
   const u=new Mesh();
-  u.loft(stackY([[.6,.95,.95,0,0],[-.2,1.0,1.0,0,0],[-1.8,.88,.88,0,0],[-3.4,.8,.8,0,0]],12,2),{col:long?TC:((i,j)=>i<2?TC:AF)});
-  u.loft(ellip(.98,.9,.98,10,8),{col:TC},{t:[0,.15,0]});armU.push(u);
+  u.loft(stackY([[.6,.95,.95,0,0],[-.2,1.0,1.0,0,0],[-1.8,.88,.88,0,0],[-3.4,.8,.8,0,0]],12,2),{col:long?TC:tank?AF:((i,j)=>i<2?TC:AF)});
+  u.loft(ellip(.98,.9,.98,10,8),{col:tank?AF:TC},{t:[0,.15,0]});armU.push(u);
   const f=new Mesh();
   f.loft(stackY([[.3,.8,.8,0,0],[-1.2,.78,.78,0,0],[-3.1,.7,.7,0,0],[-3.7,.66,.66,0,0]],12,2),{col:long?TC:AF});
   f.loft(ellip(.95,.9,.95,10,8),{col:AF},{t:[0,-4.2,0]});
@@ -1366,10 +1373,10 @@ function build(L,PAL){
   if(ac==4&&s==-1){f.box(1.5,.4,2.1,'#4d8bff',{t:[1.0,-4.2,0]});f.box(1.4,.3,2.0,'#ffffff',{t:[1.0,-4.0,0]})}
   armF.push(f);
   const lg=new Mesh(),lc=pants?BC:AF;
-  lg.loft(stackY([[.6,1.3,1.3,0,0],[-1.2,1.3,1.3,0,0],[-4.3,1.1,1.1,0,0]],14,2),{col:shortP?((i,j)=>i==0?lc:AF):lc});
+  lg.loft(stackY(wideP?[[.6,1.4,1.4,0,0],[-1.2,1.55,1.55,0,0],[-4.3,1.7,1.7,0,0]]:[[.6,1.3,1.3,0,0],[-1.2,1.3,1.3,0,0],[-4.3,1.1,1.1,0,0]],14,2),{col:shortP?((i,j)=>i==0?lc:AF):lc});
   lg.loft(ellip(1.35,1.3,1.35,10,6),{col:lc},{t:[0,.1,0]});legU.push(lg);if(tp==5){lg.box(.28,6.8,1.7,TC,{t:[1.75,-.9,0]});lg.box(.28,6.8,1.7,TC,{t:[-1.75,-.9,0]})}
   const sh=new Mesh();
-  sh.loft(stackY([[.4,1.15,1.15,0,0],[-2.4,1.0,1.0,0,0],[-4.5,.95,.95,0,0]],14,2),{col:shortP?((i,j)=>i>=1?'#ffffff':AF):capri?((i,j)=>i>=1?AF:BC):pants?BC:((i,j)=>i>=1?'#ffffff':AF)});
+  sh.loft(stackY(wideP?[[.4,1.7,1.7,0,0],[-2.4,1.75,1.75,0,0],[-4.5,1.8,1.8,0,0]]:[[.4,1.15,1.15,0,0],[-2.4,1.0,1.0,0,0],[-4.5,.95,.95,0,0]],14,2),{col:shortP?((i,j)=>i>=1?'#ffffff':AF):capri?((i,j)=>i>=1?AF:BC):pants?BC:((i,j)=>i>=1?'#ffffff':AF)});
   sh.loft(ellip(1.1,1.0,1.1,10,6),{col:shortP?AF:lc},{t:[0,0,0]});
   if(hum){const SCC=(L.sc|0)>0?pick(PAL.SHOEC,L.sc):null;sh.loft(ellip(1.9,.85,1.25,12,8),{col:SCC||(tp>=4&&tp<=6?'#25252d':'#f6f1ff')},{t:[.75,-4.85,0]});sh.loft(ellip(1.9,.25,1.25,12,4),{col:SCC?shade(SCC,.6):(tp>=4&&tp<=6?'#111116':'#b9a9e8')},{t:[.75,-5.45,0]})}
   else sh.loft(ellip(1.7,.85,1.25,12,8),{col:AF},{t:[.65,-4.85,0]});
@@ -2668,7 +2675,6 @@ const ANIM=(()=>{
  {id:'heo',n:'Heo',e:'🐖',r:'village',b:'quad',m:'walk',c:5,v:.35,rm:180,p:{L:3.6,H:2.6,leg:1.6,lt:.8,hs:1.8,sn:.85,ear:'big',tail:'curl',c1:'#f2b6b0',c2:'#f7cfc9',c3:'#e89a94'},t:'Heo là vật nuôi quan trọng ở làng quê, ăn tạp và rất sạch sẽ nếu chuồng trại được dọn thường xuyên. Heo cho thịt và được nuôi theo từng đàn.',h:'Làng quê'},
  {id:'ngua',n:'Ngựa',e:'🐴',r:'village',b:'quad',m:'walk',c:4,v:.7,rm:320,p:{L:5,H:2.5,leg:5,lt:.9,hs:1.7,sn:.9,ear:'point',tail:'long',c1:'#8a5a38',c2:'#8a5a38',mane:1,c3:'#3a2518',neck:3},t:'Ngựa chạy rất nhanh và nhớ đường giỏi. Từ xa xưa, con người đã dùng ngựa để cưỡi, kéo xe và vận chuyển hàng hóa. Ngựa ngủ được cả khi đứng.',h:'Đồng cỏ, làng quê'},
  {id:'bonong',n:'Bồ nông',e:'🐦',r:'beach',b:'bird',m:'fly',c:5,v:.8,alt:[50,120],rm:420,p:{s:1.7,fly:1,c1:'#f2efe8',cw:'#d9cdb8',cw2:'#3a3a40',cb:'#f2b630',tail:.8,c3:'#e8e2d6',ws:1.6},t:'Bồ nông có chiếc mỏ dài với túi da lớn dùng để xúc cá. Chúng bay lượn trên biển, sà xuống mặt nước bắt cá rồi nuốt gọn.',h:'Bờ biển, đầm nước'},
- {id:'cavoi',n:'Cá voi',e:'🐋',r:'beach',b:'dolphin',m:'swim',c:2,v:.5,rm:340,z:'sea',p:{s:3.4,c1:'#4a6a8a',c2:'#dfe8f0'},t:'Cá voi là động vật có vú sống dưới biển, thở bằng phổi nên thỉnh thoảng phải trồi lên mặt nước. Cá voi xanh là loài động vật lớn nhất từng sống trên Trái Đất.',h:'Biển khơi'},
  {id:'gauden',n:'Gấu đen',e:'🐻',r:'mount',b:'quad',m:'walk',c:4,v:.5,rm:300,p:{L:5,H:3,leg:3,lt:1.4,hs:2,sn:.7,ear:'round',tail:'short',c1:'#3a3430',c2:'#c9a47a',c3:'#2a2420'},t:'Gấu đen ăn tạp: quả, mật ong, cá và côn trùng. Gấu leo cây giỏi và ngủ đông trong hang khi mùa đông đến để tiết kiệm năng lượng.',h:'Núi rừng'},
  {id:'bao',n:'Báo hoa mai',e:'🐆',r:'mount',b:'quad',m:'walk',c:3,v:.9,rm:340,z:'slope',p:{L:4.2,H:2,leg:2.6,lt:.8,hs:1.6,sn:.6,ear:'round',tail:'long',c1:'#d9a441',c2:'#f4e6c0',belly:1,c3:'#3a2a1a',spots:1},t:'Báo hoa mai có những đốm hình hoa mai trên lông. Báo leo cây giỏi, thường kéo con mồi lên cành cao để ăn dần và tránh kẻ khác giành mất.',h:'Núi, rừng thưa'},
  {id:'cuunui',n:'Cừu núi',e:'🐑',r:'mount',b:'quad',m:'walk',c:6,v:.45,rm:260,z:'slope',p:{L:3.4,H:2.3,leg:2.8,lt:.7,hs:1.4,sn:.55,ear:'round',horn:'curve',tail:'short',c1:'#f1ece0',c2:'#d9cdb8',c3:'#e8e0d0'},t:'Cừu núi có đôi sừng cong lớn và bộ lông dày giữ ấm. Chúng bước đi vững vàng trên sườn dốc, nơi nhiều kẻ săn mồi khó đuổi theo.',h:'Sườn núi'},
@@ -2677,7 +2683,6 @@ const ANIM=(()=>{
  {id:'macaw',n:'Vẹt đuôi dài',e:'🦜',r:'island',b:'bird',m:'fly',c:6,v:.9,alt:[40,100],rm:300,z:'cay',p:{s:1.3,fly:1,c1:'#d6322e',cw:'#2a6fd6',cw2:'#ffd23f',ch:'#d6322e',cb:'#f4f0e0',hook:1,tail:1.6,tw:.5,c3:'#2a6fd6',eye:'#111',ws:1.3},t:'Vẹt đuôi dài có bộ lông nhiều màu sặc sỡ và sống thành đôi suốt đời. Chúng bay thành từng cặp trên các đảo nhiệt đới và kêu rất to.',h:'Đảo nhiệt đới'},
  {id:'camap',n:'Cá mập',e:'🦈',r:'island',b:'dolphin',m:'swim',c:2,v:.6,rm:260,z:'sea',p:{s:2.2,c1:'#7a8a96',c2:'#e8edf0'},t:'Cá mập là loài cá sụn, bộ xương làm bằng sụn chứ không phải xương cứng. Cá mập có khứu giác rất nhạy và vai trò giữ cân bằng cho sinh vật biển.',h:'Biển khơi'},
  {id:'soi',n:'Sói xám',e:'🐺',r:'snow',b:'quad',m:'walk',c:4,v:.8,rm:320,p:{L:3.6,H:2,leg:3,lt:.7,hs:1.6,sn:.8,ear:'point',tail:'bushy',c1:'#8a8e96',c2:'#d9dde2',belly:1,c3:'#6f737b'},t:'Sói sống và săn mồi theo bầy, có con đầu đàn dẫn dắt. Sói giao tiếp với nhau bằng tiếng hú, tư thế và ánh mắt.',h:'Vùng lạnh, rừng thông'},
- {id:'cct',n:'Chim cánh cụt',e:'🐧',r:'snow',b:'bird',m:'walk',c:7,v:.3,rm:140,p:{s:1.6,leg:.5,c1:'#1f2430',c2:'#f4f6f8',belly:1,ch:'#1f2430',cb:'#f2a830',eye:'#111',tail:.5,c3:'#1f2430',cw:'#1f2430',cw2:'#1f2430'},t:'Chim cánh cụt không biết bay nhưng bơi lặn rất giỏi, đôi cánh biến thành mái chèo. Lớp mỡ và lông dày giúp chúng chống rét.',h:'Vùng băng giá'},
  {id:'thotuyet',n:'Thỏ tuyết',e:'🐇',r:'snow',b:'quad',m:'walk',c:7,v:.7,rm:200,p:{L:1.6,H:1.2,leg:1,lt:.4,hs:1.2,sn:.5,ear:'long',tail:'short',c1:'#f6f7f9',c2:'#ffffff'},t:'Thỏ tuyết đổi màu lông theo mùa: trắng muốt vào mùa đông để lẫn vào tuyết, nâu xám vào mùa hè. Đôi tai dài giúp thỏ nghe tiếng kẻ thù từ xa.',h:'Vùng tuyết'},
  {id:'dadieu',n:'Đà điểu',e:'🦤',r:'desert',b:'bird',m:'walk',c:5,v:.8,rm:320,p:{s:1.6,leg:4,neck:2.8,c1:'#3a3a40',c2:'#f4f4f4',cb:'#e0b070',bl:1,cl:'#d9b080',tail:.7,c3:'#f4f4f4',cw:'#2a2a30'},t:'Đà điểu là loài chim lớn nhất nhưng không biết bay. Nhờ đôi chân khỏe, đà điểu chạy được rất nhanh, nhanh hơn nhiều loài thú trên thảo nguyên.',h:'Sa mạc, thảo nguyên'},
  {id:'ranchuong',n:'Rắn đuôi chuông',e:'🐍',r:'desert',b:'snake',m:'slither',c:4,v:.45,rm:200,p:{s:1.3,c1:'#b89b52',c2:'#6a5a2a'},t:'Rắn đuôi chuông rung chiếc đuôi phát ra tiếng lục lạc để cảnh báo kẻ lạ. Rắn thường nằm núp dưới hòn đá hoặc bụi cây vào ban ngày. Em nên đứng xa và báo người lớn.',h:'Sa mạc'},
@@ -2738,11 +2743,8 @@ const ANIM=(()=>{
  VR('haicau','haicauxam','Hải cẩu xám','🦭','snow',6,{c1:'#7a8590',c2:'#c9d0d8'},'Hải cẩu có lớp mỡ dày dưới da để giữ ấm trong nước lạnh. Chúng bơi rất giỏi nhưng trên bờ thì di chuyển chậm chạp.','Biển lạnh, bờ băng',{z:'lake'}),
  VR('chuot','lemming','Chuột lemming','🐀','snow',9,{c1:'#c9b8a0',c2:'#f1e8d8',c3:'#7a6a58',s:1.1},'Lemming là loài gặm nhấm nhỏ sống ở vùng lạnh, không ngủ đông mà đào đường hầm dưới lớp tuyết để kiếm ăn trong mùa đông. Số lượng của chúng thay đổi rất mạnh qua các năm.','Vùng lạnh Bắc cực',{z:undefined,rm:150}),
  VR('sduong','denui','Dê núi tuyết','🐐','snow',6,{c1:'#f4f6f8',c2:'#ffffff',c3:'#444',horn:'curve',hoof:'#2a2a2e'},'Dê núi tuyết leo những vách đá dựng đứng rất khéo nhờ móng guốc có đệm chống trượt. Bộ lông trắng dày giúp chúng chịu được giá rét.','Núi tuyết',{z:undefined,v:.5}),
- VR('cct','cct2','Chim cánh cụt Adélie','🐧','snow',8,{s:1.3},'Chim cánh cụt không biết bay nhưng bơi rất giỏi, đôi cánh như mái chèo. Chúng đi thành hàng, thay phiên nhau ấp trứng giữa những cơn gió tuyết.','Bờ băng Nam Cực'),
  /* ===== NÚI ===== */
  VR('gauden','gautruc','Gấu trúc','🐼','mount',3,{c1:'#f6f6f6',c2:'#eeeeee',c3:'#1a1a1a',c4:'#1a1a1a',mane:1,hoof:'#1a1a1a',L:5,H:3.2},'Gấu trúc ăn gần như chỉ có tre trúc, mỗi ngày ăn hàng chục ký. Đây là loài quý của Trung Quốc và là biểu tượng của việc bảo tồn thiên nhiên.','Rừng tre vùng núi',{v:.35}),
- VR('lacda','lama','Lạc đà không bướu','🦙','mount',6,{hump:0,L:4,H:2.2,leg:4.2,neck:2.8,c1:'#d9c9a8',c2:'#efe6d2',c3:'#a8946a'},'Lạc đà không bướu (lama) sống ở dãy núi Andes cao, được người dân nuôi để chở hàng và lấy len. Khi bực mình, lama có thể nhổ nước bọt.','Núi cao',{z:'slope',v:.5,rm:240}),
- VR('sduong','ibex','Dê núi Ibex','🐐','mount',6,{c1:'#9a8466',c2:'#c9b896',horn:'curve',L:3.8,H:2.2},'Dê núi Ibex có cặp sừng cong rất lớn và leo trèo trên vách đá gần như thẳng đứng. Chúng sống ở những nơi mà kẻ săn mồi khó lên tới.','Vách núi đá',{v:.5}),
  VR('soc','macmot','Marmot','🐿️','mount',8,{L:2.4,H:1.9,leg:.8,hs:1.4,tail:'short',c1:'#8a6a4a',c2:'#d9c4a0',c3:'#6a4a2a'},'Marmot sống thành đàn trong hang trên núi, khi thấy nguy hiểm thì huýt sáo báo động. Chúng ngủ đông tới gần 8 tháng trong năm.','Núi cao, đồng cỏ núi',{z:'slope',v:.5}),
  VR('trau','yak','Bò Yak','🐂','mount',5,{L:5,H:3,leg:2.6,hs:2,c1:'#2a2420',c2:'#4a3f36',c3:'#1c1816',horn:'curve',mane:1,belly:0},'Bò Yak sống ở cao nguyên Tây Tạng, nơi không khí loãng và rất lạnh. Bộ lông dài che kín chân giúp chúng không bị cóng.','Cao nguyên núi cao',{z:'slope',v:.4}),
  VR('bao','linhmieu','Linh miêu','🐈','mount',3,{L:3.2,H:1.9,leg:2.6,hs:1.6,tail:'short',ear:'point',c1:'#b8a080',c2:'#f1e6cc',c3:'#4a3a2a',spots:1},'Linh miêu có chùm lông đen trên đầu tai, giúp nghe rất tinh. Chúng săn thỏ và hươu nhỏ, di chuyển lặng lẽ như một chiếc bóng.','Rừng núi',{v:.8,z:'slope'}),
@@ -2764,7 +2766,6 @@ const ANIM=(()=>{
  VR('cumeo','chimchoat','Chim choắt','🐦','beach',9,{s:1,leg:1.4,neck:.8,c1:'#b8a58a',c2:'#f4f0e6',cb:'#3a3a3a',cw:'#8a7a62',tail:.6,ch:'#9a8a70'},'Chim choắt chạy thoăn thoắt dọc mép nước để mổ giun, tôm nhỏ trong cát ướt. Mỏ nhỏ dài giúp chúng tìm thức ăn ngay dưới lớp cát.','Bãi cát ven biển',{z:'coast',v:1.0,rm:200}),
  VR('haiau','nhanbien','Nhạn biển','🕊️','beach',8,{c1:'#f4f6f8',cw:'#c9d0d8',cw2:'#1c1c22',cb:'#f08a2e',ch:'#1c1c22',s:1.1},'Nhạn biển bay nhanh, đuôi chẻ đôi như đuôi én, và lao xuống nước bắt cá nhỏ. Chúng làm tổ ngay trên cát ven biển.','Bờ biển'),
  VR('caheo','caheoden','Cá heo mõm dài','🐬','beach',4,{c1:'#8a97a4',c2:'#f4f6f8',s:1.2},'Cá heo mõm dài thích nhảy lên khỏi mặt nước và bơi cùng thuyền. Chúng liên lạc với nhau bằng những tiếng huýt và click.','Biển khơi',{z:'sea'}),
- VR('cavoi','orca','Cá voi sát thủ','🐋','beach',2,{c1:'#1a1a1e',c2:'#f6f6f8',s:2.6},'Cá voi sát thủ (orca) thực ra là loài cá heo lớn nhất, săn mồi theo bầy rất thông minh. Thân đen với mảng trắng giúp ta dễ nhận ra chúng.','Đại dương',{z:'sea'}),
  /* ===== ĐẢO ===== */
  VR('khi','khidai','Khỉ đuôi dài','🐒','island',8,{c1:'#8a7a5a',c2:'#d9c9a8',c3:'#6a5a3a',tail:'long'},'Khỉ đuôi dài sống ở rừng ngập mặn ven biển, biết lội nước và bắt cua ăn. Chúng rất thông minh và sống thành đàn đông.','Đảo, rừng ngập mặn',{z:'isle'}),
  VR('thanlan','kyda','Kỳ đà','🦎','island',5,{c1:'#5a5a3a',c2:'#8a8a5a',s:2.2},'Kỳ đà là loài thằn lằn lớn, bơi lội và leo trèo đều giỏi. Chiếc lưỡi chẻ đôi giúp chúng đánh hơi tìm mồi.','Đảo, ven sông',{m:'walk',v:.5,rm:200,z:'isle'}),
@@ -2823,7 +2824,6 @@ const ANIM=(()=>{
  VR('co','diecdam','Diệc xám','🐦','swamp',5,{c1:'#8a98a8',c2:'#e8ecf0',cb:'#d9a83a',c3:'#6a7684',cw:'#8a98a8',s:1.5,leg:3.8,neck:3,bl:1.6},'Diệc xám đứng bất động trong nước nông thật lâu rồi phóng chiếc mỏ dài ra bắt cá. Khi bay, diệc gập cổ hình chữ S.','Bờ nước, đầm lầy'),
  VR('co','vac','Vạc','🐦','swamp',4,{c1:'#5a4a38',c2:'#e8e0d0',cb:'#2a2a2a',c3:'#4a3c2c',cw:'#5a4a38',s:1.3,leg:2.2,neck:1.6},'Vạc là loài cò hoạt động về đêm: ban ngày ngủ trong bụi cây ven nước, tối mới đi bắt cá, ếch. Hình ảnh con vạc đi ăn đêm xuất hiện trong ca dao, tục ngữ Việt Nam.','Ao đầm, bụi rậm ven nước'),
  VR('co','seu','Sếu đầu đỏ','🦩','swamp',3,{c1:'#c0c4cc',c2:'#d9dce2',cb:'#8a7a6a',ch:'#d6322e',c3:'#9a9eaa',cw:'#c0c4cc',s:2,leg:5,neck:3.6,bl:1.8},'Sếu đầu đỏ là một trong những loài chim bay lớn nhất thế giới, cao tới gần 2 m. Chúng sống ở vùng đất ngập nước như Vườn quốc gia Tràm Chim (Đồng Tháp) và rất cần được bảo vệ.','Đồng cỏ ngập nước',{v:.35}),
- VR('trau','hama','Hà mã','🦛','swamp',3,{L:5.6,H:3.4,leg:1.4,lt:1.7,hs:2.7,sn:1.2,ear:'round',horn:undefined,tail:'short',c1:'#8a7a8c',c2:'#c4a8a8',c3:'#6a5a6c',belly:1,neck:0},'Hà mã ban ngày ngâm mình trong nước cho mát, tối mới lên bờ ăn cỏ. Tuy thân hình mập mạp, hà mã chạy rất nhanh trên cạn và khá hung dữ.','Sông hồ, đầm lầy châu Phi',{v:.4}),
  VR('caodo','raica','Rái cá','🦦','swamp',5,{L:3,H:1.1,leg:.9,lt:.5,hs:1.3,sn:.6,ear:'round',tail:'long',c1:'#6a4a30',c2:'#d9c4a0',c3:'#5a3c26',belly:0},'Rái cá có bộ lông dày không thấm nước và chân có màng để bơi. Rái cá bắt cá, cua, tôm và thích nô đùa, trượt trên bờ bùn.','Sông suối, đầm lầy'),
  VR('rua','ruanuoc','Rùa nước ngọt','🐢','swamp',5,{c1:'#4f6a3a',c2:'#8aa05a',c3:'#7a8a4a'},'Rùa nước ngọt thích phơi nắng trên khúc gỗ nổi. Rùa là động vật máu lạnh, cần nhờ ánh nắng để sưởi ấm cơ thể.','Ao hồ, đầm lầy'),
  VR('buom','chuonchuondam','Chuồn chuồn','🪰','swamp',10,{s:1.5,c1:'#4ad6c8',c2:'#9af0e6'},'Chuồn chuồn là côn trùng có bốn cánh mỏng trong suốt, bay lượn rất giỏi. Ấu trùng chuồn chuồn sống dưới nước, lớn lên mới bay lên cạn. Dân gian có câu: chuồn chuồn bay thấp thì mưa.','Ao hồ, đầm lầy'),
@@ -4179,7 +4179,7 @@ function civSpot(a,b){for(let n=0;n<40;n++){const h=R()<.5,k=Math.floor(R()*W),f
  if(Math.abs(md(x)-60)<60&&Math.abs(md(y)-60)<60)continue;
  if(inYard(x,y))continue;
  if(veh.some(c=>Math.hypot(c.x-x,c.y-y)<60))continue;return{x,y,d}}return null}
-function addCiv(a,b){const s=civSpot(a,b);if(s){const _m=CM[Math.floor(R()*CM.length)];addV({x:s.x,y:s.y,a:s.d*PI/2,v:2,dir:s.d,t:'civ',model:_m,col:_m=='taxi'?'#f2c500':COLS[Math.floor(R()*COLS.length)],hp:100,cd:0,w:0,g:0})}}
+function addCiv(a,b){return;const s=civSpot(a,b);if(s){const _m=CM[Math.floor(R()*CM.length)];addV({x:s.x,y:s.y,a:s.d*PI/2,v:2,dir:s.d,t:'civ',model:_m,col:_m=='taxi'?'#f2c500':COLS[Math.floor(R()*COLS.length)],hp:100,cd:0,w:0,g:0})}}
 function addCop(){const s=civSpot(550,900);if(s){const r=ply.car||ply;addV({x:s.x,y:s.y,a:Math.atan2(r.y-s.y,r.x-s.x),v:3,t:'cop',col:'#f1f2f6',hp:100,stuck:0,td:1})}}
 function pedSpot(a,b){for(let n=0;n<40;n++){const i=Math.floor(R()*W),j=Math.floor(R()*W),s=R()<.5?130:390;let x,y;
  if(R()<.5){x=i*P+rnd(0,P);y=j*P+s}else{x=i*P+s;y=j*P+rnd(0,P)}
@@ -4426,7 +4426,7 @@ function spawnRooms(){
 }
 
 function moveCar(c){const ca=Math.cos(c.a),sa=Math.sin(c.a),nx=c.x+ca*c.v,ny=c.y+sa*c.v;
- for(const[p,q]of(c.tw?PTW:PT)){if(solid(nx+ca*p-sa*q,ny+sa*p+ca*q)||inYard(nx+ca*p-sa*q,ny+sa*p+ca*q)||NAT.noCar(nx+ca*p-sa*q,ny+sa*p+ca*q)){if(Math.abs(c.v)>3&&c.t=='player'){c.hp-=Math.abs(c.v)*2.5;shake=9;SND.p('crash')}c.v*=-.35;return}}
+ for(const[p,q]of(c.tw?PTW:PT)){if(solid(nx+ca*p-sa*q,ny+sa*p+ca*q)||inYard(nx+ca*p-sa*q,ny+sa*p+ca*q)||(NAT.noCar(nx+ca*p-sa*q,ny+sa*p+ca*q)&&!(c.model=='bike'&&NAT.realmAt&&NAT.realmAt(nx+ca*p-sa*q,ny+sa*p+ca*q)&&!NAT.waterAt(nx+ca*p-sa*q,ny+sa*p+ca*q)))){if(c.t=='player'&&c.model!='bike'&&NAT.noCar(nx,ny)&&(NAT.realmAt(nx,ny)||NAT.realmAt(nx+ca*40,ny+sa*40))){carRealm();return}if(Math.abs(c.v)>3&&c.t=='player'){c.hp-=Math.abs(c.v)*2.5;shake=9;SND.p('crash')}c.v*=-.35;return}}
  c.x=nx;c.y=ny}
 function drive(c){const u=K.w||K.arrowup,d=K.s||K.arrowdown,l=K.a||K.arrowleft,r=K.d||K.arrowright;
  if(u)c.v+=.13*SPL[SPI]*(MOD.turbo?1.7:1)*(c.tw?c.sk*.8+.2:1);else if(d)c.v-=c.v>0?.25:.08;else c.v*=.988;
@@ -4528,7 +4528,7 @@ function buildMod(){const old=modEl.querySelector('.tcont'),keep=old?old.scrollT
  else if(modTab==3){
   const left=carLeft();
   if(left>0){const bn=el('div','ban');bn.innerHTML='🚫 Em vừa đâm vào xe hoặc bạn khác nên chưa được gọi xe.<br>Còn <b>'+carLeftTx()+'</b> nữa em mới được gọi xe và lên xe lại.';cont.appendChild(bn)}
-  else cont.appendChild(el('div','note','🚗 Gọi xe tới ngay cạnh em, rồi bấm nút Tương tác (F) để lên xe. Hãy lái cẩn thận: đâm vào xe của người khác hoặc tông bạn khác thì xe biến mất và em phải chờ 20 phút mới được gọi xe lại.'));
+  else cont.appendChild(el('div','note','🚗 Gọi xe tới ngay cạnh em, rồi bấm nút Tương tác (F) để lên xe. Hãy lái cẩn thận: đâm vào xe của người khác hoặc tông bạn khác thì xe biến mất và em phải chờ 3 phút mới được gọi xe lại.'));
   g=sec('🚘','Chọn xe để gọi');g.className='g cars';
   const CI={sport:'🏎️',muscle:'🚘',sedan:'🚗',hatch:'🚙',suv:'🚙',pickup:'🛻',van:'🚐',taxi:'🚕',moto:'🏍️',scooter:'🛵',bike:'🚲'};
   for(const k of['sport','muscle','sedan','hatch','suv','pickup','van','taxi','moto','scooter','bike']){const x=el('button','cc'+(left>0?' off':''));x.type='button';x.innerHTML='<span>'+CI[k]+'</span><em></em>';x.lastChild.textContent=CARL[k];x.onclick=()=>{if(carLeft()>0){say('🚫 Chưa được gọi xe, còn '+carLeftTx(),2600);buildMod();return}spawnCar(k);if(state=='mod')toggleMod()};g.appendChild(x)}
@@ -4662,8 +4662,8 @@ function heliTick(){if(heliCD>0)heliCD--;const want=stars>=3&&!MOD.nohel&&heliCD
    if(!solid(sx,sy)){let n=0;for(const o of offs)if(o.sw&&!o.dead)n++;if(n<(stars>=4?4:2)){for(let i=0;i<2;i++)addOff(sx+rnd(-8,8),sy+rnd(-8,8),1,heli.alt-12);say('Đặc nhiệm đang đáp xuống!',1800)}}}}
  if(heli.leave&&(dd<1||Math.hypot(heli.x-tg.x,heli.z-tg.y)>2600||heli.alt>500)){scene.remove(m,heli.beam,heli.spot);heli=null}}
 function crime(n,m){if(hitCD<=0){hitCD=100;if(/Đâm|tai nạn|Húc/.test(m||''))say('Cẩn thận nhé! Hãy lái xe an toàn.',1800)}}
-/* ---- Luật lái xe: đâm xe người khác hoặc tông bạn khác → xe biến mất, 20 phút sau mới được gọi xe / lên xe lại ---- */
-const CARBAN=20*60000;
+/* ---- Luật lái xe: đâm xe người khác hoặc tông bạn khác → xe biến mất, 3 phút sau mới được gọi xe / lên xe lại ---- */
+const CARBAN=3*60000;
 function carLeft(){try{return Math.max(0,(+(EDU.x&&EDU.x.cb)||0)-Date.now())}catch(e){return 0}}
 function carLeftTx(){const sc=Math.ceil(carLeft()/1000);return Math.floor(sc/60)+' phút '+String(sc%60).padStart(2,'0')+' giây'}
 function carDenied(){if(carLeft()>0){say('🚫 Em vừa gây tai nạn nên chưa được dùng xe. Còn '+carLeftTx()+' nữa em mới được gọi xe và lên xe lại.',3800);return true}return false}
@@ -4672,7 +4672,8 @@ function carPenalty(why){if(carLeft()>0)return;const c=ply.car;if(!c)return;
  try{apStop('')}catch(e){}
  const x=EDU.x||(EDU.x=cleanX(null));x.cb=Date.now()+CARBAN;try{saveEdu()}catch(e){}
  shake=14;try{SND.p('crash')}catch(e){}
- say('🚫 Em đã đâm vào '+why+' nên xe biến mất! Em phải chờ 20 phút mới được gọi xe và lên xe lại.',6500)}
+ say('🚫 Em đã đâm vào '+why+' nên xe biến mất! Em phải chờ 3 phút mới được gọi xe và lên xe lại.',6500)}
+function carRealm(){const c=ply.car;if(!c||carLeft()>0)return;ply.car=null;cull(o=>o!==c);ply.a=c.a;ply.x=c.x-Math.cos(c.a)*40;ply.y=c.y-Math.sin(c.a)*40;if(solid(ply.x,ply.y)){ply.x=c.x;ply.y=c.y}try{apStop('')}catch(e){}shake=8;try{SND.p('crash')}catch(e){}say('⚠️ Khu thiên nhiên chỉ cho xe đạp vào! Xe của em đã biến mất, em hãy đi bộ hoặc dùng xe đạp nhé.',5500)}
 function carHitPlayers(){const c=ply.car;if(!c||Math.abs(c.v)<.8||INT.cur)return;
  try{for(const r of MP._R.values()){if(r.i||!r.g)continue;const x=r.cx!=null?r.cx:r.x,y=r.cy!=null?r.cy:r.y;if(Math.hypot(x-c.x,y-c.y)<26){carPenalty('bạn '+(r.n||'khác'));return}}}catch(e){}}
 function collide(){for(let i=0;i<veh.length;i++)for(let j=i+1;j<veh.length;j++){
@@ -4752,21 +4753,21 @@ const MP=(()=>{
  const enabled=()=>{try{return localStorage.getItem('ttt3d_mp')!=='0'}catch(e){return true}};
  const tex=(w,h,fn)=>{const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);return new THREE.CanvasTexture(c)};
  const spr=(t,w,h)=>{const q=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true}));q.scale.set(w,h,1);q.renderOrder=6;return q};
- const nameT=n=>tex(256,64,(g,w,h)=>{g.font='bold 30px system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';const m=Math.min(w-8,g.measureText(n).width+30);g.fillStyle='rgba(30,70,140,.82)';g.beginPath();if(g.roundRect)g.roundRect((w-m)/2,8,m,h-16,18);else g.rect((w-m)/2,8,m,h-16);g.fill();g.fillStyle='#fff';g.fillText(n,w/2,h/2+1)});
+ const nameT=(n,sub)=>tex(256,64,(g,w,h)=>{g.textAlign='center';g.textBaseline='middle';g.font=(sub?'bold 25px':'bold 30px')+' system-ui,sans-serif';const m=Math.min(w-8,Math.max(g.measureText(n).width,sub?(g.font='15px system-ui,sans-serif',g.measureText(sub).width):0)+30);g.fillStyle='rgba(30,70,140,.82)';g.beginPath();const y0=sub?3:8,hh=sub?h-6:h-16;if(g.roundRect)g.roundRect((w-m)/2,y0,m,hh,18);else g.rect((w-m)/2,y0,m,hh);g.fill();g.fillStyle='#fff';g.font=(sub?'bold 25px':'bold 30px')+' system-ui,sans-serif';g.fillText(n,w/2,sub?25:h/2+1);if(sub){g.font='15px system-ui,sans-serif';g.fillStyle='#ffe7a0';g.fillText(sub,w/2,48)}});
  const emoT=e=>tex(96,96,(g,w,h)=>{g.fillStyle='rgba(255,255,255,.95)';g.beginPath();if(g.roundRect)g.roundRect(6,6,w-12,h-12,22);else g.rect(6,6,w-12,h-12);g.fill();g.font='54px system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(e,w/2,h/2+4)});
  const cleanName=n=>String(n==null?'Bạn':n).replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,16)||'Bạn';
  const num=(v,a,b,d)=>{v=+v;return isFinite(v)?Math.max(a,Math.min(b,v)):d};
  /* trang phục: chỉ nhận các khóa có sẵn, giá trị ngắn */
  const cleanLook=js=>{try{const o=JSON.parse(js),L=Object.assign({},LOOK);for(const k in LOOK){if(!(k in o))continue;const v=o[k],t=typeof LOOK[k];if(t=='number'&&typeof v=='number'&&isFinite(v))L[k]=v;else if(t=='string'&&typeof v=='string'&&v.length<24)L[k]=v;else if(t=='boolean'&&typeof v=='boolean')L[k]=v}return L}catch(e){return Object.assign({},LOOK)}};
  const mkModel=r=>{let m;try{m=mkPerson(cleanLook(r.l),false)}catch(e){m=mkPerson(Object.assign({},PRE[0][1]),false)}
-  const g=new THREE.Group();g.add(m);r.m=m;r.vs=null;r.tg=spr(nameT(r.n),24,6);r.tg.position.y=25;g.add(r.tg);r.g=g;scene.add(g)};
+  const g=new THREE.Group();g.add(m);r.m=m;r.vs=null;r.tg=spr(nameT(r.n,r.sub),24,6);r.tg.position.y=25;g.add(r.tg);r.g=g;scene.add(g)};
  const clr=(r,k)=>{if(r[k]){scene.remove(r[k]);r[k]=null}};
  const drop=k=>{const r=R.get(k);if(!r)return;if(r.g)scene.remove(r.g);clr(r,'mg');clr(r,'cg');clr(r,'pg');R.delete(k);ui()};
  const upsert=(k,v)=>{if(k==uid||!v||typeof v!='object')return;let r=R.get(k);const nw=!r;
   if(!r){if(R.size>=MAXR)return;r={k,x:0,y:0,a:0,cx:null,cy:null,ca:0,s:0,d:0,i:0,c:0,v:0,vs:null,n:'Bạn',l:'',e:'',seen:0,g:null};R.set(k,r)}
   r.seen=performance.now();
-  if(v.n!=null&&cleanName(v.n)!==r.n){r.n=cleanName(v.n);if(r.g){r.g.remove(r.tg);r.tg=spr(nameT(r.n),24,6);r.tg.position.y=25;r.g.add(r.tg)}}
-  if(typeof v.l=='string'&&v.l!==r.l){r.l=v.l;if(r.g){scene.remove(r.g);r.g=null}try{const o=JSON.parse(v.l);r.gmk=/^[0-9a-z]{3}$/.test(String(o.gm))?String(o.gm):'';r.gpk=/^[0-9a-z]{3}$/.test(String(o.gp))?String(o.gp):''}catch(e){r.gmk=r.gpk=''}}
+  if(v.n!=null&&cleanName(v.n)!==r.n){r.n=cleanName(v.n);if(r.g){r.g.remove(r.tg);r.tg=spr(nameT(r.n,r.sub),24,6);r.tg.position.y=25;r.g.add(r.tg)}}
+  if(typeof v.l=='string'&&v.l!==r.l){r.l=v.l;if(r.g){scene.remove(r.g);r.g=null}try{const o=JSON.parse(v.l);r.sub=((/^[0-9A-Za-zÀ-ỹ .\-]{1,8}$/.test(String(o.cs||''))&&o.cs?'Lớp '+o.cs:'')+(o.tt&&/^[a-z0-9]{1,10}$/.test(String(o.tt))?' '+(V5.badOf(o.tt)||''):'')).trim();r.gmk=/^[0-9a-z]{3}$/.test(String(o.gm))?String(o.gm):'';r.gpk=/^[0-9a-z]{3}$/.test(String(o.gp))?String(o.gp):''}catch(e){r.gmk=r.gpk='';r.sub=''}}
   if('x'in v)r.x=num(v.x,-30000,30000,r.x);if('y'in v)r.y=num(v.y,-30000,30000,r.y);if('a'in v)r.a=num(v.a,-10,10,r.a);
   if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);
   {const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);r.mt=(typeof v.m=='string'&&V5.mountOk(v.m))?v.m:'';r.pt=(typeof v.p=='string'&&V5.petOk(v.p))?v.p:'';
@@ -4776,19 +4777,20 @@ const MP=(()=>{
  const bubble=(r,e)=>{if(r.bb){r.g&&r.g.remove(r.bb);r.bb=null}if(!r.g)return;r.bb=spr(emoT(e),11,11);r.bb.position.y=36;r.g.add(r.bb);r.bt=performance.now()+4200};
  const loadFB=()=>new Promise((ok,no)=>{if(window.firebase&&firebase.database)return ok();const add=(src,cb)=>{const q=document.createElement('script');q.src=src;q.onload=cb;q.onerror=no;document.head.appendChild(q)};
   add('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js',ok)))});
+ const lookJ=()=>JSON.stringify(Object.assign({},LOOK,(()=>{try{return V5.gearCode()}catch(e){return{}}})(),(()=>{try{return{cs:String(EDU.cls||'').slice(0,8),tt:V5.myTt()}}catch(e){return{}}})()));
  const payload=()=>{const c=ply.car,o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((c?c.a:ply.a)*100)/100,s:ply.sw2?1:0,d:(ply.mt&&ply.mt.env=='f')?Math.round(Math.min(95,(ply.z||0)/4)):Math.round(ply.dd||0),i:INT.cur?1:0,c:c?1:0,v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
  const payX=()=>{const c=ply.car,t=ply.mt;let m='',p='',k='',kc='';if(t&&t.id&&!c)m=String(t.id).slice(0,24);try{if(!c)p=String(V5.petKey()||'').slice(0,30)}catch(e){}if(c&&c.model){k=String(c.model).slice(0,12);kc=/^#[0-9a-fA-F]{6}$/.test(String(c.col))?String(c.col):''}return{m,p,k,kc}};
  const getDb=async()=>{if(db)return db;await loadFB();if(!(firebase.apps&&firebase.apps.length))firebase.initializeApp(MP_CFG);db=firebase.database();return db};
  const getAuth=async()=>{await getDb();return firebase.auth()};
  const boot=async()=>{booted=1;try{await getDb();if(CL.uid)uid=CL.uid;pr=db.ref('players');me=pr.child(uid);
-  try{lookS=JSON.stringify(Object.assign({},LOOK,(()=>{try{return V5.gearCode()}catch(e){return{}}})()))}catch(e){lookS=''}
+  try{lookS=lookJ()}catch(e){lookS=''}
   db.ref('.info/connected').on('value',sn=>{conn=sn.val()?1:0;if(conn){try{me.onDisconnect().remove()}catch(e){}{const r=me.set(payload());if(r&&r.catch)r.catch(()=>{})}sent=payload();sentX={}}ui()});
   pr.on('child_added',sn=>upsert(sn.key,sn.val()));pr.on('child_changed',sn=>upsert(sn.key,sn.val()));pr.on('child_removed',sn=>drop(sn.key));
   addEventListener('pagehide',()=>{try{me.remove()}catch(e){}})}catch(e){console.warn('Chơi chung: không kết nối được',e);booted=-1;ui()}};
  const stop=()=>{try{if(me)me.remove()}catch(e){}for(const k of[...R.keys()])drop(k);try{if(pr){pr.off();db.ref('.info/connected').off()}}catch(e){}pr=null;me=null;db=null;booted=0;conn=0;ui()};
  const send=(force)=>{if(!me||!conn)return;const now=performance.now();if(!force&&now-lastSend<450)return;const p=payload(),d={};let ch=0;
   for(const k of['n','x','y','a','s','d','i','c','v'])if(p[k]!==sent[k]){d[k]=p[k];ch=1}
-  try{const l=JSON.stringify(Object.assign({},LOOK,(()=>{try{return V5.gearCode()}catch(e){return{}}})()));if(l!==lookS){lookS=l;d.l=l;ch=1}}catch(e){}
+  try{const l=lookJ();if(l!==lookS){lookS=l;d.l=l;ch=1}}catch(e){}
   {const x=payX(),dx={};let cx=0;for(const k in x)if(x[k]!==sentX[k]){dx[k]=x[k]===''?null:x[k];cx=1}
    if(cx){Object.assign(sentX,x);try{const r=me.update(dx);if(r&&r.catch)r.catch(e=>{if(!send._w){send._w=1;console.warn('Chưa đồng bộ được thú/xe: hãy dán Rules mới vào Firebase',e)}})}catch(e){}}}
   if(!ch){if(now-lastBeat<6000&&!force)return;d.h=p.h}
@@ -4876,9 +4878,9 @@ const CHAT=(()=>{
 @media(max-height:480px){#chpan{width:min(520px,60vw)}}`;document.head.appendChild(st);
  const toast=document.createElement('div');toast.id='chtoast';document.body.appendChild(toast);
  const pan=document.createElement('div');pan.id='chpan';
- pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
+ pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chs" style="display:none;padding:6px 12px;background:#7a1f2a;font-size:13px"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
  document.body.appendChild(pan);
- const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi');
+ const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none'};
  const btn=document.createElement('button');btn.type='button';btn.id='chbtn';btn.innerHTML='💬<i></i>';btn.title='Chat (phím Enter)';
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const BAD=/(?<![\p{L}])(đ[mụ]m?|đ[mc]m|đéo|địt|vcl|vkl|cặc|lồn|buồi|óc chó|chó chết|mẹ mày|khốn nạn|mất dạy|đồ ngu|thằng ngu|con ngu)(?![\p{L}])/giu;
@@ -4886,29 +4888,30 @@ const CHAT=(()=>{
  const hm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
  const muted=u=>{try{return VOICE.muted(u)}catch(e){return false}};
  const badge=()=>{const b=btn.querySelector('i');b.style.display=unread>0&&!open?'block':'none';b.textContent=unread>9?'9+':unread};
- const paint=()=>{const me=MP.uid;lEl.innerHTML=rows.length?rows.map(r=>{const self=r.u==me,on=!self&&MP._R.has(r.u);return'<div class="cm'+(self?' me':'')+'"><b data-u="'+esc(r.u)+'">'+esc(self?'Em':r.n)+':</b> '+esc(r.m)+'<i>'+hm(r.t)+'</i>'+(on?'<button data-go="'+esc(r.u)+'" title="Chạy tới bạn này">🏃 Tới</button>':'')+'</div>'}).join(''):'<div class="emp">Chưa có tin nhắn nào. Em hãy chào các bạn nhé! 👋</div>';lEl.scrollTop=lEl.scrollHeight;
+ const paint=()=>{const me=myU();lEl.innerHTML=rows.length?rows.map(r=>{const self=r.u==me,on=!self&&MP._R.has(r.u);return'<div class="cm'+(self?' me':'')+'"><b data-u="'+esc(r.u)+'">'+esc(self?'Em':r.n)+':</b> '+esc(r.m)+'<i>'+hm(r.t)+'</i>'+(on?'<button data-go="'+esc(r.u)+'" title="Chạy tới bạn này">🏃 Tới</button>':'')+'</div>'}).join(''):'<div class="emp">Chưa có tin nhắn nào. Em hãy chào các bạn nhé! 👋</div>';lEl.scrollTop=lEl.scrollHeight;
   for(const b of lEl.querySelectorAll('[data-go]'))b.onclick=e=>{e.stopPropagation();setOpen(0);try{MP.goTo(b.dataset.go)}catch(x){}};
   for(const b of lEl.querySelectorAll('b[data-u]'))b.onclick=e=>{e.stopPropagation();const k=b.dataset.u;if(k!=MP.uid&&MP._R.has(k)){setOpen(0);try{MP.goTo(k)}catch(x){}}};
   const n=pan.querySelector('#chn');if(n)n.textContent='· '+(MP.count+1)+' bạn đang online'};
  const setOpen=v=>{open=v?1:0;pan.classList.toggle('on',!!open);if(open){toast.classList.remove('on');unread=0;paint();setTimeout(()=>{try{iEl.focus({preventScroll:true})}catch(e){}},60)}else try{iEl.blur()}catch(e){}badge()};
  const show=(n,m)=>{if(open)return;toast.innerHTML='<b>'+esc(n)+':</b>'+esc(m);toast.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('on'),5000)};
  const onMsg=(id,v)=>{if(seen.has(id)||!v||typeof v!='object')return;seen.add(id);if(typeof v.u!='string'||typeof v.m!='string'||typeof v.n!='string')return;
-  const r={u:v.u.slice(0,40),n:cleanName(v.n),m:clean(v.m),t:Number.isFinite(+v.t)?+v.t:Date.now()};if(!r.m||muted(r.u))return;rows.push(r);while(rows.length>KEEP)rows.shift();
-  if(open){paint();return}if(hist)return;if(r.u!=MP.uid)unread++;badge();show(r.u==MP.uid?'Em':r.n,r.m)};
- const start=async()=>{if(started||!MP.uid)return;started=1;try{db=await MP.db();ref=db.ref('chat').limitToLast(KEEP);hist=true;ref.on('child_added',sn=>onMsg(sn.key,sn.val()),()=>{if(!warned){warned=1;try{say('💬 Chưa đọc được chat. Thầy/cô cần dán Rules mới (mục chat) vào Firebase.',5000)}catch(e){}}});
-   ref.once('value').then(()=>{hist=false}).catch(()=>{hist=false})}catch(e){started=0}};
+  const r={id,u:v.u.slice(0,40),n:cleanName(v.n),m:clean(v.m),t:Number.isFinite(+v.t)?+v.t:Date.now()};if(!r.m||muted(r.u))return;rows.push(r);while(rows.length>KEEP)rows.shift();
+  if(open){paint();return}if(hist)return;if(r.u!=myU())unread++;badge();show(r.u==myU()?'Em':r.n,r.m)};
+ const start=async()=>{if(started||!MP.uid)return;started=1;try{db=await MP.db();ref=db.ref('chat').limitToLast(KEEP);hist=true;ref.on('child_added',sn=>onMsg(sn.key,sn.val()),e=>{stt('⚠️ Chưa đọc được chat ('+((e&&e.code)||'lỗi')+'). Thầy/cô cần dán Rules mới (có mục chat) vào Firebase rồi bấm Publish.');if(!warned){warned=1;try{say('💬 Chưa đọc được chat. Thầy/cô cần dán Rules mới (mục chat) vào Firebase.',5000)}catch(e){}}});ref.on('child_removed',sn=>{const i=rows.findIndex(r=>r.id==sn.key);if(i>=0){rows.splice(i,1);if(open)paint()}});
+   ref.once('value').then(()=>{hist=false}).catch(()=>{hist=false})}catch(e){started=0;stt('⚠️ Chưa kết nối được máy chủ chat ('+((e&&(e.code||e.message))||'lỗi')+').')}};
  const stop=()=>{try{if(ref)ref.off()}catch(e){}ref=null;db=null;started=0;rows.length=0;seen.clear();unread=0;badge();toast.classList.remove('on');setOpen(0)};
- const send=txt=>{const m=clean(txt);if(!m)return false;if(!MP.ready||!db){try{say('💬 Em cần bật 🌐 Chơi chung để nhắn tin nhé.',2600)}catch(e){}return false}
-  const now=Date.now();if(now-last<1500){try{say('Em gửi chậm lại một chút nhé 🙂',1600)}catch(e){}return false}last=now;
-  try{const p=db.ref('chat').push({u:MP.uid,n:cleanName(EDU.name),m,t:now}),id=p.key;if(p&&p.catch)p.catch(()=>{if(!warned){warned=1;try{say('💬 Chưa gửi được tin. Thầy/cô cần dán Rules mới (mục chat) vào Firebase.',5000)}catch(e){}}});
+ const myU=()=>{try{const a=firebase.auth().currentUser;if(a&&a.uid)return a.uid}catch(e){}return MP.uid};
+ const send=txt=>{const m=clean(txt);if(!m)return false;if(!db){stt('⚠️ Chat chưa kết nối máy chủ. Em đợi vài giây rồi gửi lại, hoặc bật 🌐 Chơi chung nhé.');if(!started)start();return false}
+  const now=Date.now();if(now-last<1500){stt('Em gửi chậm lại một chút nhé 🙂');setTimeout(()=>stt(''),1500);return false}last=now;
+  try{const p=db.ref('chat').push(),id=p.key;stt('');const w=p.set({u:myU(),n:cleanName(EDU.name),m,t:now});if(w&&w.catch)w.catch(e=>{seen.add(id);const i=rows.findIndex(r=>r.id==id);if(i>=0)rows.splice(i,1);if(open)paint();stt('⚠️ Tin nhắn chưa gửi được ('+((e&&e.code)||'lỗi')+'). Thầy/cô cần dán Rules mới (có mục chat) vào Firebase rồi bấm Publish.')});
    setTimeout(()=>{try{db&&db.ref('chat/'+id).remove().catch(()=>{})}catch(e){}},15*60*1000)}catch(e){return false}return true};
  pan.addEventListener('pointerdown',e=>e.stopPropagation());pan.addEventListener('keydown',e=>e.stopPropagation());pan.addEventListener('keyup',e=>e.stopPropagation());
  $c('chx').onclick=()=>setOpen(0);
  pan.querySelector('#chf').onsubmit=e=>{e.preventDefault();if(send(iEl.value))iEl.value=''};
  const qk=['Xin chào các bạn! 👋','Bạn ở đâu vậy?','Cho mình đi cùng nhé','Mình ở đây nè 📍','Cảm ơn bạn! 😊','Giúp mình với!'],q=$c('chq');for(const t of qk){const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>send(t);q.appendChild(b)}
  btn.onclick=e=>{e.stopPropagation();setOpen(!open)};btn.addEventListener('pointerdown',e=>e.stopPropagation());
- addEventListener('keydown',e=>{if(e.key=='Enter'&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName||''))&&state=='play'&&MP.uid&&CL.ok){e.preventDefault();setOpen(1)}else if(e.key=='Escape'&&open)setOpen(0)});
- setInterval(()=>{try{const on=!!(CL.ok&&MP.uid&&state=='play');if(on)start();else if(started&&!MP.uid)stop();if(!on){if(open)setOpen(0);toast.classList.remove('on')}}catch(e){}},700);
+ addEventListener('keydown',e=>{if(e.key=='Enter'&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName||''))&&state=='play'&&MP.uid){e.preventDefault();setOpen(1)}else if(e.key=='Escape'&&open)setOpen(0)});
+ setInterval(()=>{try{const on=!!(MP.uid&&state=='play');if(on)start();else if(started&&!MP.uid)stop();if(!on){if(open)setOpen(0);toast.classList.remove('on')}}catch(e){}},700);
  return{btn,open:setOpen,send,stop}})();
 const VOICE=(()=>{const RANGE=1000,MAXP=5,CFG={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
  let on=0,talk=0,selfMute=0,stream=null,db=null,inbox=null,uid='',lastCfg=0,actx=null,anl=null,abuf=null,lastLoud=0;const P=new Map(),muted=new Set(),cool=new Map(),reported=new Set();
@@ -7294,8 +7297,9 @@ const rl=p.role||'nl',r=p.chat==1?-1:R(),pa=rl=='gv'?.5:rl=='be'?.12:.22;let tx;
  sayN(p,tx)}
 function tip(){const p=nearPed();if(!p){say('Không có ai gần đây',1100);return}
  if(p.ask){p.ask=0;p.talk=120;const ks=ROLE_SUB[p.role]||Object.keys(SUBJ);sayN(p,'Cảm ơn {you} đã giúp {me} nhé!');openQuiz(pick(ks),1)}else sayN(p,'{You} hãy ghé các trạm học trên bản đồ để làm bài nhé!')}
+function nearPlayer(){let b=null,bd=75;try{for(const r of MP._R.values()){if(!r.g||(r.i?1:0)!=(INT.cur?1:0))continue;const x=r.cx!=null?r.cx:r.x,y=r.cy!=null?r.cy:r.y,d=Math.hypot(x-ply.x,y-ply.y);if(d<bd){bd=d;b=r}}}catch(e){}return b}
 function interact(){const dr=nearDoor();if(dr){useDoor(dr);return}const s=nearShop();if(s){openShop(s);return}
- if(ply.car){useCar();return}if(ply.boat){BT.leave();return}if(ply.mt){V5.dismount();return}{const pb=BT.near();if(pb){BT.board(pb);return}}const b=nearPed();if(b){if(b.sell){V5.canMenu(b);return}talk(b);return}{const an=INT.cur?null:ANIM.near(ply.x,ply.y);if(an){V5.animal(an.s);return}}let cr=0;for(const o of veh)if(o.t=='parked'&&dst(o,ply)<56){cr=1;break}if(cr){useCar();return}say('Không có ai gần đây',1100)}
+ if(ply.car){useCar();return}if(ply.boat){BT.leave();return}if(ply.mt){V5.dismount();return}{const pb=BT.near();if(pb){BT.board(pb);return}}const b=nearPed();if(b){if(b.sell){V5.canMenu(b);return}talk(b);return}{const rp=nearPlayer();if(rp){PC.show(rp);return}}{const an=INT.cur?null:ANIM.near(ply.x,ply.y);if(an){V5.animal(an.s);return}}let cr=0;for(const o of veh)if(o.t=='parked'&&dst(o,ply)<56){cr=1;break}if(cr){useCar();return}say('Không có ai gần đây',1100)}
 function extra(){
  if(PR.f){PR.f=0;interact()}
  if(PR.g){PR.g=0;tip()}
@@ -7470,8 +7474,9 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
     w.appendChild(r);if(V.bs==id){const d=document.createElement('div');d.style.cssText='margin:2px 0 6px 26px;padding:6px 10px;border-radius:8px;background:#ffffff14;font-size:13px;line-height:1.5';const ach=['Cấp '+(Math.floor(s.s/10)+1)+' · '+s.s+' ⭐'];if(s.k)ach.push('Đã trả lời đúng '+s.k+' câu hỏi');if(mo)ach.push('Giỏi môn '+mo[1]+' '+mo[2]);d.innerHTML='<b>Thành tích của '+esc(s.nm)+':</b><br>'+ach.map(x=>'• '+esc(x)).join('<br>');w.appendChild(d)}
     r.onclick=()=>{V.bs=V.bs==id?'':id;V.draw()};return w};
    if(V.bc){const t3=document.createElement('div');t3.style.cssText='font-weight:700;margin:12px 0 4px';t3.textContent='Các bạn lớp '+V.bc+' (bấm vào tên để xem thành tích)';box.appendChild(t3);B.st.filter(x=>(x.c||'?')==V.bc).forEach((x,i)=>box.appendChild(row(x,i,false)))}
-   if(B.st.length){const t2=document.createElement('div');t2.style.cssText='font-weight:700;margin:12px 0 4px';t2.textContent='Học sinh xuất sắc toàn trường (bấm vào tên để xem thành tích)';box.appendChild(t2);
-    B.st.slice(0,15).forEach((x,i)=>box.appendChild(row(x,i,true)))}
+   if(B.st.length){const t2=document.createElement('div');t2.style.cssText='font-weight:700;margin:12px 0 4px';t2.textContent='Tất cả học sinh toàn trường · '+B.st.length+' bạn (bấm vào tên để xem thành tích)';box.appendChild(t2);
+    V.bn=V.bn||30;B.st.slice(0,V.bn).forEach((x,i)=>box.appendChild(row(x,i,true)));
+    if(B.st.length>V.bn){const mb=document.createElement('button');mb.style.cssText='margin:8px 0';mb.textContent='⬇️ Xem thêm ('+(B.st.length-V.bn)+' bạn nữa)';mb.onclick=()=>{V.bn+=40;V.draw()};box.appendChild(mb)}}
    const nt=document.createElement('div');nt.style.cssText='opacity:.65;font-size:12px;margin-top:8px';nt.textContent='Bảng này chỉ gồm các bạn thật đã đăng ký tài khoản. Sao của em được cập nhật lên bảng sau vài giây khi em chơi.';box.appendChild(nt)}
   P.innerHTML='';P.appendChild(box)};
  V.open=tab=>{if(state!='play'&&state!='v5')return;if(INT.cur==null&&ply.car)return;state='v5';if(tab)V.tab=tab;if(V.tab=='b')V.bd.t=0;V.draw();P.style.display='flex'};
@@ -7545,7 +7550,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
  BAD.push(['rk_all','🌏','Nhà tự nhiên học vĩ đại','Đạt huy hiệu "gặp tất cả các loài" ở cả '+RBD.length+' khu',()=>RBD.every(r=>{const c=rbN(r[0]);return c[1]>0&&c[0]>=c[1]}),300,()=>RBD.filter(r=>{const c=rbN(r[0]);return c[1]>0&&c[0]>=c[1]}).length+'/'+RBD.length+' khu']);
  V.bchk=silent=>{try{if(!EDU.name)return;const x=X(),nw=[];let bx=0;for(const b of BAD)if(!x.bd[b[0]]&&b[4]()){x.bd[b[0]]=1;nw.push(b);if(b[5]){cash+=b[5];bx+=b[5]}}
   if(nw.length){if(!x.ti||!x.bd[x.ti])x.ti=nw[0][0];saveEdu();if(!silent){SND.p('level');say('🏅 Huy hiệu mới: '+nw.map(b=>b[1]+' '+b[2]).join(', ')+(bx?' · +'+bx+' xu':'')+'! Mở bảng Q → Huy hiệu để xem.',5000)}}}catch(e){}};
- V.ttl=()=>{try{const x=X(),b=BAD.find(b=>b[0]==x.ti);return b&&x.bd[b[0]]?' · '+b[1]+' '+b[2]:''}catch(e){return''}};window.ttlText=V.ttl;
+ V.badOf=id=>{try{const b=BAD.find(b=>b[0]==id);return b?b[1]+' '+b[2]:''}catch(e){return''}};V.myTt=()=>{try{const x=X();return x.ti&&x.bd[x.ti]?String(x.ti).slice(0,10):''}catch(e){return''}};V.ttl=()=>{try{const x=X(),b=BAD.find(b=>b[0]==x.ti);return b&&x.bd[b[0]]?' · '+b[1]+' '+b[2]:''}catch(e){return''}};window.ttlText=V.ttl;
  V.X.h=box=>{const x=X(),n=Object.keys(x.bd).length;
   box.appendChild(h('div','opacity:.85;margin-bottom:6px','Em đã mở được '+n+'/'+BAD.length+' huy hiệu. Bấm vào huy hiệu đã mở để chọn làm danh hiệu hiển thị cạnh tên.'));
   const g=h('div','display:grid;grid-template-columns:1fr 1fr;gap:6px');
@@ -8527,7 +8532,7 @@ const UI2=(()=>{const LS='ttt3d_ui_full';let full=0,more=0;try{full=localStorage
   ico('vc',VOICE.on?'🎙️':'🎤');{const p=document.getElementById('ptt');if(p){p.classList.toggle('on',!!VOICE.on);p.classList.toggle('talk',VOICE.talking);p.classList.toggle('mute',VOICE.selfMuted);if(p.firstChild)p.firstChild.textContent=VOICE.selfMuted?'🔇':'🎤';if(p.lastChild&&p.lastChild.nodeType==3)p.lastChild.textContent=VOICE.selfMuted?'Mic tắt':'Mic mở'}}
   ico('snd',SND.on()?'🔊':'🔇');ico('mus',SND.mus()?'🎵':'🔕');ico('fp',FPV?'🎥':'👁');
   try{const left=carLeft();let bd=document.querySelector('#dk_car b i');if(left>0){if(!bd){bd=document.createElement('i');document.querySelector('#dk_car b').appendChild(bd)}bd.textContent=Math.ceil(left/60000)+'p'}else if(bd)bd.remove()}catch(e){}
-  try{const on=!!(CL.ok&&MP.uid&&state=='play');if(on&&!emb){emb=1;['👋','😀','👍','❤️','🎉','❓'].forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.textContent=e;b.onclick=ev=>{ev.stopPropagation();MP.emo(i)};b.addEventListener('pointerdown',ev=>ev.stopPropagation());emq.appendChild(b)});emq.insertBefore(CHAT.btn,emq.firstChild);document.body.appendChild(emq)}emq.style.display=on?'flex':'none'}catch(e){}};
+  try{const on=!!(MP.uid&&state=='play');if(on&&!emb){emb=1;['👋','😀','👍','❤️','🎉','❓'].forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.textContent=e;b.onclick=ev=>{ev.stopPropagation();MP.emo(i)};b.addEventListener('pointerdown',ev=>ev.stopPropagation());emq.appendChild(b)});emq.insertBefore(CHAT.btn,emq.firstChild);document.body.appendChild(emq)}emq.style.display=on?'flex':'none'}catch(e){}};
  setInterval(sync,300);sync();
  return{sync,set full(v){full=v?1:0;sync()},get full(){return full}}})();
 try{if(!sessionStorage.getItem('ttt3d_rot')){$('rot').classList.add('on');sessionStorage.setItem('ttt3d_rot','1');setTimeout(()=>$('rot').classList.remove('on'),9000)}}catch(e){$('rot').classList.add('on')}
