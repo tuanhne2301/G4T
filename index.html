@@ -564,7 +564,7 @@ function donBuild(host,dark,compact){if(!host)return;host.innerHTML='';
  const w=E('div','text-align:left;line-height:1.55;font-size:14px;padding:12px 14px;border-radius:16px;border:2px solid #ff8fb8;background:'+(dark?'rgba(255,143,184,.10)':'rgba(255,255,255,.78)'));
  if(!compact)w.appendChild(E('div','font-weight:800;font-size:16px;margin-bottom:6px;color:'+(dark?'#ffb3cf':'#d6336c'),'💖 Cùng chung tay nuôi lớn GAME 4 TEEN'));
  if(compact)w.appendChild(E('div','margin:2px 0;font-size:13px;--x:1','GAME 4 TEEN do một giáo viên Trường THCS An Quang tự làm, miễn phí và sẽ luôn miễn phí. Nếu em, phụ huynh hoặc thầy cô thấy game vui và có ích, một khoản ủng hộ nhỏ sẽ tiếp thêm động lực để tác giả làm thêm vùng đất, thú cưỡi và trò chơi học tập mới.'));else{w.appendChild(E('div','margin:6px 0','GAME 4 TEEN do một giáo viên Trường THCS An Quang tự làm trong những lúc rảnh, để các em vừa chơi vừa học mà không phải xem quảng cáo hay tốn tiền. Game miễn phí và sẽ luôn miễn phí.'));
- w.appendChild(E('div','margin:6px 0','Mỗi khu thiên nhiên mới, loài vật mới, câu hỏi mới đều tốn rất nhiều thời gian, công sức và cả chi phí duy trì. Nếu em, phụ huynh hoặc thầy cô thấy game vui và có ích, một khoản ủng hộ nhỏ (dù chỉ vài nghìn đồng) sẽ tiếp thêm động lực và kinh phí để tác giả làm tiếp: thêm vùng đất mới, thêm thú cưỡi, thêm nhiều trò chơi học tập hay hơn nữa.'));
+ w.appendChild(E('div','margin:6px 0','Mỗi môi trường sống mới, loài vật mới, câu hỏi mới đều tốn rất nhiều thời gian, công sức và cả chi phí duy trì. Nếu em, phụ huynh hoặc thầy cô thấy game vui và có ích, một khoản ủng hộ nhỏ (dù chỉ vài nghìn đồng) sẽ tiếp thêm động lực và kinh phí để tác giả làm tiếp: thêm vùng đất mới, thêm thú cưỡi, thêm nhiều trò chơi học tập hay hơn nữa.'));
  }if(compact)w.appendChild(E('div','margin:4px 0;padding:6px 8px;border-radius:10px;font-size:12px;--x:1;background:rgba(255,214,231,.55)','🌟 Hoàn toàn tự nguyện, không ủng hộ em vẫn chơi đầy đủ; ủng hộ cũng không nhận thêm xu hay vật phẩm. Các em hãy xin phép bố mẹ trước khi chuyển khoản nhé!'));else w.appendChild(E('div','margin:6px 0;padding:8px 10px;border-radius:12px;background:'+(dark?'rgba(255,255,255,.08)':'rgba(255,214,231,.55)'),'🌟 Ủng hộ hoàn toàn tự nguyện. Không ủng hộ em vẫn chơi đầy đủ mọi tính năng, và ủng hộ cũng không nhận thêm xu hay vật phẩm nào trong game. Các em học sinh hãy xin phép bố mẹ trước khi chuyển khoản nhé!'));
  const bx=E('div','display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0 4px');
  const im=E('img','width:'+(compact?'200':'210')+'px;max-width:68vw;height:auto;background:#fff;padding:8px;border-radius:12px;image-rendering:pixelated;box-shadow:0 2px 10px #0003');im.src=DON.qr;im.alt='Mã QR chuyển khoản';bx.appendChild(im);
@@ -1878,15 +1878,15 @@ const NAT=(()=>{
  mkRoad([[60,1260],[-150,1262],[-350,1300],[-600,1360],[-790,1400]]);
  mkRoad([[-350,1300],[-480,900],[-520,300],[-460,-300],[-560,-700],[-900,-1000]]);
  mkRoad([[-900,-1000],[-1800,-1060],[-2800,-1000],[-4000,-940],[-5400,-1030],[-6600,-1000],[-7600,-1000],[-9000,-960],[-10400,-1040],[-11600,-1000],[-12400,-1000]]);
- mkRoad([[-2800,-1000],[-2850,-850],[-2800,-640]]);mkRoad([[-7600,-1000],[-7650,-850],[-7600,-640]]);mkRoad([[-12400,-1000],[-12350,-850],[-12400,-640]]);mkRoad([[-12400,-1000],[-12450,-1200],[-12400,-1390]]);
+ mkRoad([[-2800,-1000],[-2850,-850],[-2800,-640]]);mkRoad([[-7000,-1000],[-7050,-850],[-7000,-640]]);mkRoad([[-11200,-1000],[-11150,-850],[-11200,-640]]);mkRoad([[-12400,-1000],[-12450,-1200],[-12400,-1390]]);
  /* cổng Bắc -> vùng quê; cổng Đông -> bãi biển, đầm lầy ven biển; cổng Nam -> hang động; quốc lộ phía nam -> sa mạc nội địa, núi lửa */
  mkRoad([[1260,60],[1260,-200],[1340,-450],[1250,-650],[1290,-780]]);
  mkRoad([[2460,1260],[2800,1262],[3050,1400],[3300,1180],[3590,1400]]);
- mkRoad([[3050,1400],[3200,2000],[3150,2700],[3350,3300],[3900,3700],[4800,3850],[6000,3990]]);
+ mkRoad([[3050,1400],[3200,2000],[3150,2700],[3350,3300],[3900,3700],[4800,3850],[5600,3990]]);
  mkRoad([[1260,2460],[1260,2800],[1180,3050],[1320,3300],[1310,3590]]);
- /* quốc lộ phía nam -> đầm lầy, núi lửa */
+ /* quốc lộ phía nam -> sa mạc (cạnh thảo nguyên), đầm lầy (dưới rừng), núi lửa (gần biển) */
  mkRoad([[-350,1300],[-430,2000],[-640,2800],[-950,3560],[-1700,3780],[-2900,3700],[-4100,3760],[-5400,3700],[-6800,3740],[-8000,3700],[-9400,3720],[-10800,3740],[-12400,3720]]);
- mkRoad([[-3000,3720],[-3000,3850],[-3000,3990]]);mkRoad([[-7800,3720],[-7800,3850],[-7800,3990]]);mkRoad([[-12400,3720],[-12400,3850],[-12400,3990]]);
+ mkRoad([[-3000,3720],[-3000,3850],[-3000,3990]]);mkRoad([[-7200,3720],[-7200,3850],[-7200,3990]]);mkRoad([[-11400,3720],[-11400,3850],[-11400,3990]]);
  const SEG=[],BK={};
  for(const r of ROADS)for(let k=0;k+1<r.p.length;k++){const a=r.p[k],b=r.p[k+1],id=SEG.length;SEG.push([a[0],a[1],b[0],b[1],r.w/2]);
   for(let i=Math.floor((Math.min(a[0],b[0])-60)/500);i<=Math.floor((Math.max(a[0],b[0])+60)/500);i++)for(let j=Math.floor((Math.min(a[1],b[1])-60)/500);j<=Math.floor((Math.max(a[1],b[1])+60)/500);j++){const q=i+','+j;(BK[q]||(BK[q]=[])).push(id)}}
@@ -1895,11 +1895,11 @@ const NAT=(()=>{
  const roadD=(x,y)=>{let d=1e9;const bi=Math.floor(x/500),bj=Math.floor(y/500);for(let i=bi-1;i<=bi+1;i++)for(let j=bj-1;j<=bj+1;j++){const l=BK[i+','+j];if(!l)continue;for(const k of l){const g=SEG[k],q=segD(g,x,y)-g[4];if(q<d)d=q}}return d<0?0:d};
  const RL=[];
  const mkRealm=(id,n,x0,y0,music,e)=>{const R=Object.assign({id,n,x0,y0,music,tl:[],built:false,H:{},fd:{w:1,n:1,s:1,e:1}},e||{});R.x1=R.x0+RS;R.y1=R.y0+RS;RL.push(R);return R};
- const FO=mkRealm('forest','Rừng nhiệt đới',-4800,-600,'forest'),GR=mkRealm('grass','Thảo nguyên',-9600,-600,'village'),SN=mkRealm('snow','Vùng tuyết',-14400,-600,'snow'),
+ const FO=mkRealm('forest','Rừng nhiệt đới',-4800,-600,'forest'),GR=mkRealm('grass','Thảo nguyên',-9000,-600,'village'),SN=mkRealm('snow','Vùng tuyết',-13200,-600,'snow'),
   MO=mkRealm('mount','Núi Fansipan thu nhỏ',-14400,-5400,'mount'),VI=mkRealm('village','Làng quê & ruộng lúa',-600,-4800,'village'),
   BE=mkRealm('beach','Biển & bãi cát',3600,-600,'beach',{fd:{w:1,n:1,s:1,e:0}}),IS=mkRealm('island','Đảo nhiệt đới',8400,-600,'island',{fd:{w:0,n:0,s:0,e:0}}),
-  CA=mkRealm('cave','Hang động đá vôi',-600,3600,'cave'),DE=mkRealm('desert','Sa mạc & kim tự tháp',-5000,4000,'desert'),RE=mkRealm('reef','Rạn san hô & đáy biển',8400,4000,'reef',{fd:{w:0,n:0,s:0,e:0}}),
-  SW=mkRealm('swamp','Đầm lầy & rừng ngập nước',4000,4000,'swamp'),VO=mkRealm('volcano','Núi lửa',-9800,4000,'volcano'),PH=mkRealm('prehis','Nguyên thủy (thời khủng long)',-14400,4000,'prehis'),DL=mkRealm('plateau','Cao nguyên Thông Xanh',-9600,-5400,'mount');
+  CA=mkRealm('cave','Hang động đá vôi',-600,3600,'cave'),DE=mkRealm('desert','Sa mạc & kim tự tháp',-9200,4000,'desert'),RE=mkRealm('reef','Rạn san hô & đáy biển',8400,4000,'reef',{fd:{w:0,n:0,s:0,e:0}}),
+  SW=mkRealm('swamp','Đầm lầy & rừng ngập nước',-5000,4000,'swamp'),VO=mkRealm('volcano','Núi lửa',3600,4000,'volcano'),PH=mkRealm('prehis','Nguyên thủy (thời khủng long)',-13400,4000,'prehis'),DL=mkRealm('plateau','Cao nguyên Thông Xanh',-10200,-5400,'mount');
  const realmAt=(x,y)=>{for(const R of RL)if(x>=R.x0&&x<R.x1&&y>=R.y0&&y<R.y1)return R;return null};
  const seaOut=(x,y)=>x>6050&&!(x>=IS.x0&&x<IS.x1&&y>=IS.y0&&y<IS.y1)&&!(x>=BE.x0&&x<BE.x1&&y>=BE.y0&&y<BE.y1)&&!(x>=RE.x0&&x<RE.x1&&y>=RE.y0&&y<RE.y1);
  const walk=(x,y)=>x>XMIN&&x<XMAX&&y>YMIN&&y<YMAX&&!seaOut(x,y);
@@ -2148,6 +2148,9 @@ const NATV=(()=>{
  const GC={leaf:['#2f6b34','#3b7d3a','#2d6a2e','#467f3e'],wall:['#f2e6c8','#e8dcc0','#efe0b8','#e3d5b5','#f5ecd2'],roof:['#b4472f','#a33d2a','#8a4a2f'],sw:['#3f6f3a','#4f7f3a','#355f34']};
  const PI2=Math.PI;
  const gt=(R,x,y)=>{const u=x-R.x0,v=y-R.y0;return N.raw(R,u,v)*N.fadeOf(R,u,v)};
+ /* rìa môi trường sống pha dần sang màu nền chung của vùng đệm để không còn đường ranh giới */
+ const EBA={};{const q={forest:'#4a9a3a',village:'#8fca48',mount:'#6f9a4c',snow:'#dfe9f0',desert:'#e3c274',swamp:'#5f7a3c',volcano:'#4a403a',plateau:'#7cc05a',prehis:'#4f7a30'};for(const k in q)EBA[k]=C(q[k])}
+ const EB=(R,u,v,h,c)=>{const bq=EBA[R.id];if(!bq||h<-.5)return c;const f=N.fadeOf(R,u,v);if(f>=.98)return c;return mx(c,bq,(1-f)*.6)};
  const col=(R,u,v,h,sl)=>{const j=1+.05*Math.sin(u*.37+v*.21)+.03*Math.sin(u*.11-v*.17);let c;
   switch(R.id){
   case'forest':{const d=Math.abs(v-N.FRV(u));if(d<150)c=C('#8f7f55');else if(Math.hypot(u-2000,v-2000)<190)c=C('#b39a6a');else if((Math.abs(u-2000)<34&&v<2000)||(Math.abs(v-2000)<34&&u<2000))c=C('#9b8660');else c=mx(C('#3d7a33'),C('#5a9a3c'),sm(-60,70,h)*.8+.1*Math.sin(u*.05));break}
@@ -2183,7 +2186,7 @@ const NATV=(()=>{
   const step=R.id=='forest'?25:R.id=='beach'?40:R.id=='desert'?40:R.id=='reef'?40:R.id=='swamp'?40:R.id=='volcano'?40:R.id=='prehis'?40:50,nn=RS/step;
   for(let ti=0;ti<5;ti++)for(let tj=0;tj<5;tj++){const t0=ti,t1=tj;R.q.push(()=>{const per=TS/step;for(let a=0;a<per;a++)for(let b=0;b<per;b++){const u=t0*TS+a*step,v=t1*TS+b*step,x=R.x0+u,z=R.y0+v,
     h00=gt(R,x,z),h10=gt(R,x+step,z),h01=gt(R,x,z+step),h11=gt(R,x+step,z+step);
-    const hm=(h00+h10+h01+h11)/4,sl=(Math.max(h00,h10,h01,h11)-Math.min(h00,h10,h01,h11))/step,c=col(R,u+step/2,v+step/2,hm,sl),m=bm(x+1,z+1);
+    const hm=(h00+h10+h01+h11)/4,sl=(Math.max(h00,h10,h01,h11)-Math.min(h00,h10,h01,h11))/step,c=EB(R,u+step/2,v+step/2,hm,col(R,u+step/2,v+step/2,hm,sl)),m=bm(x+1,z+1);
     const A=[x,h00,z],Bp=[x+step,h10,z],Cc=[x,h01,z+step],D=[x+step,h11,z+step];
     m.tri(A,Cc,Bp,nrm(A,Cc,Bp),nrm(A,Cc,Bp),nrm(A,Cc,Bp),c);m.tri(Bp,Cc,D,nrm(Bp,Cc,D),nrm(Bp,Cc,D),nrm(Bp,Cc,D),c)}},)}
   /* ---- mặt nước ---- */
@@ -2315,7 +2318,7 @@ const NATV=(()=>{
  return{upd,pre,pump,setup,roads}})();
 
 NATV.roads();
-/* ===== phong cảnh lấp đầy: nền cỏ có đồi, cây cối, hoa, đá, công trình ở giữa và trong các khu thiên nhiên ===== */
+/* ===== phong cảnh lấp đầy: nền cỏ có đồi, cây cối, hoa, đá, công trình ở giữa và trong các môi trường sống ===== */
 const SCN=(()=>{
  const N=NAT,{Mesh,stackY}=K3,TS=800,X0=N.XMIN,X1=N.XMAX,Y0=N.YMIN,Y1=N.YB+400,TX=Math.ceil((X1-X0)/TS),TY=Math.ceil((Y1-Y0)/TS),inCity=(x,y,e)=>{e=e||0;return x>-e&&x<S+e&&y>-e&&y<S+e};
  const matL=new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide});seeThru(matL);
@@ -2444,20 +2447,30 @@ const ANIM=(()=>{
  /* ---- bốn chân ---- */
  const quad=p=>{const L=p.L,H=p.H,W=p.W||H*.9,lg=p.leg,hy=lg+H*.5,hs=p.hs,M=new Mesh(),g=grp(),nl=p.neck||0;
   M.loft(ellip(L,H,W,14,10),{col:p.c1},{t:[0,hy,0]});
+  if(p.wool)M.loft(ellip(L*1.07,H*1.16,W*1.16,12,8),{col:p.wool},{t:[0,hy+H*.04,0]});
+  if(p.skirt)M.loft(ellip(L*.95,H*.62,W*1.1,12,8),{col:p.skirt},{t:[0,hy-H*.42,0]});
   if(p.belly)M.loft(ellip(L*.88,H*.6,W*.92,12,8),{col:p.c2,},{t:[0,hy-H*.38,0]});
   if(p.hump)M.loft(ellip(H*.5,H*.62,W*.55,10,8),{col:p.c1},{t:[-L*.05,hy+H*.95,0]});
   if(p.mane)M.loft(ellip(L*.55,H*.95,W*1.05,10,8),{col:p.c3},{t:[L*.55,hy+H*.1,0]});
   let hx=L*.82+hs*.5,hyy=hy+H*.45;
-  if(nl>0){M.loft(ellip(H*.4,nl*.75+H*.3,H*.42,10,8),{col:p.c1},{t:[L*.82+nl*.32,hy+H*.4+nl*.52,0],r:[0,0,-.38]});hx=L*.82+nl*.75+hs*.4;hyy=hy+H*.4+nl*1.05}
-  M.loft(ellip(hs*1.15,hs*1.07,hs*1.1,14,10),{col:p.c1},{t:[hx,hyy,0]});
+  if(nl>0){M.loft(ellip(H*.4,nl*.75+H*.3,H*.42,10,8),{col:p.hc||p.c1},{t:[L*.82+nl*.32,hy+H*.4+nl*.52,0],r:[0,0,-.38]});hx=L*.82+nl*.75+hs*.4;hyy=hy+H*.4+nl*1.05}
+  M.loft(ellip(hs*1.15,hs*1.07,hs*1.1,14,10),{col:p.hc||p.c1},{t:[hx,hyy,0]});
+  if(p.ruff)M.loft(ellip(hs*.85,hs*1.02,hs*1.08,10,8),{col:p.ruff},{t:[hx-hs*.5,hyy-hs*.08,0]});
+  if(p.trunk){for(let i=0;i<5;i++){const r=hs*(.36-i*.045);M.loft(ellip(r,hs*.55,r,8,6),{col:p.c1},{t:[hx+hs*.78+i*hs*.1,hyy-hs*.15-i*hs*.5,0]})}M.loft(ellip(hs*.2,hs*.12,hs*.2,6,4),{col:'#5a5f68'},{t:[hx+hs*1.3,hyy-hs*2.55,0]})}
+  if(p.rhino)cone(M,hs*.34,hs*1.15,'#d9d2c0',{t:[hx+hs*1.0,hyy+hs*.18,0],r:[0,0,-.3]});
+  if(p.blaze)M.loft(ellip(hs*.75,hs*.1,hs*.15,8,6),{col:p.blaze},{t:[hx+hs*.2,hyy+hs*1.0,0]});
   M.loft(ellip(hs*(p.sn||.6),hs*.46,hs*.52,10,8),{col:p.c2||p.c1},{t:[hx+hs*.72,hyy-hs*.28,0]});
   M.loft(ellip(hs*.17,hs*.14,hs*.2,6,4),{col:'#2a1d1d'},{t:[hx+hs*(.72+(p.sn||.6)*.95),hyy-hs*.18,0]});
-  cEyes(M,hx+hs*.66,hyy+hs*.2,hs*.72,hs*.27);blush(M,hx+hs*.55,hyy-hs*.2,hs*.88,hs*.25);
+  if(p.mask)for(const s of[-1,1])M.loft(ellip(hs*.34,hs*.44,hs*.13,8,6),{col:p.mask},{t:[hx+hs*.6,hyy+hs*.18,s*hs*.7],r:[s*.1,0,s*.35]});
+  cEyes(M,hx+hs*.66,hyy+hs*.2,hs*.72,hs*.27*(p.es||1));blush(M,hx+hs*.55,hyy-hs*.2,hs*.88,hs*.25);
   for(const s of[-1,1]){const e=p.ear;
-   if(e=='round')M.loft(ellip(hs*.28,hs*.34,hs*.3,8,6),{col:p.c1},{t:[hx-hs*.1,hyy+hs*.88,s*hs*.62]});
-   else if(e=='long')M.loft(ellip(hs*.2,hs*.95,hs*.26,8,6),{col:p.c1},{t:[hx-hs*.2,hyy+hs*1.05,s*hs*.5],r:[s*.28,0,-.12]});
+   if(e=='round')M.loft(ellip(hs*.28,hs*.34,hs*.3,8,6),{col:p.ec||p.c1},{t:[hx-hs*.1,hyy+hs*.88,s*hs*.62]});
+   else if(e=='floppy')M.loft(ellip(hs*.2,hs*.62,hs*.3,8,6),{col:p.ec||p.c3||p.c1},{t:[hx-hs*.05,hyy+hs*.05,s*hs*.97],r:[s*.25,0,0]});
+   else if(e=='long')M.loft(ellip(hs*.2,hs*.95,hs*.26,8,6),{col:p.ec||p.c1},{t:[hx-hs*.2,hyy+hs*1.05,s*hs*.5],r:[s*.28,0,-.12]});
    else if(e=='point')cone(M,hs*.3,hs*.8,p.c1,{t:[hx-hs*.15,hyy+hs*.75,s*hs*.5],r:[s*.25,0,0]});
    else if(e=='big')M.loft(ellip(hs*.14,hs*1.2,hs*.55,8,6),{col:p.c1},{t:[hx-hs*.2,hyy+hs*1.0,s*hs*.55],r:[s*.25,0,0]});
+   if(p.tusk)cone(M,hs*.16*p.tusk,hs*1.3*p.tusk,'#f6f0dc',{t:[hx+hs*.85,hyy-hs*.7,s*hs*.42],r:[s*.1,0,-1.6]});
+   if(p.tuskU)cone(M,hs*.13,hs*.55,'#f1ead4',{t:[hx+hs*1.05,hyy-hs*.38,s*hs*.3],r:[0,0,-.25]});
    if(p.horn=='antler'){M.box(hs*.16,hs*1.5,hs*.16,'#c9a56a',{t:[hx-hs*.2,hyy+hs*1.55,s*hs*.5],r:[s*.38,0,-.18]});M.box(hs*.13,hs*.8,hs*.13,'#c9a56a',{t:[hx+hs*.05,hyy+hs*2.1,s*hs*.95],r:[s*.9,0,.35]});M.box(hs*.13,hs*.7,hs*.13,'#c9a56a',{t:[hx-hs*.45,hyy+hs*2.15,s*hs*.8],r:[s*.7,0,-.5]})}
    if(p.horn=='horn')cone(M,hs*.22,hs*1.3,'#ece0c4',{t:[hx-hs*.15,hyy+hs*.75,s*hs*.62],r:[s*.62,0,.5]});
    if(p.horn=='curve')cone(M,hs*.2,hs*1.4,'#d8ccb0',{t:[hx-hs*.2,hyy+hs*.8,s*hs*.45],r:[s*.2,0,.8]})}
@@ -2468,8 +2481,17 @@ const ANIM=(()=>{
   else if(t=='short')M.loft(ellip(L*.16,L*.16,L*.16,8,6),{col:p.c2||p.c1},{t:[-L-L*.1,hy+H*.15,0]});
   if(p.spots)for(let i=0;i<7;i++)M.loft(ellip(H*.2,H*.12,H*.2,6,4),{col:p.c3},{t:[-L*.6+i*L*.22,hy+H*(.75-(i%3)*.12),((i*5)%3-1)*W*.55]});
   if(p.arm){for(const s of[-1,1])M.loft(ellip(H*.28,H*.28,H*.28,6,4),{col:p.c2||p.c1},{t:[L*.4,hy+H*.1,s*W*1.05]})}
+
+  {const sf=x=>Math.sqrt(Math.max(.02,1-(x/L)*(x/L))),fr=i=>(i*.6180339)%1;
+   if(p.stripe){const n=p.ns||8;for(let i=0;i<n;i++){const x=-L*.72+i*(L*1.44/(n-1)),s=sf(x);M.loft(ellip(L*.05,H*s*1.04,W*s*1.04,8,6),{col:p.stripe},{t:[x,hy,0],r:[0,0,i%2?.07:-.07]})}}
+   if(p.band){const x=L*p.band[0],s=sf(x);M.loft(ellip(L*.17,H*s*1.05,W*s*1.05,8,6),{col:p.band[1]},{t:[x,hy,0]})}
+   if(p.patch){const np=p.np||5;for(let i=0;i<np;i++){const x=-L*.65+fr(i+1)*L*1.3,s=sf(x),ph=(i%2?1:-1)*(.5+fr(i*3+2)*.75);M.loft(ellip(L*.2,H*.23,W*.23,8,6),{col:p.patch},{t:[x,hy+H*s*Math.cos(ph)*.9,W*s*Math.sin(ph)*.9]})}}
+   if(p.sp2){for(let i=0;i<p.sp2;i++){const x=-L*.82+fr(i+3)*L*1.64,s=sf(x),sd=i%2?1:-1,ph=sd*(.15+fr(i*5+1)*1.05);M.loft(ellip(L*.07,H*.1,W*.1,6,4),{col:p.c3},{t:[x,hy+H*s*Math.cos(ph)*.97,W*s*Math.sin(ph)*.97]})}}
+   if(p.dors)M.loft(ellip(L*.82,H*.1,W*.17,8,6),{col:p.dors},{t:[0,hy+H*.97,0]});
+   if(p.chest)M.loft(ellip(L*.2,H*.62,W*.82,8,6),{col:p.chest},{t:[L*.8,hy-H*.12,0]});
+   if(p.side)for(let i=0;i<6;i++){const x=-L*.7+i*L*.28,s=sf(x);for(const sd of[-1,1])M.loft(ellip(L*.2,H*.1,W*.1,6,4),{col:p.side},{t:[x,hy+H*.12,sd*W*s*.96]})}}
   g.add(GM(M));
-  const lh=lg+H*.45,lm=new Mesh();lm.box(p.lt,lh,p.lt,p.c4||p.c1,{t:[0,-lh/2,0]});lm.box(p.lt*1.15,p.lt*.7,p.lt*1.15,p.hoof||'#3b2c24',{t:[0,-lh+p.lt*.35,0]});const lgeo=kgeo(lm.build()),legs=[];
+  const lh=lg+H*.45,lm=new Mesh();lm.box(p.lt,lh,p.lt,p.c4||p.c1,{t:[0,-lh/2,0]});if(p.sock)lm.box(p.lt*1.1,lh*.32,p.lt*1.1,p.sock,{t:[0,-lh+lh*.16+p.lt*.65,0]});lm.box(p.lt*1.15,p.lt*.7,p.lt*1.15,p.hoof||'#3b2c24',{t:[0,-lh+p.lt*.35,0]});const lgeo=kgeo(lm.build()),legs=[];
   for(const[x,z]of[[.55,.55],[.55,-.55],[-.55,.55],[-.55,-.55]]){const q=grp();q.position.set(L*x,lh,W*z*.9);q.add(new THREE.Mesh(lgeo,mA));g.add(q);legs.push(q)}
   g.userData.legs=legs;return g};
  /* ---- chim ---- */
@@ -2757,7 +2779,7 @@ const ANIM=(()=>{
  {id:'caoco',n:'Hươu cao cổ',e:'🦒',r:'grass',b:'quad',m:'walk',c:4,v:.5,rm:300,p:{L:4.6,H:2.5,leg:7,lt:.9,hs:1.5,sn:.7,ear:'point',tail:'short',c1:'#e8b04a',c2:'#f4dca0',belly:1,c3:'#8a5a2a',spots:1,neck:7.5},t:'Hươu cao cổ là loài cao nhất thế giới, cao tới gần 6 mét. Chiếc cổ dài giúp chúng ăn lá ở những cành cây rất cao mà các loài khác không với tới.',h:'Thảo nguyên'},
  {id:'gnu',n:'Linh dương đầu bò',e:'🐃',r:'grass',b:'quad',m:'walk',c:7,v:.8,rm:340,p:{L:4.2,H:2.4,leg:3.6,lt:.9,hs:1.8,sn:.9,ear:'point',horn:'curve',tail:'long',c1:'#6f6f78',c2:'#8a8a92',mane:1,c3:'#33333a'},t:'Linh dương đầu bò (gnu) di cư theo đàn hàng triệu con để tìm cỏ non và nước. Đây là một trong những cuộc di cư lớn nhất của động vật trên Trái Đất.',h:'Thảo nguyên'}
  ];
- const VR=(base,id,n,e,r,c,o,t,h,x)=>{const b=SPS.find(q=>q.id==base);if(!b)throw new Error('base '+base);return Object.assign({},b,{id,n,e,r,c,z:undefined,alt:b.m=='fly'?b.alt:undefined,tp:undefined,p:Object.assign({},b.p,o)},x||{},{t,h})};
+ const VR=(base,id,n,e,r,c,o,t,h,x)=>{const b=SPS.find(q=>q.id==base);if(!b)throw new Error('base '+base);return Object.assign({},b,{bs:b.bs||b.id,id,n,e,r,c,z:undefined,alt:b.m=='fly'?b.alt:undefined,tp:undefined,p:Object.assign({},b.p,o)},x||{},{t,h})};
  SPS.push(
  /* ===== RỪNG NHIỆT ĐỚI ===== */
  VR('khi','vooc','Voọc','🐒','forest',7,{c1:'#26262a',c2:'#f1ede0',c3:'#1a1a1e'},'Voọc là họ hàng của khỉ, chuyên ăn lá cây non. Nhiều loài voọc ở Việt Nam rất quý hiếm và nằm trong Sách đỏ, cần được bảo vệ.','Rừng nhiệt đới'),
@@ -2929,7 +2951,92 @@ const ANIM=(()=>{
  VR('buom','buomhoa','Bướm hoa','🦋','plateau',10,{s:1.6,c1:'#ff8ab8',c2:'#ffe0ee'},'Bướm hoa lượn trên những luống hoa, hút mật bằng chiếc vòi dài. Nhờ bướm, phấn hoa được chuyển từ hoa này sang hoa khác để cây kết trái.','Vườn hoa'),
  VR('buomvang','ongmat','Ong mật','🐝','plateau',9,{s:1.3,c1:'#f2c230',c2:'#2a2a30'},'Ong mật sống thành đàn, mỗi tổ có một ong chúa, ong thợ và ong đực. Ong thợ đi hút mật, làm mật và giúp hoa thụ phấn nên rất có ích.','Vườn hoa, rừng thông')
  );
- const BYID={};for(const s of SPS)BYID[s.id]=s;
+  /* ===== NGOẠI HÌNH ĐẶC TRƯNG: vằn, đốm, mặt nạ, vòi, sừng, bờm... để mỗi loài nhìn khác nhau ===== */
+ const LOOKX={
+  ho:{stripe:'#2a1a10',ns:10,spots:0,chest:'#fbf0dc',c2:'#fbf0dc',es:1.1,blaze:'#f8ecd8'},
+  bao:{sp2:30,spots:0,es:1.1,chest:'#f8ecd0'},
+  baogam:{patch:'#4a3a28',np:6,sp2:14,es:1.15,ear:'round',L:4.2,leg:2.2,sn:.55},
+  baosan:{sp2:34,spots:0,L:3.9,H:1.55,leg:4.3,hs:1.2,sn:.5,es:1.2,mask:'#2a2018',side:'#2a2018',chest:'#f6ead0'},
+  baotuyet:{sp2:24,spots:0,tail:'long',L:4.3,H:2.1,leg:2.5,c3:'#4a4e55',chest:'#f4f6f8',es:1.1},
+  puma:{spots:0,chest:'#f4e8d2',sock:'#8a6a40',es:1.1},
+  linhmieu:{sp2:12,ear:'point',tail:'short',sock:'#3a2a1a',es:1.1},
+  sutu:{chest:'#f4e2bc',tail:'long',ruff:'#7a4a22',mane:1,es:1.05},
+  nguavan:{stripe:'#1a1a1a',ns:12,spots:0,blaze:'#1a1a1a',mask:'#1a1a1a',mane:1,dors:'#1a1a1a',sock:'#3a3a3a'},
+  caoco:{patch:'#9a5a22',np:10,spots:0,horn:'horn',ec:'#9a5a22',hc:'#e8b04a',blaze:'#c98a3a',es:1.1,tail:'short'},
+  bo:{patch:'#2a2a2a',np:6,spots:0,blaze:'#2a2a2a',ec:'#2a2a2a',horn:'horn',es:1.05},
+  bosua:{patch:'#2b2b30',np:7,spots:0,blaze:'#f7f3ea',ec:'#2b2b30',es:1.05},
+  cuu:{wool:'#f7f3ea',hc:'#3a3430',ec:'#3a3430',c2:'#3a3430',c4:'#3a3430',tail:'short',es:1.15,hs:1.3},
+  cuuden:{wool:'#4a4642',hc:'#2a2622',ec:'#2a2622',c4:'#2a2622'},
+  cuunui:{wool:'#e9e2d2',hc:'#d9cdb8',ec:'#d9cdb8',horn:'curve',c4:'#8a7a68',es:1.1},
+  denuilua:{horn:'curve',dors:'#5a4a3a',sock:'#2a2018',ruff:'#8a7a68'},
+  llama:{wool:'#e8d8bc',hc:'#d9c3a0',ec:'#b8946a',sock:'#b8946a',es:1.2,neck:4.4},
+  lacda:{ruff:'#a07a3c',hump:1,sock:'#b98a47',es:1.05,hc:'#d9b070'},
+  heo:{ear:'floppy',ec:'#e89a94',c3:'#e89a94',tail:'curl',tuskU:0,es:1.15,sn:.9},
+  lonrung:{dors:'#2f2620',tuskU:1,ear:'point',sock:'#2f2620',stripe:0,hs:1.8},
+  lonbuou:{dors:'#2f2620',tuskU:1,mane:1,sock:'#2f2620'},
+  cho:{ear:'floppy',ec:'#a8742f',chest:'#f4e2bd',sock:'#f4e2bd',blaze:'#f4e2bd',es:1.15},
+  meo:{stripe:'#b86a22',ns:7,chest:'#f6e6c8',sock:'#f6e6c8',es:1.25,ear:'point',tail:'long'},
+  meocat:{chest:'#f6eed8',sock:'#f6eed8',es:1.2,mask:'#b89a5a'},
+  linhcau:{sp2:16,mask:'#2a2018',ear:'round',ruff:'#6a5238',sock:'#4a3a2a',dors:'#4a3a2a',sn:.9,es:1.05},
+  soi:{ruff:'#b4b8be',dors:'#575a62',chest:'#e3e6ea',sock:'#6f737b',tail:'bushy',es:1.05},
+  caodo:{sock:'#2a1c14',chest:'#fff3e6',tail:'bushy',es:1.1,ec:'#2a1c14'},
+  caoxam:{sock:'#4a4c52',chest:'#f2f2f4',dors:'#4a4c52',es:1.1},
+  caosm:{ear:'big',es:1.2,sock:'#d6ad6c',chest:'#fbf0dc'},
+  caotuyet:{es:1.15,sock:'#e9eef2',ec:'#d8dee4'},
+  gauden:{chest:'#e0b872',sn:.6,es:.95,ec:'#2a2420',mask:0},
+  gauchoi:{chest:'#e6b050',sn:.55,es:1.0},
+  gautrang:{sn:.95,hs:1.9,es:.9,L:6.2,leg:3.4},
+  gautruc:{mask:'#1a1a1a',ec:'#1a1a1a',band:[.5,'#1a1a1a'],sn:.45,es:1.3,hs:2.2},
+  voi:{trunk:1,tusk:1,sn:.4,ear:'big',es:.9,ec:'#7a838e'},
+  voiphi:{trunk:1,tusk:1.25,sn:.4,ear:'big',es:.9,ec:'#74787e'},
+  tegiac:{rhino:1,sn:1.1,ear:'point',es:.85,sock:'#6a6a70',dors:'#7a7a80'},
+  trau:{sock:0,es:.95,dors:'#2a2c32',horn:'curve'},
+  bototr:{sock:'#f0e6d0',hump:1,horn:'curve',es:.95,ec:'#3a2f28'},
+  trauchau:{horn:'curve',es:.95,dors:'#141210',ruff:'#2a2624'},
+  boxa:{skirt:'#2a2018',ruff:'#2a2018',horn:'curve',hc:'#2a2018',es:.95},
+  yak:{skirt:'#14110f',ruff:'#14110f',horn:'curve',es:.95,tail:'long'},
+  ngua:{blaze:'#f6f2ea',sock:'#f6f2ea',ruff:0,mane:1,es:1.1},
+  ngua2:{blaze:'#f6f2ea',sock:'#3a2518',mane:1,es:1.2},
+  lua:{dors:'#4a4a50',band:[.4,'#4a4a50'],sock:'#d9d4c8',chest:'#e6e0d4',es:1.15,ear:'long'},
+  gnu:{ruff:'#2f2f36',dors:'#2f2f36',stripe:'#3a3a42',ns:5,es:.95,horn:'curve'},
+  linhduong:{side:'#6a4a22',chest:'#fff',sock:'#6a4a22',es:1.15},
+  gazelle:{side:'#3a2a1a',chest:'#fff',blaze:'#fff',mask:'#3a2a1a',sock:'#3a2a1a',es:1.2},
+  oryx:{side:'#2a2018',blaze:'#2a2018',mask:'#2a2018',sock:'#2a2018',horn:'horn',es:1.1},
+  nai:{sp2:22,spots:0,chest:'#fff3dd',es:1.15,sock:'#8a5a32'},
+  huou:{sp2:26,spots:0,chest:'#fff3dd',es:1.15,dors:'#7a5230'},
+  mang:{sp2:0,spots:0,es:1.2,chest:'#f6ead2'},
+  tuanloc:{ruff:'#f2ead8',es:1.0,chest:'#f2ead8',sock:'#f2ead8'},
+  sduong:{dors:'#5a4a3a',side:'#cfc3ae',es:1.05,ruff:'#6a5a48'},
+  de:{horn:'curve',blaze:'#f4eee0',ruff:'#cfc3ae',es:1.2,hs:1.4},
+  denui:{ruff:'#ffffff',horn:'curve',es:1.1},
+  khi:{mask:'#e8c9a0',ruff:'#b89968',es:1.15,tail:'long'},
+  vooc:{mask:'#f1ede0',ruff:'#f1ede0',es:1.15,chest:'#f1ede0'},
+  vuon:{mask:'#c9a67a',es:1.1,ruff:'#3a3430'},
+  khidai:{mask:'#f0dcc0',es:1.2,ruff:'#b8a888'},
+  soc:{dors:'#7a4a22',chest:'#f3e4cc',es:1.2,tail:'bushy'},
+  socthong:{dors:'#3a2418',side:'#3a2418',es:1.2},
+  macmot:{chest:'#d9c4a0',es:1.1},
+  mangut:{dors:'#8a6a3a',es:1.2,mask:'#3a2a1a'},
+  chonermine:{es:1.2,sock:'#f6f8fa',dors:0},
+  chon:{mask:'#3a2a1a',chest:'#f2e6c8',es:1.15},
+  cayhuong:{sp2:10,mask:'#3a3228',dors:'#4a4238',sn:1},
+  raica:{chest:'#e6d6b4',es:1.1,ec:'#5a3c26'},
+  tho:{es:1.2,sock:'#f1e8d8',chest:'#f1e8d8'},
+  thorung:{es:1.2,sock:'#efe6d4',dors:'#7a6a4a'},
+  thotuyet:{es:1.2,ec:'#6a6a70'},
+  pika:{es:1.3,ear:'round',tail:0},
+  chuot:{es:1.25,ear:'round',ec:'#c9b8aa'},
+  chuotdong:{es:1.25,dors:'#6a5438'},
+  chuotcanh:{es:1.2,dors:'#7a6a4a'},
+  lemming:{es:1.2,dors:'#7a6a58',hs:1.1},
+  chuotnhay:{es:1.4,ear:'long',sock:'#f6ead0',tail:'long'},
+  nhim:{mane:1,sock:0,es:1.1},
+  tete:{sp2:30,spots:0,es:1.0}
+ };
+ for(const s of SPS){const x=LOOKX[s.id];if(x)Object.assign(s.p,x)}
+ const HZ={caloc:'sw',caheoden:'sea',cuaansi:'coast',datrang:'coast'};for(const s of SPS)if(HZ[s.id]&&!s.z)s.z=HZ[s.id];
+ const OFF=new Set(['buomxanh', 'buomtrang', 'chuonchuondam', 'chuonchuon2', 'ongmat', 'buomhoa', 'bomdem', 'chauchau', 'chimsao', 'gatieu', 'chimchay', 'chichchoe', 'cugay', 'galoitrang', 'ngong', 'bocau', 'hoami', 'garung', 'diecdam', 'vac', 'chimchoat', 'nhanbien', 'kenkenp', 'condor', 'vetmao', 'echdong', 'echhang', 'cocdam', 'thanlanhang', 'thanlangai', 'kyda', 'ret', 'nhenhang', 'cuahang', 'doinau', 'ranlucdat', 'bocapden', 'nhenvang', 'chuotdong', 'chuotcanh', 'thorung', 'socthong', 'ngua2', 'denuilua', 'cuuden', 'caoxam', 'lonbuou', 'caheo2', 'caheoden', 'haicauxam', 'cuaansi', 'datrang']),SPSALL=SPS.slice();{const k=SPS.filter(q=>!OFF.has(q.id));SPS.length=0;k.forEach(q=>SPS.push(q))}
+ const BYID={};for(const s of SPSALL)BYID[s.id]=s;
  /* gộp: các loài đảo dùng chung id với bãi biển để sổ động vật không bị trùng tên (rua2/caheo2 coi là loài riêng) */
  const N=SPS.length,ALL=[];
  const R2=Math.random;
@@ -3842,9 +3949,15 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
  const inst=s=>{if(!s.tp){const bf=MECH.get(s.id);if(bf){try{s.tp=bf()}catch(e){s.tp=null;try{ERR(e)}catch(_){}}}if(!s.tp)s.tp=BU[s.b](s.p)}const mp=new Map(),g=dup(s.tp,mp),u=s.tp.userData,d=g.userData;
   for(const k of['legs','wings','seg'])if(u[k])d[k]=u[k].map(x=>mp.get(x)||x);if(u.sp)d.sp=u.sp;if(u.rig){try{u.rig(mp)}catch(e){}}return g};
  const HERD={walk:1,dash:1,hop:1,slide:1,side:1,school:1};
- const spawnRealm=R=>{R.an=1;const mult=R.id=='plain'?1.6:2.6;for(const s of SPS){if(s.r!=R.id&&!(R.id=='grass'&&s.r=='plain'))continue;
-   const n=Math.max(1,Math.round(s.c*mult)),herd=n>=3&&HERD[s.m]&&s.z!='cave'&&s.z!='sea';let i=0,guard=0;
-   while(i<n&&guard++<n*3){const q=spot(R,s);if(!q)continue;const sch=s.m=='school',ga=rnd(0,6.28),hn=herd?Math.min(n-i,sch?4+Math.floor(R2()*5):2+Math.floor(R2()*4)):1;
+ const HK=o=>{const L=o.ld;if(!L||!L.on||o.b=='flee'||o.b=='run')return null;return(L.b=='walk'&&Math.hypot(L.x-o.x,L.y-o.y)>20)?'walk':null};
+ const SOLO=new Set(['ho','bao','baogam','baosan','baotuyet','puma','gautrang','gauden','gauchoi','gautruc','tegiac','meocat','linhmieu','cayhuong','caosm','mangut','nhim','macmot']),PACK=new Set(['soi','cho','caoxam','caodo','caotuyet','linhcau','sutu','khi','vooc','khidai','vuon']);
+ const GS=s=>{const id=s.bs||s.id;if(SOLO.has(id))return 1+Math.floor(R2()*2);if(PACK.has(id))return 3+Math.floor(R2()*3);return 4+Math.floor(R2()*5)};
+ /* vùng đệm giữa các môi trường: thú của môi trường gần nhất lan ra, càng gần càng nhiều (chuyển tiếp mượt) */
+ const PNOK=new Set(['forest','grass','snow','mount','village','desert','swamp','volcano','plateau']);
+ const PN=(R,s)=>{if(!PNOK.has(s.r)||s.z||s.alt||(s.m!='walk'&&s.m!='dash'&&s.m!='hop'))return 0;const Q=NAT.RL.find(q=>q.id==s.r);if(!Q)return 0;const cx=R.x0+R.W/2,cy=R.y0+R.W/2,d=Math.hypot(Math.max(Q.x0-cx,0,cx-Q.x1),Math.max(Q.y0-cy,0,cy-Q.y1));if(d>1000)return 0;return 1.6/(1+(d/450)*(d/450))};
+ const spawnRealm=R=>{R.an=1;const mult=R.id=='plain'?1.6:2.6;for(const s of SPS){let n;if(s.r==R.id||(R.id=='grass'&&s.r=='plain'))n=Math.max(1,Math.round(s.c*mult));else if(R.id=='plain'){n=Math.round(s.c*PN(R,s));if(n<1)continue}else continue;
+   const herd=n>=2&&HERD[s.m]&&s.z!='cave'&&s.z!='sea';let i=0,guard=0;
+   while(i<n&&guard++<n*3){let q=spot(R,s);if(!q)continue;{const h=BH.habPos(R,s);if(h)q=h}const sch=s.m=='school',ga=rnd(0,6.28),hn=herd?Math.min(n-i,sch?4+Math.floor(R2()*5):GS(s)):1;
     for(let j=0;j<hn;j++,i++){let x=q[0],y=q[1];
      if(j>0&&!sch){const a=rnd(0,6.28),r=rnd(12,60)*Math.max(1,(s.k||1)*.9),nx=q[0]+Math.cos(a)*r,ny=q[1]+Math.sin(a)*r;if(ok(R,nx,ny)&&(R.id!='plain'||NAT.walk(nx,ny))){x=nx;y=ny}}
      ALL.push({ld:j>0&&!sch?ALL[ALL.length-j]:null,s,g:null,x,y,hx:sch?q[0]:x,hy:sch?q[1]:y,a:rnd(0,6.28),t:rnd(0,120),md:'idle',tx:x,ty:y,ph:rnd(0,6.28),R,alt:s.alt?rnd(s.alt[0],s.alt[1]):0,ang:sch?ga+rnd(-.12,.12):rnd(0,6.28),ox:sch?rnd(-18,18):0,oy:sch?rnd(-18,18):0,on:0,d:0,want:0})}}}
@@ -3892,9 +4005,9 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
   const findPrey=o=>{let b=null,bd=260*260;for(const q of ALL){if(!q.on||q===o||q.R!==o.R)continue;const P=PF[q.s.id];if(!P||!P.prey)continue;const d=(q.x-o.x)*(q.x-o.x)+(q.y-o.y)*(q.y-o.y);if(d<bd&&d>40*40){bd=d;b=q}}o.pr=b;return b};
   const pick=(o,P)=>{const w=P.w,L=[],n=isN()&&!NOCT.has(o.s.id)&&!P.nn;let tot=0;for(const k in w){let v=w[k];if(!v||!can(o,k,P))continue;if(n)v=(k=='rest'||k=='doze'||k=='coil'||k=='perch'||k=='still')?v*4:v*.35;L.push([k,v]);tot+=v}
    let r=Math.random()*tot;for(const[k,v]of L){r-=v;if(r<=0)return k}return L.length?L[0][0]:'idle'};
-  const enter=(o,k,P)=>{const R=o.R;o.b=k;o.bs=0;const rn=(a,b)=>a+Math.random()*(b-a);
-   switch(k){case'graze':case'browse':o.bt=rn(300,800);break;case'rest':case'roll':o.bt=rn(700,1800);break;case'doze':o.bt=rn(300,700);break;case'sit':case'stand':o.bt=rn(240,520);break;
-    case'walk':{const r=o.s.rm||150;o.bt=260;if(o.ld&&o.ld.on&&Math.hypot(o.ld.x-o.x,o.ld.y-o.y)>50){o.tx=o.ld.x+rn(-30,30);o.ty=o.ld.y+rn(-30,30)}else{o.tx=o.hx+rn(-r,r);o.ty=o.hy+rn(-r,r)}if(NAT.solid(o.tx,o.ty,0)){o.b='idle';o.bt=30}break}
+  const enter=(o,k,P)=>{const R=o.R;o.b=k;o.bs=0;o.wb=null;const rn=(a,b)=>a+Math.random()*(b-a);
+   switch(k){case'browse':{const q=nearTree(R,o.x,o.y,450,null,99);if(q){const f=Math.atan2(o.y-q.y,o.x-q.x),d=q.r+9;o.tx=q.x+Math.cos(f)*d;o.ty=q.y+Math.sin(f)*d;if(!NAT.solid(o.tx,o.ty,0)){o.b='walk';o.bt=500;o.wb=q;break}}o.bt=rn(300,800);break}case'graze':o.bt=rn(300,800);break;case'rest':case'roll':o.bt=rn(700,1800);break;case'doze':o.bt=rn(300,700);break;case'sit':case'stand':o.bt=rn(240,520);break;
+    case'walk':{const r=o.s.rm||150;o.bt=260;if(o.ld&&o.ld.on&&(o.ld.b=='walk'||Math.hypot(o.ld.x-o.x,o.ld.y-o.y)>26)){o.tx=o.ld.x+rn(-22,22);o.ty=o.ld.y+rn(-22,22)}else{o.tx=o.hx+rn(-r,r);o.ty=o.hy+rn(-r,r)}if(NAT.solid(o.tx,o.ty,0)){o.b='idle';o.bt=30}break}
     case'drink':case'wade':{const b=bankNear(R,o.x,o.y);if(!b){o.b='idle';o.bt=40;break}o.bk=b;o.tx=b.x;o.ty=b.y;o.bt=900;break}
     case'swim':{const b=bankNear(R,o.x,o.y);if(!b){o.b='idle';o.bt=40;break}const d=rn(45,110);o.tx=b.x+Math.cos(b.f)*d;o.ty=b.y+Math.sin(b.f)*d;o.bt=1200;break}
     case'climb':case'wrap':{const q=nearTree(R,o.x,o.y,230,null,k=='wrap'?4.5:P.mr);if(!q){o.b='idle';o.bt=40;break}o.tr=q;o.bt=900;o.zk=rn(.55,1);o.cl=0;o.wu=0;o.ph0=Math.atan2(o.y-q.y,o.x-q.x);break}
@@ -3921,11 +4034,11 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
    switch(o.b){
     case'idle':settle(legs,.8);if(o.bt<=0)nx=true;break;
     case'alert':{aim(o,px,py,.07);th=.06;settle(legs,.8);if(o.bt<=0&&dp>(P.al||70)*1.2)nx=true;else if(o.bt<=0)o.bt=30;break}
-    case'walk':{if(o.lie>.25){settle(legs,.8);break}if(o.ld&&o.ld.on&&o.bt%80==0&&Math.hypot(o.ld.x-o.x,o.ld.y-o.y)>40){o.tx=o.ld.x+(Math.random()-.5)*60;o.ty=o.ld.y+(Math.random()-.5)*60}
+    case'walk':{if(o.lie>.25){settle(legs,.8);break}if(o.ld&&o.ld.on&&o.bt%40==0&&Math.hypot(o.ld.x-o.x,o.ld.y-o.y)>24){o.tx=o.ld.x+(Math.random()-.5)*44;o.ty=o.ld.y+(Math.random()-.5)*44}
      aim(o,o.tx,o.ty,.07);const ok=mv(o,v);gait(legs,t,o.ph,.6,.26*(1+v*.3));if(P.hop)hop=Math.abs(Math.sin(t*.22+o.ph))*3;
-     if(!ok||o.bt<=0||Math.hypot(o.tx-o.x,o.ty-o.y)<10){o.b='idle';o.bt=30+Math.random()*90;nx=o.bt<35}break}
+     if(!ok||o.bt<=0||Math.hypot(o.tx-o.x,o.ty-o.y)<10){if(o.wb){const q=o.wb;o.wb=null;o.b='browse';o.bs=0;o.bt=500+Math.random()*500;o.a=Math.atan2(q.y-o.y,q.x-o.x)}else{o.b='idle';o.bt=30+Math.random()*90;nx=o.bt<35}}break}
     case'graze':case'browse':{const up=o.b=='browse';const lf=cl(Math.sin(t*.011+o.ph*3)*2.2-1.2,0,1);th=up?.14+Math.sin(t*.05+o.ph)*.03:G.dn*(P.gd||.9)*(1-lf)+Math.sin(t*.2)*.015;
-     if(Math.sin(t*.02+o.ph)>.55&&o.lie<.2){if(mv(o,.16*v))gait(legs,t,o.ph,.3,.14);else o.bt=0}else settle(legs,.85);if(o.bt<=0)nx=true;break}
+     if(!up&&Math.sin(t*.02+o.ph)>.55&&o.lie<.2){if(mv(o,.16*v))gait(legs,t,o.ph,.3,.14);else o.bt=0}else settle(legs,.85);if(o.bt<=0)nx=true;break}
     case'rest':case'roll':{lieT=1;th=.05+Math.sin(t*.03)*.01;settle(legs,.8);if(o.b=='roll'&&o.lie>.9)roll=Math.sin(t*.035+o.ph)*.4;if(o.bt<=0)nx=true;break}
     case'doze':{th=G.dn*.35;settle(legs,.85);if(o.bt<=0)nx=true;break}
     case'sit':{gp=.8*cl(1-o.bt/30,0,1);if(o.bt>400)gp=.8;gp=.8;th=Math.sin(t*.06+o.ph)*.05;settle(legs,.8);if(o.bt<=0)nx=true;break}
@@ -3939,7 +4052,7 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
     case'flee':{aim(o,o.x+Math.cos(o.fa),o.y+Math.sin(o.fa),.2);if(!mv(o,v*2.1))o.fa+=1.3;gait(legs,t,o.ph,.9,.5);if(P.hop)hop=Math.abs(Math.sin(t*.4+o.ph))*5;hop+=Math.abs(Math.sin(t*.5))*.6;th=-.05;if(o.bt<=0){o.b='idle';o.bt=60;o.warn=0}break}
     case'climb':return climbU(o,g,s,ud,t,px,py,P,G,legs);
     default:o.b='idle';o.bt=30}
-   if(nx){const k=pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else{enter(o,k,P);if(k=='stalk'&&!o.pr)findPrey(o)}}
+   if(nx){const k=HK(o)||pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else{enter(o,k,P);if(k=='stalk'&&!o.pr)findPrey(o)}}
    o.lie+=((o.b=='rest'||o.b=='roll'||o.b=='stalk'?lieT:0)-o.lie)*.05;if(Math.abs(o.lie)<.002)o.lie=0;
    o.hp+=(th-o.hp)*.1;
    bodyPose(body,G,o.hp,G.drop*o.lie);body.rotation.x=roll;
@@ -3978,6 +4091,7 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
     case'idle':if(o.bt<=0)nx=true;break;
     case'slither':{aim(o,o.tx,o.ty,.05);const ok=mv(o,v);slith=1;if(!ok||o.bt<=0||Math.hypot(o.tx-o.x,o.ty-o.y)<10){o.b='idle';o.bt=40+Math.random()*100}break}
     case'coil':coilT=1;if(o.bt<=0)nx=true;break;
+    case'swim':{aim(o,o.tx,o.ty,.05);const ok=mv(o,v*.9,1);slith=1;if(!ok||o.bt<=0||Math.hypot(o.tx-o.x,o.ty-o.y)<10){o.b='idle';o.bt=50+Math.random()*120}break}
     case'bask':if(o.bt<=0)nx=true;break;
     case'wrap':{const q=o.tr;if(!q){nx=true;break}wrapT=1;const rr=q.r+sp*.8;
      if(o.bs==0){const tx=q.x+Math.cos(o.ph0)*rr,ty=q.y+Math.sin(o.ph0)*rr;aim(o,tx,ty,.08);const ok=mv(o,v);slith=1;wrapT=0;if(!ok||o.bt<=0){o.b='idle';o.bt=60}else if(Math.hypot(tx-o.x,ty-o.y)<3){o.bs=1;o.x=tx;o.y=ty;o.a=o.ph0+H2}}
@@ -3986,7 +4100,7 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
      else if(o.bs==3){o.wu=Math.max(0,o.wu-.004);if(o.wu<=0)o.bs=4}
      else{wrapT=0;if(o.wk<.03){o.b='idle';o.bt=60;o.a=o.ph0+PI;o.x=q.x+Math.cos(o.ph0)*(q.r+4);o.y=q.y+Math.sin(o.ph0)*(q.r+4)}}break}
     default:o.b='idle';o.bt=30}
-   if(nx){const k=pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
+   if(nx){const k=HK(o)||pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
    o.ck+=(coilT-o.ck)*.03;o.wk+=(wrapT-o.wk)*.04;o.rk+=(rear-o.rk)*.08;if(o.wk<.002)o.wk=0;
    const a=o.a,ca=Math.cos(a),sa=Math.sin(a),moving=slith?1:.2,wv=slith?1:.25;
    let cx=0,cz=0,ang=0,q=o.tr,rr=q?q.r+sp*.8:0,hz=o.wu*(q?Math.max(6,Math.min(q.h*.3,45)):0),th0=q?Math.atan2(o.y-q.y,o.x-q.x):0;
@@ -4026,7 +4140,7 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
      if(o.bs==0){const rc=q.h*.2,ex=q.x+Math.cos(o.pa)*rc,ey=q.y+Math.sin(o.pa)*rc;o.tx=ex;o.ty=ey;o.ayT=Math.min(q.h*.62,170)+(gy(ex,ey)-gy(o.x,o.y))*0;o.pt=1;o.b='fly';o.fz=0;o.bt=500;o.bs=0;break}
      if(o.bs==1){fl=0;yaw=Math.sin(t*.01+o.ph)*.8+Math.sin(t*.3)*(Math.sin(t*.004+o.ph)>.8?.5:0);pit=Math.sin(t*.35)*(Math.sin(t*.006+o.ph)>.85?.4:0);if(o.bt<=0){if(Math.random()<.5&&P.w.perch&&nearTree(o.R,o.x,o.y,420,q,P.mr)){o.b='perch';o.bs=0;o.pa=Math.random()*6.28;o.tr=nearTree(o.R,o.x,o.y,420,q,P.mr)}else{const r=s.rm||150;o.tx=o.hx+(Math.random()-.5)*r;o.ty=o.hy+(Math.random()-.5)*r;o.ayT=0;o.pt=0;o.b='fly';o.fz=0;o.bt=500;o.x+=0}}}break}
     default:o.b='idle';o.bt=30}
-   if(nx){const k=pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
+   if(nx){const k=HK(o)||pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
    if(o.b=='perch'&&o.bs==0&&o.b!='fly'){}
    wingSet(o,g,ud,fl||(o.b=='sprint'),t);
    let gyv=gy(o.x,o.y),yy=gyv+o.ay+hop;
@@ -4049,7 +4163,7 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
     case'hump':{const k=Math.sin(t*.08+o.ph);sx=1+k*.14;sy=1-k*.07;mv(o,Math.max(0,k)*.5*v);if(o.bt<=0)nx=true;break}
     case'rest':{sy=1+Math.sin(t*.03+o.ph)*.02;if(o.bt<=0)nx=true;break}
     default:o.b='idle';o.bt=30}
-   if(nx){const k=pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
+   if(nx){const k=HK(o)||pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
    const sc=(s.k||1)*1.25;g.scale.set(sc*sx,sc*sy,sc);
    g.position.set(o.x,gy(o.x,o.y)+hop,o.y);g.rotation.set(roll,-(o.a+side),pit);return true};
   const run=(o,g,s,ud,t,px,py)=>{const P=PF[s.id];if(!P||o.perch)return false;
@@ -4100,7 +4214,27 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
   def('ech',{k:'x',w:{walk:3,still:3},flee:30,hopy:1});
   def('haicau',{k:'x',w:{rest:5,hump:3},al:30});
   def('rua rua2',{k:'x',w:{walk:3,still:4},al:30});
-  return{run,PF}})();
+  /* ----- môi trường sống: mỗi loài xuất hiện đúng nơi (trên cây / bên bờ nước) ----- */
+  def('rannuoc',{k:'s',w:{slither:1.5,swim:5,coil:1,bask:2.5}});
+  def('casau',{k:'x',w:{dart:1,bask:4,swim:3.5,still:1.5},flee:40});
+  def('ech echdong echhang cocdam',{k:'x',w:{walk:2,still:3,wade:3.5,swim:2},flee:30,hopy:1});
+  def('ruanuoc',{k:'x',w:{walk:2,still:3,swim:4},al:30});
+  def('rua rua2',{k:'x',w:{walk:2,still:3,swim:3,wade:1},al:30});
+  def('baosan',{k:'q',w:{walk:3,rest:3,stalk:2,drink:.8},lie:1,al:60});
+  def('mangut macmot chon chonermine',{k:'q',w:{walk:3,graze:2,sit:3},flee:45,gd:1});
+  def('raica',{k:'q',w:{walk:2.5,rest:2,drink:4,sit:1.5},lie:1,flee:35});
+  def('trauchau',{k:'q',w:{graze:4,walk:1.5,drink:4,roll:3,rest:2},lie:1,al:70});
+  for(const x of SPS)if(x.bs&&!PF[x.id]&&PF[x.bs])PF[x.id]=PF[x.bs];
+  const HAB={};const hs=(t,ids)=>ids.split(' ').forEach(i=>HAB[i]=t);
+  hs('tree','khi vooc vuon khidai soc baogam bao gauden gautruc vet goki honghoang cumeo chaomao chimsao macaw vetmao cong cutuyet ranluc homang');
+  hs('oasis','linhduong oryx lacda dadieu chimchay');hs('tree','doiqua');
+  hs('bank','ech echdong echhang cocdam rannuoc rua ruanuoc casau co diecdam vac seu diec honghac boica cuadong raica trauchau');
+  const tlist=R=>{if(R.ta)return R.ta;const a=R.ta=[];const g=trees(R);for(const k in g)for(const q of g[k])a.push(q);return a};
+  const habPos=(R,s)=>{const h=HAB[s.id]||HAB[s.bs];if(!h||R.id=='plain')return null;
+   try{if(h=='oasis'){return(R.id=='desert'&&Math.random()<.6)?spot(R,{z:'oasis',m:'walk'}):null}if(h=='tree'){const a=tlist(R);if(!a.length)return null;for(let k=0;k<8;k++){const t=a[Math.floor(Math.random()*a.length)],f=Math.random()*6.28,d=t.r+10+Math.random()*10,x=t.x+Math.cos(f)*d,y=t.y+Math.sin(f)*d;if(!NAT.solid(x,y,0)&&!NAT.inRoad(x,y))return[x,y]}}
+    else{const L=banks(R);if(!L.length)return null;for(let k=0;k<8;k++){const b=L[Math.floor(Math.random()*L.length)],d=6+Math.random()*26,x=b.x-Math.cos(b.f)*d,y=b.y-Math.sin(b.f)*d;if(!NAT.solid(x,y,0)&&!NAT.waterAt(x,y))return[x,y]}}}catch(e){}
+   return null};
+  return{run,PF,habPos}})();
  let tmr=0;const PC={};
  const upd=(px,py)=>{
   if(!INT.cur){for(const R of NAT.RL){if(R.an)continue;const dx=Math.max(R.x0-px,0,px-R.x1),dy=Math.max(R.y0-py,0,py-R.y1);if(Math.hypot(dx,dy)<2200)spawnRealm(R)}}
@@ -4112,6 +4246,11 @@ MECH.reg('rampho',(T,s)=>MKB(T,s).flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4
    o.on=1;g.visible=true;const near=Math.hypot(dx,dy)<(s.nl?s.nl*.6:80);let yy=gy(o.x,o.y);const ud=g.userData;
    const m=s.m;
    if(o.perch){if(o.lift==null){const wp=g.children[0];o.lift=1.8*(wp?wp.scale.x:1)*g.scale.x}g.position.set(o.x,gy(o.x,o.y)+o.lift,o.y);g.rotation.y=-o.a;g.rotation.z=0;const w=ud.wings;if(w&&w.length>1){const f=1.3+Math.sin(t*.04+o.ph)*.05;w[0].rotation.x=f;w[1].rotation.x=-f}continue}
+   if(s.b=='bat'&&m=='fly'){if(o.hg==null)o.hg=Math.sin(o.ph*7)>-.15?1:0;let dy=true;try{const tm=V5.tm;dy=!(tm<330||tm>=1110)}catch(e){}
+    if(o.hg&&dy){if(o.hpx==null){let bx=o.x,by=o.y,bd=1e9;for(let k=0;k<8;k++){const f=k*.785+o.ph;for(let d=6;d<220;d+=8){const x=o.x+Math.cos(f)*d,y=o.y+Math.sin(f)*d;if(NAT.solid(x,y,0)){if(d<bd){bd=d;bx=o.x+Math.cos(f)*(d-8);by=o.y+Math.sin(f)*(d-8)}break}}}o.hpx=bx;o.hpy=by}
+     const w=ud.wings;if(w&&w.length>1){w[0].rotation.x=1.3;w[1].rotation.x=-1.3}
+     g.position.set(o.hpx,gy(o.hpx,o.hpy)+(s.z=='cave'?30:42),o.hpy);g.rotation.y=-o.a;g.rotation.z=Math.PI;continue}
+    o.hpx=null}
    if(m=='fly'||m=='flit'){
     if(m=='fly'){o.ang+=s.v*.012*(o.R?1:1);const rr=s.rm||300;o.rr=o.rr||rr;o.x=o.hx+Math.cos(o.ang)*o.rr;o.y=o.hy+Math.sin(o.ang)*o.rr;o.a=o.ang+Math.PI/2;
      if(s.z=='cave'){if(NAT.solid(o.x,o.y,0)){o.rr=Math.max(10,o.rr*.9)}else if(o.rr<rr)o.rr+=.2}
@@ -4531,7 +4670,7 @@ function pedUpdate(p){
 const MOD=Object.assign({turbo:0,jump:0,magnet:0,slow:0,hint:0,time:0},(()=>{try{return JSON.parse(localStorage.getItem('ttt3d_mod')||'{}')}catch(e){return{}}})());
 MOD.time=0;
 const saveMod=()=>{try{localStorage.setItem('ttt3d_mod',JSON.stringify(MOD))}catch(e){}};
-const TOGS=[['turbo','Xe siêu tốc'],['jump','Siêu nhảy'],['magnet','Nam châm xu'],['slow','Quay chậm'],['hint','Gợi ý 50:50'],['cls','Đi kiểu cổ điển (A/D xoay người)'],['norg','Tắt nhạc riêng theo khu thiên nhiên'],['fps','Hiện số khung hình (FPS)'],['cam0','Camera tự quay theo sau nhân vật (kiểu cũ)']];
+const TOGS=[['turbo','Xe siêu tốc'],['jump','Siêu nhảy'],['magnet','Nam châm xu'],['slow','Quay chậm'],['hint','Gợi ý 50:50'],['cls','Đi kiểu cổ điển (A/D xoay người)'],['norg','Tắt nhạc riêng theo môi trường sống'],['fps','Hiện số khung hình (FPS)'],['cam0','Camera tự quay theo sau nhân vật (kiểu cũ)']];
 const CARL={super:'Siêu xe',sport:'Xe thể thao',hyper:'Hyper',muscle:'Muscle',sedan:'Sedan',hatch:'Hatchback',suv:'SUV',pickup:'Bán tải',van:'Xe van',taxi:'Taxi',moto:'Mô tô',scooter:'Xe máy',bike:'Xe đạp'},TIMEN=['Tự động theo giờ','Ban ngày','Hoàng hôn','Ban đêm'];
 function applyTime(){try{V5.light(true)}catch(e){}}
 applyTime();
@@ -4580,7 +4719,7 @@ function buildMod(){const old=modEl.querySelector('.tcont'),keep=old?old.scrollT
  else if(modTab==2){
   g=sec('🏙','Địa điểm trong thành phố');for(const s of shops)chip(g,s.n,()=>tp(s.x,s.y));
   g=sec('🏫','Trường học');for(const s of PLACES.slice(0,1))chip(g,s.e+' '+s.n,()=>tp(s.tx,s.ty));
-  g=sec('🌏','Các trạm khám phá thiên nhiên');for(const z of ZST)chip(g,z[1]+' '+z[2],()=>tp(z[3],z[4]));
+  g=sec('🌏','Các trạm khám phá môi trường sống');for(const z of ZST)chip(g,z[1]+' '+z[2],()=>tp(z[3],z[4]));
   g=sec('⭐','Điểm khác');chip(g,'Điểm nhiệm vụ',()=>{const T=mission.st?mission.B:mission.A;tp(T.x,T.y)});
   chip(g,'Điểm xuất phát',()=>tp(1300,1330));chip(g,'Cầu bên sông',()=>tp(6*P+60,3*P+200))}
  else if(modTab==3){
@@ -4731,7 +4870,7 @@ function carPenalty(why){if(carLeft()>0)return;const c=ply.car;if(!c)return;
  const x=EDU.x||(EDU.x=cleanX(null));x.cb=Date.now()+CARBAN;try{saveEdu()}catch(e){}
  shake=14;try{SND.p('crash')}catch(e){}
  say('🚫 Em đã đâm vào '+why+' nên xe biến mất! Em phải chờ 3 phút mới được gọi xe và lên xe lại.',6500)}
-function carRealm(){const c=ply.car;if(!c||carLeft()>0)return;ply.car=null;cull(o=>o!==c);ply.a=c.a;ply.x=c.x-Math.cos(c.a)*40;ply.y=c.y-Math.sin(c.a)*40;if(solid(ply.x,ply.y)){ply.x=c.x;ply.y=c.y}try{apStop('')}catch(e){}shake=8;try{SND.p('crash')}catch(e){}say('⚠️ Khu thiên nhiên chỉ cho xe đạp vào! Xe của em đã biến mất, em hãy đi bộ hoặc dùng xe đạp nhé.',5500)}
+function carRealm(){const c=ply.car;if(!c||carLeft()>0)return;ply.car=null;cull(o=>o!==c);ply.a=c.a;ply.x=c.x-Math.cos(c.a)*40;ply.y=c.y-Math.sin(c.a)*40;if(solid(ply.x,ply.y)){ply.x=c.x;ply.y=c.y}try{apStop('')}catch(e){}shake=8;try{SND.p('crash')}catch(e){}say('⚠️ Môi trường sống chỉ cho xe đạp vào! Xe của em đã biến mất, em hãy đi bộ hoặc dùng xe đạp nhé.',5500)}
 function carHitPlayers(){const c=ply.car;if(!c||Math.abs(c.v)<.8||INT.cur)return;
  try{for(const r of MP._R.values()){if(r.i||!r.g)continue;const x=r.cx!=null?r.cx:r.x,y=r.cy!=null?r.cy:r.y;if(Math.hypot(x-c.x,y-c.y)<26){carPenalty('bạn '+(r.n||'khác'));return}}}catch(e){}}
 function collide(){for(let i=0;i<veh.length;i++)for(let j=i+1;j<veh.length;j++){
@@ -4923,7 +5062,13 @@ const CHAT=(()=>{
 @keyframes chin{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%)}}
 #chpan{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:75;width:min(440px,94vw);max-height:48vh;display:none;flex-direction:column;background:rgba(12,28,66,.96);border:2px solid rgba(255,255,255,.3);border-radius:18px;color:#fff;font:14px/1.4 var(--ff,system-ui),sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);overflow:hidden}
 #chpan.on{display:flex}
-#chpan.kb{bottom:auto!important;width:min(560px,96vw)!important}#chpan.kb #chq,#chpan.kb #chd,#chpan.kb .chh small{display:none!important}#chpan.kb .chh{padding:3px 10px}#chpan.kb .chh button{width:30px;height:30px;font-size:15px}#chpan.kb #chl{min-height:0;padding:4px 10px}#chpan.kb #chf{padding:4px 10px 6px}#chpan.kb #chf input{padding:7px 10px;font-size:15px}
+#chpan.kb{bottom:auto!important;width:min(620px,96vw)!important;display:grid!important;grid-template-columns:1fr auto;align-items:center;max-height:none!important;border-radius:14px}
+#chpan.kb #chq,#chpan.kb #chd,#chpan.kb #chs{display:none!important}
+#chpan.kb .chh{display:contents}#chpan.kb .chh span{display:none}
+#chpan.kb #chx{grid-column:2;grid-row:2;margin:0 8px 0 0;width:38px;height:38px;font-size:17px}
+#chpan.kb #chl{grid-column:1/3;grid-row:1;display:flex!important;flex-direction:column;justify-content:flex-end;max-height:36px;min-height:0!important;overflow:hidden;padding:3px 12px;font-size:13px}
+#chpan.kb #chf{grid-column:1;grid-row:2;padding:4px 8px 6px!important}
+#chpan.kb #chf input{padding:8px 12px;font-size:16px}
 #chpan .chh{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.08);font-weight:700}#chpan .chh span{flex:1}
 #chpan .chh button{border:0;border-radius:10px;width:34px;height:34px;font-size:18px;background:#3a3870;color:#fff;cursor:pointer}
 #chl{flex:1;min-height:90px;overflow:auto;padding:8px 12px;-webkit-overflow-scrolling:touch}
@@ -5227,7 +5372,7 @@ const mmb=document.createElement('canvas');mmb.width=mmb.height=960;
  T('▲ BẮC: Làng quê, sông',1260*k,11);T('▼ NAM: Hang động, sa mạc',1260*k,229);T('TÂY: Rừng, thảo nguyên, tuyết',11,1260*k,-Math.PI/2);T('ĐÔNG: Biển, cảng, đảo',229,1260*k,Math.PI/2)})();
 const MW=28000;
 /* một bản đồ duy nhất: vẽ theo toạ độ thế giới, phóng to / thu nhỏ từ toàn thế giới tới từng con phố */
-const SHN={forest:'Rừng nhiệt đới',grass:'Thảo nguyên',snow:'Vùng tuyết',mount:'Núi Fansipan',village:'Làng quê & ruộng lúa',beach:'Bãi biển',island:'Đảo nhiệt đới',cave:'Hang động',desert:'Sa mạc',reef:'Rạn san hô & đáy biển',swamp:'Đầm lầy & rừng ngập nước',volcano:'Núi lửa',prehis:'Khu nguyên thủy',plateau:'Cao nguyên Thông Xanh'};
+const SHN={forest:'Rừng nhiệt đới',grass:'Thảo nguyên',snow:'Vùng tuyết',mount:'Núi Fansipan',village:'Làng quê & ruộng lúa',beach:'Bãi biển',island:'Đảo nhiệt đới',cave:'Hang động',desert:'Sa mạc',reef:'Rạn san hô & đáy biển',swamp:'Đầm lầy & rừng ngập nước',volcano:'Núi lửa',prehis:'Thời khủng long',plateau:'Cao nguyên Thông Xanh'};
 const ZCB={forest:'#2d6a2e',grass:'#a9d95f',village:'#b9d65e',beach:'#e6d6a0',mount:'#8a8579',cave:'#4a4458',island:'#2d6ea8',snow:'#f4f8fc',desert:'#e9c97a',reef:'#3fb8d6',swamp:'#4f7a4a',volcano:'#5a4a44',prehis:'#6f9a3a',plateau:'#86c76a'};
 /* ---------- trang trí đồng cỏ trên bản đồ: đồi, ao, cây, hoa, nhà dân, đường mòn (chỉ để cho đẹp, không ảnh hưởng gameplay) ---------- */
 let DEC=null,DTX=null;
@@ -6860,7 +7005,7 @@ const QB=[
 ];
 const SPOS={gt:[860,460],toan:[460,860],ly:[1260,460],hoa:[1660,1260],sinh:[460,1660],dia:[1260,2060],su:[860,1260],van:[860,2460],anh:[1660,1660]};
 const H_SCH=82,PLACES=[{n:'Trường THCS An Quang',e:'🏫',x:150,y:1660,tx:175,ty:1660}];
-const ZST=[['dalat','🌸','Cao nguyên Thông Xanh',NAT.ST['dalat'][0],NAT.ST['dalat'][1],0xe88ab0],['grass','🦁','Thảo nguyên',NAT.ST['grass'][0],NAT.ST['grass'][1],0xa6c83a],['port','⛴️','Cảng tàu',NAT.ST['port'][0],NAT.ST['port'][1],0x3f8fe0],['forest','🌲','Khu rừng',NAT.ST['forest'][0],NAT.ST['forest'][1],0x2e9a4a],['beach','🏖️','Bãi biển',NAT.ST['beach'][0],NAT.ST['beach'][1],0x2fa8e0],['light','🗼','Hải đăng',NAT.ST['light'][0],NAT.ST['light'][1],0xe05a3a],['rice','🌾','Ruộng lúa',NAT.ST['rice'][0],NAT.ST['rice'][1],0xb5c93a],['vill','🌸','Làng quê',NAT.ST['vill'][0],NAT.ST['vill'][1],0xe88ab0],['peak','⛰️','Chân núi',NAT.ST['peakb'][0],NAT.ST['peakb'][1],0x9a9a90],['snow','❄️','Vùng tuyết',NAT.ST['snow'][0],NAT.ST['snow'][1],0x7ec8ff],['ice','🧊','Nhà tuyết',NAT.ST['ice'][0],NAT.ST['ice'][1],0x9ad6ee],['desert','🏜️','Sa mạc',NAT.ST['desert'][0],NAT.ST['desert'][1],0xe0a93a],['oasis','🌴','Ốc đảo',NAT.ST['oasis'][0],NAT.ST['oasis'][1],0x2fb59a],['pyr','🔺','Kim tự tháp',NAT.ST['pyr'][0],NAT.ST['pyr'][1],0xd8b45a],['island','🏝️','Đảo hoang',NAT.ST['island'][0],NAT.ST['island'][1],0x25b5b5],['spratly','🇻🇳','Đảo tiền tiêu',NAT.ST['spratly'][0],NAT.ST['spratly'][1],0xd62f2f],['cave','🦇','Hang động pha lê',NAT.ST['cave'][0],NAT.ST['cave'][1],0xb06bff],['reef','🐠','Rạn san hô',NAT.ST['reef'][0],NAT.ST['reef'][1],0x2aa5c8],['swamp','🐸','Đầm lầy',NAT.ST['swamp'][0],NAT.ST['swamp'][1],0x4f9a6a],['mang','🌿','Rừng ngập nước',NAT.ST['mang'][0],NAT.ST['mang'][1],0x3f8a5a],['volc','🌋','Chân núi lửa',NAT.ST['volc'][0],NAT.ST['volc'][1],0xe0603a],['crater','🔥','Miệng núi lửa',NAT.ST['crater'][0],NAT.ST['crater'][1],0xff8a2a],['prehis','🦖','Khu nguyên thủy',NAT.ST['prehis'][0],NAT.ST['prehis'][1],0x6aa83a],['fossil','🦴','Bãi hóa thạch',NAT.ST['fossil'][0],NAT.ST['fossil'][1],0xd9cfa0],['nest','🥚','Tổ trứng khủng long',NAT.ST['nest'][0],NAT.ST['nest'][1],0xe8c870],['cliff','🪨','Vách đá Dực long',NAT.ST['cliff'][0],NAT.ST['cliff'][1],0xb5a183]];
+const ZST=[['dalat','🌸','Cao nguyên Thông Xanh',NAT.ST['dalat'][0],NAT.ST['dalat'][1],0xe88ab0],['grass','🦁','Thảo nguyên',NAT.ST['grass'][0],NAT.ST['grass'][1],0xa6c83a],['port','⛴️','Cảng tàu',NAT.ST['port'][0],NAT.ST['port'][1],0x3f8fe0],['forest','🌲','Rừng nhiệt đới',NAT.ST['forest'][0],NAT.ST['forest'][1],0x2e9a4a],['beach','🏖️','Bãi biển',NAT.ST['beach'][0],NAT.ST['beach'][1],0x2fa8e0],['light','🗼','Hải đăng',NAT.ST['light'][0],NAT.ST['light'][1],0xe05a3a],['rice','🌾','Ruộng lúa',NAT.ST['rice'][0],NAT.ST['rice'][1],0xb5c93a],['vill','🌸','Làng quê',NAT.ST['vill'][0],NAT.ST['vill'][1],0xe88ab0],['peak','⛰️','Chân núi',NAT.ST['peakb'][0],NAT.ST['peakb'][1],0x9a9a90],['snow','❄️','Vùng tuyết',NAT.ST['snow'][0],NAT.ST['snow'][1],0x7ec8ff],['ice','🧊','Nhà tuyết',NAT.ST['ice'][0],NAT.ST['ice'][1],0x9ad6ee],['desert','🏜️','Sa mạc',NAT.ST['desert'][0],NAT.ST['desert'][1],0xe0a93a],['oasis','🌴','Ốc đảo',NAT.ST['oasis'][0],NAT.ST['oasis'][1],0x2fb59a],['pyr','🔺','Kim tự tháp',NAT.ST['pyr'][0],NAT.ST['pyr'][1],0xd8b45a],['island','🏝️','Đảo hoang',NAT.ST['island'][0],NAT.ST['island'][1],0x25b5b5],['spratly','🇻🇳','Đảo tiền tiêu',NAT.ST['spratly'][0],NAT.ST['spratly'][1],0xd62f2f],['cave','🦇','Hang động pha lê',NAT.ST['cave'][0],NAT.ST['cave'][1],0xb06bff],['reef','🐠','Rạn san hô',NAT.ST['reef'][0],NAT.ST['reef'][1],0x2aa5c8],['swamp','🐸','Đầm lầy',NAT.ST['swamp'][0],NAT.ST['swamp'][1],0x4f9a6a],['mang','🌿','Rừng ngập nước',NAT.ST['mang'][0],NAT.ST['mang'][1],0x3f8a5a],['volc','🌋','Chân núi lửa',NAT.ST['volc'][0],NAT.ST['volc'][1],0xe0603a],['crater','🔥','Miệng núi lửa',NAT.ST['crater'][0],NAT.ST['crater'][1],0xff8a2a],['prehis','🦖','Thời khủng long',NAT.ST['prehis'][0],NAT.ST['prehis'][1],0x6aa83a],['fossil','🦴','Bãi hóa thạch',NAT.ST['fossil'][0],NAT.ST['fossil'][1],0xd9cfa0],['nest','🥚','Tổ trứng khủng long',NAT.ST['nest'][0],NAT.ST['nest'][1],0xe8c870],['cliff','🪨','Vách đá Dực long',NAT.ST['cliff'][0],NAT.ST['cliff'][1],0xb5a183]];
 for(const z of ZST)if(['grass','port','forest','beach','rice','vill','peak','snow','desert','island','cave','reef','swamp','volc','prehis','fossil','nest','cliff','dalat'].includes(z[0]))PLACES.push({n:z[2],e:z[1],x:z[3],y:z[4],tx:z[3],ty:z[4]});
 const shops=[];for(const k in SPOS){const s=SUBJ[k];shops.push({n:'Trạm '+s.n,type:k,sub:k,x:SPOS[k][0],y:SPOS[k][1],c:s.c})}
 shops.push({n:'Tiệm quần áo',type:'cloth',x:930,y:1060,c:0xb06bff},{n:'Gara sơn xe',type:'garage',x:1260,y:1260,c:0xf0f0f0});
@@ -6903,7 +7048,7 @@ const BM=(()=>{
   el=document.createElement('div');el.id='bm';
   el.innerHTML='<div id="bmh"><div class="tt"><b>🗺 Bản đồ</b><small>Chạm vào địa điểm để tự đi tới</small></div><button data-a="in" title="Phóng to">＋</button><button data-a="out" title="Thu nhỏ">－</button><button data-a="me" title="Chỗ em đang đứng">🎯</button><button data-a="all" title="Toàn cảnh">🌍</button><button data-a="close" title="Đóng (M)">✖</button></div><div id="bmc"><canvas id="bmv"></canvas></div><div id="bmsel"><div class="t"></div><button data-a="go" style="background:#2fa05a"></button><button data-a="tp" style="background:#7b3fe4">✨ Dịch chuyển</button><button data-a="clr">Bỏ chọn</button></div><div id="bml"></div>';
   document.body.appendChild(el);el.style.setProperty('--asp',((NB.YMAX-NB.YMIN)/(NB.XMAX-NB.XMIN)).toFixed(3));cv=el.querySelector('#bmv');c2=cv.getContext('2d');
-  const L=el.querySelector('#bml');let grp='';for(const d of D){if(d.g!=grp){grp=d.g;const i=document.createElement('i');i.textContent=grp=='c'?'THÀNH PHỐ:':'THIÊN NHIÊN:';L.appendChild(i)}const b=document.createElement('button');b.innerHTML='<b>'+d.e+'</b><span>'+d.n+'</span>';if(d.g=='c'?/^Cổng/.test(d.n):!d.maj)b.className='mn';b.onclick=()=>pick(d,true);d.btn=b;L.appendChild(b)}
+  const L=el.querySelector('#bml');let grp='';for(const d of D){if(d.g!=grp){grp=d.g;const i=document.createElement('i');i.textContent=grp=='c'?'THÀNH PHỐ:':'MÔI TRƯỜNG SỐNG:';L.appendChild(i)}const b=document.createElement('button');b.innerHTML='<b>'+d.e+'</b><span>'+d.n+'</span>';if(d.g=='c'?/^Cổng/.test(d.n):!d.maj)b.className='mn';b.onclick=()=>pick(d,true);d.btn=b;L.appendChild(b)}
   {const mr=document.createElement('button');mr.className='mr';const t0_=x=>{mr.innerHTML=x?'<b>▴</b><span>Thu gọn</span>':'<b>⋯</b><span>Thêm</span>'};t0_(0);mr.onclick=()=>{t0_(L.classList.toggle('ex'))};L.appendChild(mr)}
   el.addEventListener('click',e=>{const a=e.target.getAttribute&&e.target.getAttribute('data-a');if(!a)return;
    if(a=='close')close();else if(a=='in')zoom(1.5);else if(a=='out')zoom(1/1.5);else if(a=='me')me();else if(a=='all')all();else if(a=='clr')pick(null);else if(a=='go')go();else if(a=='tp')tele()});
@@ -6996,7 +7141,7 @@ const EXL=['grass','forest','beach','light','rice','vill','peak','snow','ice','d
 const cleanX=d=>{const o=d&&typeof d=='object'?d:{},n=v=>Number.isFinite(+v)?Math.max(0,Math.floor(+v)):0,bo=m=>{const r={};if(m&&typeof m=='object')for(const k in m)if(m[k])r[String(k).slice(0,20)]=1;return r},eq={};if(o.eq&&typeof o.eq=='object')for(const k in o.eq)eq[String(k).slice(0,6)]=String(o.eq[k]).slice(0,20);
  const cap=m=>{const r={};let c=0;if(m&&typeof m=='object')for(const k in m)if(m[k]&&c<3){r[String(k).slice(0,20)]=1;c++}return r},cp=cap(o.cp),cm=cap(o.cm);if(eq.cp&&!cp[eq.cp])delete eq.cp;if(eq.cm&&!cm[eq.cm])delete eq.cm;
  const gmp=m=>{const r={};if(m&&typeof m=='object')for(const k of['hd','bd','nk'])if(typeof m[k]=='string'&&/^[A-Za-z0-9_]{1,20}$/.test(m[k]))r[k]=m[k];return r};
- return{gm:gmp(o.gm),gp:gmp(o.gp),cp,cm,cn:n(o.cn),cb:n(o.cb),inv:bo(o.inv),fo:bo(o.fo),eq,bd:bo(o.bd),ti:String(o.ti||'').slice(0,20),hm:bo(o.hm),ls:n(o.ls),ld:String(o.ld||'').slice(0,12),dw:n(o.dw),dl:n(o.dl),bw:n(o.bw),bs:String(o.bs||'').slice(0,12),buy:n(o.buy),ex:bo(o.ex),an:bo(o.an),vr:bo(o.vr),aq:bo(o.aq),pn:(()=>{const r={};if(o.pn&&typeof o.pn=='object')for(const k in o.pn)r[String(k).slice(0,12)]=String(o.pn[k]).replace(/[<>&]/g,'').slice(0,14);return r})(),pf:(()=>{const r={};if(o.pf&&typeof o.pf=='object')for(const k in o.pf)r[String(k).slice(0,12)]=Math.min(9999,n(o.pf[k]));return r})()}};
+ return{pos:(Array.isArray(o.pos)&&o.pos.length==3&&o.pos.every(v=>Number.isFinite(+v))?o.pos.map(v=>Math.round(+v)):null),gm:gmp(o.gm),gp:gmp(o.gp),cp,cm,cn:n(o.cn),cb:n(o.cb),inv:bo(o.inv),fo:bo(o.fo),eq,bd:bo(o.bd),ti:String(o.ti||'').slice(0,20),hm:bo(o.hm),ls:n(o.ls),ld:String(o.ld||'').slice(0,12),dw:n(o.dw),dl:n(o.dl),bw:n(o.bw),bs:String(o.bs||'').slice(0,12),buy:n(o.buy),ex:bo(o.ex),an:bo(o.an),vr:bo(o.vr),aq:bo(o.aq),pn:(()=>{const r={};if(o.pn&&typeof o.pn=='object')for(const k in o.pn)r[String(k).slice(0,12)]=String(o.pn[k]).replace(/[<>&]/g,'').slice(0,14);return r})(),pf:(()=>{const r={};if(o.pf&&typeof o.pf=='object')for(const k in o.pf)r[String(k).slice(0,12)]=Math.min(9999,n(o.pf[k]));return r})()}};
 const cleanProfile=d=>{const n=v=>Number.isFinite(+v)?Math.max(0,Math.floor(+v)):0,st={},se={};
  if(d&&d.stat&&typeof d.stat=='object')for(const k in d.stat){const q=d.stat[k]||{};st[k]={c:n(q.c),t:Math.max(n(q.t),n(q.c))}}
  if(d&&d.seen&&typeof d.seen=='object')for(const k in d.seen)se[k]=n(d.seen[k]);
@@ -7070,9 +7215,14 @@ const CL=(()=>{const C={ok:false,key:'',nm:'',cls:'',uid:'',ref:null,d:0,tm:0,er
   try{const r=C.ref.update({o:C.uid,n:C.nm,c:C.cls,sao:p.sao|0,cash:p.cash|0,u:Date.now(),d});
    if(r&&r.then)r.then(()=>{try{const b=V5.brief(p),w=C.bref.update({o:C.uid,n:C.nm,c:C.cls,s:p.sao|0,k:b.k,m:b.m,u:Date.now()});if(w&&w.catch)w.catch(fail)}catch(e){fail()}},fail)}catch(e){C.d=1}};
  return C})();
-const saveEdu=()=>{if(!EDU.name)return;EDU.cash=cash;DB.p[EDU.name]={sao:EDU.sao,cash:EDU.cash,stat:EDU.stat,seen:EDU.seen,cls:EDU.cls,q:EDU.q,x:EDU.x,look:Object.assign({},LOOK),t:Date.now()};DB.last=EDU.name;
+let posOK=false;
+const posStore=()=>{try{if(!posOK||!EDU.x||(state!='play'&&state!='mod'&&state!='v5'&&state!='quiz'&&state!='rep'&&state!='mg'))return;const g=ply.car||ply,p=INT.cur&&INT.out?INT.out:g;if(Number.isFinite(p.x)&&Number.isFinite(p.y))EDU.x.pos=[Math.round(p.x),Math.round(p.y),Math.round((ply.a||0)*100)]}catch(e){}};
+const restorePos=()=>{try{const q=EDU.x&&EDU.x.pos;if(!q||q.length!=3)return;let X=null,Y=null;for(let r=0;r<=160&&X==null;r+=16){const n=r?10:1;for(let k=0;k<n;k++){const a=k/n*6.2832,x=q[0]+Math.cos(a)*r,y=q[1]+Math.sin(a)*r;if(!solid(x,y)&&!NAT.waterAt(x,y)){X=x;Y=y;break}}}
+ if(X==null)return;INT.cur=null;ply.car=null;ply.x=X;ply.y=Y;ply.a=q[2]/100;ply.z=0;ply.vz=0;try{say('📍 Chào mừng em trở lại! Em đang ở đúng chỗ lần trước.',3000)}catch(e){}}catch(e){}};
+const saveEdu=()=>{if(!EDU.name)return;posStore();EDU.cash=cash;DB.p[EDU.name]={sao:EDU.sao,cash:EDU.cash,stat:EDU.stat,seen:EDU.seen,cls:EDU.cls,q:EDU.q,x:EDU.x,look:Object.assign({},LOOK),t:Date.now()};DB.last=EDU.name;
  try{localStorage.setItem(STK,JSON.stringify(DB))}catch(e){}
  try{CL.dirty()}catch(e){}};
+setInterval(()=>{if(posOK&&state=='play'){posStore();try{saveEdu()}catch(e){}}},20000);
 addEventListener('visibilitychange',()=>{if(document.hidden){saveEdu();try{CL.flush()}catch(e){}}});addEventListener('pagehide',()=>{saveEdu();try{CL.flush()}catch(e){}});
 function exportFile(all){saveEdu();const pr={};if(all||!EDU.name){Object.assign(pr,DB.p)}else pr[EDU.name]=DB.p[EDU.name];
  const nm=all||!EDU.name?'ca-lop':EDU.name.replace(/[^\wÀ-ỹ -]/g,'').trim().replace(/\s+/g,'-')||'hoc-sinh';
@@ -7122,7 +7272,7 @@ function exportXlsx(all){saveEdu();
  const SK=Object.keys(SUBJ),pc=(c,t)=>t?c/t:'',hd=a=>a.map(v=>({v,s:1}));
  const sum=p=>{let T=0,C=0;const w=[];let bn=0,best='';for(const k of SK){const s=p.stat[k]||{c:0,t:0};T+=s.t;C+=s.c;if(s.t>=5&&s.c/s.t<.6)w.push(SUBJ[k].n);if(s.c>bn){bn=s.c;best=SUBJ[k].n}}return{T,C,w,best}};
  const pcs=(c,t)=>t?{v:c/t,s:c/t<.6&&t>=5?4:c/t>=.85&&t>=5?5:2}:'';
- const r1=[hd(['STT','Họ và tên','Lớp','Cấp','Sao','Xu','Số câu đã làm','Số câu đúng','Tỉ lệ đúng','Môn mạnh nhất','Môn cần ôn tập','Số huy hiệu','Số loài động vật đã gặp','Số khu thiên nhiên đã đến','Lần chơi gần nhất'])];
+ const r1=[hd(['STT','Họ và tên','Lớp','Cấp','Sao','Xu','Số câu đã làm','Số câu đúng','Tỉ lệ đúng','Môn mạnh nhất','Môn cần ôn tập','Số huy hiệu','Số loài động vật đã gặp','Số môi trường sống đã đến','Lần chơi gần nhất'])];
  P.forEach((o,i)=>{const p=o.p,s=sum(p),x=p.x||{};r1.push([i+1,o.n,p.cls||'',Math.floor(p.sao/10)+1,p.sao,p.cash,s.T,s.C,pcs(s.C,s.T),s.best,s.w.join(', '),Object.keys(x.bd||{}).length,Object.keys(x.an||{}).length,Object.keys(x.vr||{}).length,DB.p[o.n].t?new Date(DB.p[o.n].t).toLocaleString('vi-VN'):''])});
  const h2=['Họ và tên','Lớp'];for(const k of SK)h2.push(SUBJ[k].n+' (đúng)',SUBJ[k].n+' (đã làm)',SUBJ[k].n+' (%)');
  const r2=[hd(h2)];for(const o of P){const r=[o.n,o.p.cls||''];for(const k of SK){const s=o.p.stat[k]||{c:0,t:0};r.push(s.c,s.t,pcs(s.c,s.t))}r2.push(r)}
@@ -7425,6 +7575,7 @@ $('go').onclick=()=>{if(wd&&cash<150)return;if(!wd){const nm0=($('nm').value||''
  scene.remove(ply.m);ply.m=mkPerson(LOOK,true);scene.add(ply.m);try{V5.applyEq()}catch(e){}
  for(const k in PR)PR[k]=0;
  $('ov').style.display='none';state='play';
+ if(!wd){posOK=true;restorePos()}
  if(wd){wd=false;cash-=150;saveEdu();say('Đã đổi đồ! -150 xu',2000)}else say('Chào '+(EDU.name||'em')+'! Hãy tới các trạm học màu sắc trên bản đồ (nhấn F) để nhận sao và xu. Nhấn F gần xe để lên xe. Giữ chuột trái (hoặc chạm kéo) để xoay camera ngắm nhân vật.',8000)};
 {const g0=$('go').onclick;
  const remember=()=>{try{if(CL.ok&&CL.key&&CL.uid)localStorage.setItem('ttt3d_auto',JSON.stringify({key:CL.key,uid:CL.uid}))}catch(e){}};
@@ -7498,7 +7649,7 @@ V.clockText=()=>hm(V.tm);
  V.daily=()=>{if(!EDU.name)return;if(!EDU.x)EDU.x=cleanX(null);const x=EDU.x,dt=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),now=new Date(),t=dt(now);if(x.ld===t)return;const y=new Date(now.getTime()-864e5);x.ls=(x.ld===dt(y))?(x.ls|0)+1:1;x.ld=t;const g=10*Math.min(x.ls,7);cash+=g;saveEdu();setTimeout(()=>{try{SND.p('gift');say('📅 Đăng nhập ngày thứ '+x.ls+' liên tiếp! +'+g+' xu (tối đa +70 xu/ngày)',4500)}catch(e){}},1500)};
 V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}try{V.daily()}catch(e){}try{V.homeApply();V.applyEq();V.bchk(true)}catch(e){}};
  /* ---- nhiệm vụ ---- */
- const QP=[['an3','Gặp 3 loài động vật ở khu thiên nhiên','an',3,25],['ans5','Trả lời 5 câu hỏi','ans',5,15],['ok3','Trả lời đúng 3 câu hỏi','ok',3,30],['cls','Về lớp của em (vào phòng học)','cls',1,20],['lib','Đến thư viện đọc sách','lib',1,20],['lab','Làm thí nghiệm ở phòng thí nghiệm','lab',1,20],['med','Ghé phòng y tế','med',1,15],['can','Ghé căn tin','can',1,15],['game','Chơi một trò chơi giờ ra chơi','game',1,25],['bus','Đi xe buýt tới nơi khác','bus',1,20],['market','Đi chợ tính tiền','market',1,20],['park','Đến công viên tìm hiểu thiên nhiên','park',1,20],['forest','Vào rừng khám phá thiên nhiên','forest',1,20],['beach','Ra bãi biển tìm hiểu về biển','beach',1,20],['light','Đến ngọn hải đăng','light',1,20],['rice','Ra đồng lúa tìm hiểu nghề nông','rice',1,20],['vill','Ghé làng quê, giếng nước, ao sen','vill',1,20],['peak','Đến chân núi tìm hiểu về núi','peak',1,20],['snow','Đến vùng tuyết trắng','snow',1,20],['ice','Ghé ngôi nhà tuyết (igloo)','ice',1,20],['desert','Băng qua sa mạc','desert',1,20],['oasis','Tìm ốc đảo giữa sa mạc','oasis',1,20],['pyr','Đến kim tự tháp','pyr',1,20],['island','Qua cầu ra đảo hoang','island',1,20],['spratly','Ra đảo tiền tiêu','spratly',1,20],['cave','Khám phá hang động pha lê','cave',1,20],['reef','Lặn xuống rạn san hô','reef',1,20],['swamp','Khám phá khu đầm lầy','swamp',1,20],['mang','Vào rừng ngập nước','mang',1,20],['volc','Đến chân núi lửa','volc',1,20],['crater','Lên miệng núi lửa','crater',1,25],['prehis','Vào khu nguyên thủy','prehis',1,20],['fossil','Tới bãi hóa thạch khủng long','fossil',1,25],['nest','Tìm tổ trứng khủng long','nest',1,25],['ans10','Trả lời 10 câu hỏi','ans',10,40]];
+ const QP=[['an3','Gặp 3 loài động vật ở môi trường sống','an',3,25],['ans5','Trả lời 5 câu hỏi','ans',5,15],['ok3','Trả lời đúng 3 câu hỏi','ok',3,30],['cls','Về lớp của em (vào phòng học)','cls',1,20],['lib','Đến thư viện đọc sách','lib',1,20],['lab','Làm thí nghiệm ở phòng thí nghiệm','lab',1,20],['med','Ghé phòng y tế','med',1,15],['can','Ghé căn tin','can',1,15],['game','Chơi một trò chơi giờ ra chơi','game',1,25],['bus','Đi xe buýt tới nơi khác','bus',1,20],['market','Đi chợ tính tiền','market',1,20],['park','Đến công viên tìm hiểu thiên nhiên','park',1,20],['forest','Vào rừng khám phá thiên nhiên','forest',1,20],['beach','Ra bãi biển tìm hiểu về biển','beach',1,20],['light','Đến ngọn hải đăng','light',1,20],['rice','Ra đồng lúa tìm hiểu nghề nông','rice',1,20],['vill','Ghé làng quê, giếng nước, ao sen','vill',1,20],['peak','Đến chân núi tìm hiểu về núi','peak',1,20],['snow','Đến vùng tuyết trắng','snow',1,20],['ice','Ghé ngôi nhà tuyết (igloo)','ice',1,20],['desert','Băng qua sa mạc','desert',1,20],['oasis','Tìm ốc đảo giữa sa mạc','oasis',1,20],['pyr','Đến kim tự tháp','pyr',1,20],['island','Qua cầu ra đảo hoang','island',1,20],['spratly','Ra đảo tiền tiêu','spratly',1,20],['cave','Khám phá hang động pha lê','cave',1,20],['reef','Lặn xuống rạn san hô','reef',1,20],['swamp','Khám phá khu đầm lầy','swamp',1,20],['mang','Vào rừng ngập nước','mang',1,20],['volc','Đến chân núi lửa','volc',1,20],['crater','Lên miệng núi lửa','crater',1,25],['prehis','Vào khu nguyên thủy','prehis',1,20],['fossil','Tới bãi hóa thạch khủng long','fossil',1,25],['nest','Tìm tổ trứng khủng long','nest',1,25],['ans10','Trả lời 10 câu hỏi','ans',10,40]];
  const QM={};for(const q of QP)QM[q[0]]=q;
  const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
  const seedOf=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
@@ -7618,14 +7769,14 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   ['pet4','🐶','Chủ trại thú cưng','Nuôi 4 thú cưng khác nhau',()=>ITEMS.filter(i=>i[1]=='pt'&&X().inv[i[0]]).length>=4,80,()=>ITEMS.filter(i=>i[1]=='pt'&&X().inv[i[0]]).length+'/4 bé'],
   ['petf','🍖','Người nuôi tận tụy','Cho thú cưng ăn tổng cộng 30 lần',()=>Object.values(X().pf||{}).reduce((a,b)=>a+b,0)>=30,60,()=>Object.values(X().pf||{}).reduce((a,b)=>a+b,0)+'/30 lần'],
   ['rich','💰','Tiểu phú ông','Có ít nhất 500 xu',()=>cash>=500]];
- /* huy hiệu cho từng khu thiên nhiên: đặt chân tới / gặp một nửa số loài / gặp đủ loài */
+ /* huy hiệu cho từng môi trường sống: đặt chân tới / gặp một nửa số loài / gặp đủ loài */
  const RBD=[['plateau','🌸','Cao nguyên Thông Xanh',['Khách cao nguyên','Người bạn của rừng thông','Chúa cao nguyên']],['forest','🌲','Rừng nhiệt đới',['Lữ khách rừng xanh','Nhà động vật học rừng','Chúa sơn lâm']],['grass','🦁','Thảo nguyên',['Lữ khách thảo nguyên','Thợ săn ảnh Safari','Vua thảo nguyên']],['snow','❄️','Vùng tuyết',['Lữ khách băng giá','Nhà thám hiểm Bắc Cực','Chúa tể băng tuyết']],['mount','⛰️','Núi',['Người leo núi','Nhà quan sát vách núi','Vua đỉnh núi']],['village','🌾','Làng quê',['Khách làng quê','Bạn của nhà nông','Chủ trang trại']],['beach','🏖️','Biển & bãi cát',['Khách bãi biển','Nhà hải dương học nhí','Hải vương']],['island','🏝️','Đảo nhiệt đới',['Du khách đảo hoang','Nhà thám hiểm đảo','Chúa đảo']],['cave','🦇','Hang động',['Khách hang động','Nhà động vật học hang','Chúa hang đêm']],['desert','🏜️','Sa mạc',['Du khách cát vàng','Nhà quan sát sa mạc','Vua sa mạc']],['reef','🐠','Rạn san hô',['Thợ lặn nhí','Nhà hải dương học rạn','Chúa tể đại dương']],['swamp','🐸','Đầm lầy',['Khách miền sông nước','Nhà sinh thái đầm lầy','Chúa tể đầm lầy']],['volcano','🌋','Núi lửa',['Người leo núi lửa','Nhà địa chất nhí','Chúa tể dung nham']],['prehis','🦖','Nguyên thủy',['Du khách thời tiền sử','Nhà cổ sinh vật nhí','Chúa tể khủng long']]];
  const rbN=id=>{const L=ANIM.SPS.filter(q=>q.r==id),an=X().an||{};return[L.filter(q=>an[q.id]).length,L.length]};
  for(const[id,em,nm,tt]of RBD){
   BAD.push(['rv_'+id,em,tt[0],'Đặt chân tới khu '+nm,()=>!!(X().vr||{})[id],15,()=>((X().vr||{})[id]?'1/1':'0/1')]);
   BAD.push(['ra_'+id,'🐾',tt[1],'Gặp ít nhất một nửa số loài ở khu '+nm,()=>{const c=rbN(id);return c[1]>0&&c[0]>=Math.ceil(c[1]/2)},40,()=>{const c=rbN(id);return c[0]+'/'+Math.ceil(c[1]/2)+' loài'}]);
   BAD.push(['rk_'+id,'👑',tt[2],'Gặp tất cả các loài ở khu '+nm,()=>{const c=rbN(id);return c[1]>0&&c[0]>=c[1]},100,()=>{const c=rbN(id);return c[0]+'/'+c[1]+' loài'}])}
- BAD.push(['rv_all','🗺️','Du hành '+RBD.length+' miền','Đặt chân tới cả '+RBD.length+' khu thiên nhiên',()=>RBD.every(r=>(X().vr||{})[r[0]]),150,()=>RBD.filter(r=>(X().vr||{})[r[0]]).length+'/'+RBD.length+' khu']);
+ BAD.push(['rv_all','🗺️','Du hành '+RBD.length+' miền','Đặt chân tới cả '+RBD.length+' môi trường sống',()=>RBD.every(r=>(X().vr||{})[r[0]]),150,()=>RBD.filter(r=>(X().vr||{})[r[0]]).length+'/'+RBD.length+' khu']);
  BAD.push(['rk_all','🌏','Nhà tự nhiên học vĩ đại','Đạt huy hiệu "gặp tất cả các loài" ở cả '+RBD.length+' khu',()=>RBD.every(r=>{const c=rbN(r[0]);return c[1]>0&&c[0]>=c[1]}),300,()=>RBD.filter(r=>{const c=rbN(r[0]);return c[1]>0&&c[0]>=c[1]}).length+'/'+RBD.length+' khu']);
  V.bchk=silent=>{try{if(!EDU.name)return;const x=X(),nw=[];let bx=0;for(const b of BAD)if(!x.bd[b[0]]&&b[4]()){x.bd[b[0]]=1;nw.push(b);if(b[5]){cash+=b[5];bx+=b[5]}}
   if(nw.length){if(!x.ti||!x.bd[x.ti])x.ti=nw[0][0];saveEdu();if(!silent){SND.p('level');say('🏅 Huy hiệu mới: '+nw.map(b=>b[1]+' '+b[2]).join(', ')+(bx?' · +'+bx+' xu':'')+'! Mở bảng Q → Huy hiệu để xem.',5000)}}}catch(e){}};
@@ -7984,7 +8135,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
  V.aqGen=sp=>{const S=ANIM.SPS,RLN={};for(const R of NAT.RL)RLN[R.id]=R.n;
   const plain=sp.r=='plain',ty=[];ty.push('grp','hab');if(!plain)ty.push('realm','who');
   const k=ty[Math.random()*ty.length|0],pick=(a,n)=>shuf(a).slice(0,n);
-  if(k=='realm'){const ok=RLN[sp.r],sm_=new Set(S.filter(q=>q.n==sp.n).map(q=>RLN[q.r])),ds=pick(Object.values(RLN).filter(x=>x!=ok&&!sm_.has(x)),3);return{q:'Em gặp '+sp.e+' '+sp.n+' ở khu thiên nhiên nào?',o:shuf([ok].concat(ds)),a:ok,x:sp.n+' sống ở khu '+ok+'.'}}
+  if(k=='realm'){const ok=RLN[sp.r],sm_=new Set(S.filter(q=>q.n==sp.n).map(q=>RLN[q.r])),ds=pick(Object.values(RLN).filter(x=>x!=ok&&!sm_.has(x)),3);return{q:'Em gặp '+sp.e+' '+sp.n+' ở môi trường sống nào?',o:shuf([ok].concat(ds)),a:ok,x:sp.n+' sống ở khu '+ok+'.'}}
   if(k=='hab'){const w=wset(sp.h),ds=[];for(const q of shuf(S)){if(q.r==sp.r||ds.length>=3)continue;if(q.h==sp.h||ds.includes(q.h))continue;const ww=wset(q.h);let ov=0;for(const x of ww)if(w.has(x))ov=1;if(!ov)ds.push(q.h)}
    return{q:'Môi trường sống của '+sp.e+' '+sp.n+' là gì?',o:shuf([sp.h].concat(ds)),a:sp.h,x:sp.n+' sống ở: '+sp.h+'.'}}
   if(k=='who'){const ds=pick(S.filter(q=>q.r!=sp.r&&q.r!='plain'&&!S.some(z=>z.r==sp.r&&z.n==q.n)),3).map(q=>q.e+' '+q.n),ok=sp.e+' '+sp.n;
@@ -8053,7 +8204,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   const show=()=>{P.innerHTML='';P.appendChild(box);P.style.display='flex'};
   const back=()=>{state='play';V.animal(sp)};
   const choose=()=>{box.innerHTML='';head('🪢 Bắt '+sp.e+' '+sp.n);
-   txt('Muốn bắt '+sp.n+' về làm bạn đồng hành, em hãy trả lời đúng '+CAPN+' câu hỏi (trắc nghiệm hoặc đúng/sai) về loài này và khu thiên nhiên nơi bé sống. Sai '+CAPW+' câu thì bé chạy mất, nhưng em có thể thử lại ngay, không mất xu.');
+   txt('Muốn bắt '+sp.n+' về làm bạn đồng hành, em hãy trả lời đúng '+CAPN+' câu hỏi (trắc nghiệm hoặc đúng/sai) về loài này và môi trường sống nơi bé sống. Sai '+CAPW+' câu thì bé chạy mất, nhưng em có thể thử lại ngay, không mất xu.');
    txt('🐾 Thú cưng của em: '+cnt('cp')+'/'+CAPMAX+'   ·   🐎 Thú cưỡi của em: '+cnt('cm')+'/'+CAPMAX,'margin:6px 0;font-weight:700;color:#ffe27a');
    for(const[k,lb]of[['cp','🐾 Bắt làm thú cưng (dắt theo em)'],['cm','🐎 Bắt làm thú cưỡi ('+envN(env)+')']]){
     if(k=='cm'&&!env){txt('🐎 '+sp.n+' quá nhỏ hoặc không phù hợp để cưỡi, nhưng bé làm thú cưng thì rất dễ thương!','margin:8px 0;opacity:.85');continue}
@@ -8143,7 +8294,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   for(const R of NAT.RL.concat([{id:'plain',n:'🌾 Đồng cỏ khắp nơi'}])){const L=ANIM.SPS.filter(q=>q.r==R.id);if(!L.length)continue;const gc=L.filter(q=>an[q.id]).length;h+='<div style="margin:8px 0 2px;font-weight:700">'+R.n+' <span style="font-weight:400;opacity:.85">('+gc+'/'+L.length+')'+(gc==L.length?' 👑':'')+'</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">'+L.map(q=>an[q.id]?'<span style="background:#ffffff22;border-radius:12px;padding:4px 9px">'+q.e+' '+q.n+'</span>':'<span style="background:#00000033;border-radius:12px;padding:4px 9px;opacity:.7">❔ Chưa gặp</span>').join('')+'</div>'}
   box.innerHTML=h;const b=document.createElement('button');b.textContent='Đóng';b.style.cssText='display:block;width:100%;margin:12px 0 0;padding:10px;background:#555';b.onclick=V.close;box.appendChild(b);P.innerHTML='';P.appendChild(box);P.style.display='flex'};
  V.busMenu=i=>{if(state!='play')return;state='v5';const box=document.createElement('div');box.className='box';
-  box.innerHTML='<h3><span>🚌 Trạm xe buýt: '+STOPS[i].n+'</span></h3><div style="opacity:.8;margin-bottom:8px">Giá vé 5 xu (đi khu thiên nhiên xa: 10 xu). Em muốn đi đâu?</div>';
+  box.innerHTML='<h3><span>🚌 Trạm xe buýt: '+STOPS[i].n+'</span></h3><div style="opacity:.8;margin-bottom:8px">Giá vé 5 xu (đi môi trường sống xa: 10 xu). Em muốn đi đâu?</div>';
   box.style.maxHeight='88vh';box.style.overflowY='auto';
   STOPS.forEach((d,j)=>{if(j==i)return;const b=document.createElement('button');b.textContent='➡ '+d.n;b.style.cssText='display:block;width:100%;margin:6px 0;padding:10px';b.onclick=()=>V.ride(j);box.appendChild(b)});
   const x=document.createElement('button');x.textContent='Không đi nữa';x.style.cssText='display:block;width:100%;margin-top:8px;background:#555';x.onclick=V.close;box.appendChild(x);P.innerHTML='';P.appendChild(box);P.style.display='flex'};
@@ -8152,7 +8303,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   STOPS.forEach((d,i)=>{BUS(d.bx,d.bz);B(1.2,34,1.2,'#8c9099',d.x-30,.35,d.y);B(26,1.6,10,'#e8e8ee',d.x-18,34,d.y+1);B(1.2,14,1.2,'#8c9099',d.x-30,.35,d.y+6);B(12,1.4,5,'#a67c52',d.x-18,6,d.y+3);
    placeLabel('🚌 Trạm xe buýt',24,5.5,d.x-18,30,d.y+6.2,'rgba(20,60,120,.9)',0);
    DOORS.push({fn:'act',id:'bus'+i,x:d.x-12,y:d.y+4,r:34,txt:'F: đi xe buýt ('+(d.f||5)+' xu) — trạm '+d.n})});
-  /* biển chỉ đường tới các khu thiên nhiên */
+  /* biển chỉ đường tới các môi trường sống */
   {const ZS2=(x,z,txt,w,col)=>{const g=Math.max(0,GHy(x,z));B(2,22,2,'#6b4a2b',x-w/2+3,.35+g,z);B(2,22,2,'#6b4a2b',x+w/2-3,.35+g,z);B(w,9,1.4,'#6b4a2b',x,22+g,z);placeLabel(txt,w-2,7.5,x,26.3+g,z+.9,col,0);placeLabel(txt,w-2,7.5,x,26.3+g,z-.9,col,PI)};
    const EM={forest:'🌲',grass:'🦁',village:'🌾',beach:'🏖',mount:'⛰',cave:'🦇',island:'🏝',snow:'❄',desert:'🏜',reef:'🐠',swamp:'🐸',volcano:'🌋',prehis:'🦖',plateau:'🌸'};
    for(const d of STOPS){if(!d.nat||!d.id)continue;const r=NAT.RL.find(q=>q.id==d.id),dm=Math.round(Math.hypot(d.x-1400,d.y-1400)/100)*10;ZS2(d.x+62,d.y-16,'➡ '+EM[d.id]+' '+r.n+' · '+dm+' m',84,'rgba(40,120,70,.95)')}}
