@@ -4879,9 +4879,9 @@ const CHAT=(()=>{
 @media(max-height:480px){#chpan{width:min(520px,60vw)}}`;document.head.appendChild(st);
  const toast=document.createElement('div');toast.id='chtoast';document.body.appendChild(toast);
  const pan=document.createElement('div');pan.id='chpan';
- pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chs" style="display:none;padding:6px 12px;background:#7a1f2a;font-size:13px"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
+ pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chs" style="display:none;padding:6px 12px;background:#2a3f7a;font-size:13px;flex:none"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
  document.body.appendChild(pan);
- const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none'};
+ const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none';sEl.style.background=/^⚠/.test(m||'')?'#8a2230':'#2a3f7a'};
  const btn=document.createElement('button');btn.type='button';btn.id='chbtn';btn.innerHTML='💬<i></i>';btn.title='Chat (phím Enter)';
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const BAD=/(?<![\p{L}])(đ[mụ]m?|đ[mc]m|đéo|địt|vcl|vkl|cặc|lồn|buồi|óc chó|chó chết|mẹ mày|khốn nạn|mất dạy|đồ ngu|thằng ngu|con ngu)(?![\p{L}])/giu;
@@ -4904,7 +4904,7 @@ const CHAT=(()=>{
  const myU=()=>{try{const a=firebase.auth().currentUser;if(a&&a.uid)return a.uid}catch(e){}return MP.uid};
  const send=txt=>{const m=clean(txt);if(!m)return false;if(!db){stt('⚠️ Chat chưa kết nối máy chủ. Em đợi vài giây rồi gửi lại, hoặc bật 🌐 Chơi chung nhé.');if(!started)start();return false}
   const now=Date.now();if(now-last<1500){stt('Em gửi chậm lại một chút nhé 🙂');setTimeout(()=>stt(''),1500);return false}last=now;
-  try{const p=db.ref('chat').push(),id=p.key;stt('');const w=p.set({u:myU(),n:cleanName(EDU.name),m,t:now});if(w&&w.catch)w.catch(e=>{seen.add(id);const i=rows.findIndex(r=>r.id==id);if(i>=0)rows.splice(i,1);if(open)paint();stt('⚠️ Tin nhắn chưa gửi được ('+((e&&e.code)||'lỗi')+'). Thầy/cô cần dán Rules mới (có mục chat) vào Firebase rồi bấm Publish.')});
+  try{const p=db.ref('chat').push(),id=p.key;stt('⏳ Đang gửi…');let okd=0;const w=p.set({u:myU(),n:cleanName(EDU.name),m,t:now});if(w&&w.then)w.then(()=>{okd=1;stt('✓ Đã gửi');setTimeout(()=>{if(sEl.textContent=='✓ Đã gửi')stt('')},1500)});setTimeout(()=>{if(!okd&&sEl.textContent=='⏳ Đang gửi…')stt('⚠️ Hơn 6 giây mà máy chủ chưa xác nhận tin nhắn. Em kiểm tra mạng; nếu vẫn vậy thì Rules Firebase (mục chat) chưa được Publish.')},6000);if(w&&w.catch)w.catch(e=>{seen.add(id);const i=rows.findIndex(r=>r.id==id);if(i>=0)rows.splice(i,1);if(open)paint();stt('⚠️ Tin nhắn chưa gửi được ('+((e&&e.code)||'lỗi')+'). Thầy/cô cần dán Rules mới (có mục chat) vào Firebase rồi bấm Publish.')});
    setTimeout(()=>{try{db&&db.ref('chat/'+id).remove().catch(()=>{})}catch(e){}},15*60*1000)}catch(e){return false}return true};
  pan.addEventListener('pointerdown',e=>e.stopPropagation());pan.addEventListener('keydown',e=>e.stopPropagation());pan.addEventListener('keyup',e=>e.stopPropagation());
  $c('chx').onclick=()=>setOpen(0);
