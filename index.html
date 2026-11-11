@@ -4893,6 +4893,7 @@ const CHAT=(()=>{
  document.body.appendChild(pan);
  const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none';sEl.style.background=/^⚠/.test(m||'')?'#8a2230':'#2a3f7a'};
  const btn=document.createElement('button');btn.type='button';btn.id='chbtn';btn.innerHTML='💬<i></i>';btn.title='Chat (phím Enter)';
+ const cleanName=n=>String(n==null?'Bạn':n).replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,16)||'Bạn';
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const BAD=/(?<![\p{L}])(đ[mụ]m?|đ[mc]m|đéo|địt|vcl|vkl|cặc|lồn|buồi|óc chó|chó chết|mẹ mày|khốn nạn|mất dạy|đồ ngu|thằng ngu|con ngu)(?![\p{L}])/giu;
  const clean=t=>String(t||'').normalize('NFC').replace(/[\u0000-\u001f<>]/g,' ').replace(/\s+/g,' ').trim().slice(0,MAXL).replace(BAD,m=>'*'.repeat(m.length));
