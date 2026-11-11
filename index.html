@@ -4876,6 +4876,7 @@ const CHAT=(()=>{
 @keyframes chin{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%)}}
 #chpan{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:75;width:min(440px,94vw);max-height:48vh;display:none;flex-direction:column;background:rgba(12,28,66,.96);border:2px solid rgba(255,255,255,.3);border-radius:18px;color:#fff;font:14px/1.4 var(--ff,system-ui),sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);overflow:hidden}
 #chpan.on{display:flex}
+#chpan.kb{bottom:auto!important;width:min(560px,96vw)!important}#chpan.kb #chq,#chpan.kb #chd,#chpan.kb .chh small{display:none!important}#chpan.kb .chh{padding:3px 10px}#chpan.kb .chh button{width:30px;height:30px;font-size:15px}#chpan.kb #chl{min-height:0;padding:4px 10px}#chpan.kb #chf{padding:4px 10px 6px}#chpan.kb #chf input{padding:7px 10px;font-size:15px}
 #chpan .chh{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.08);font-weight:700}#chpan .chh span{flex:1}
 #chpan .chh button{border:0;border-radius:10px;width:34px;height:34px;font-size:18px;background:#3a3870;color:#fff;cursor:pointer}
 #chl{flex:1;min-height:90px;overflow:auto;padding:8px 12px;-webkit-overflow-scrolling:touch}
@@ -4891,7 +4892,7 @@ const CHAT=(()=>{
  const pan=document.createElement('div');pan.id='chpan';
  pan.innerHTML='<div class="chh"><span>💬 Chat chung <small id="chn" style="font-weight:400;opacity:.7"></small></span><button type="button" id="chx" title="Đóng">✕</button></div><div id="chl"></div><div id="chs" style="display:none;padding:6px 12px;background:#2a3f7a;font-size:13px;flex:none"></div><div id="chd" style="padding:2px 12px;font-size:11px;opacity:.7;flex:none"></div><div id="chq"></div><form id="chf"><input id="chi" maxlength="'+MAXL+'" autocomplete="off" placeholder="Nhắn cho các bạn đang chơi…"><button type="submit">Gửi</button></form>';
  document.body.appendChild(pan);
- const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');let dR='đọc: chờ…',dW='ghi: —';const dg=()=>{const d=pan.querySelector('#chd');if(d)d.textContent=dR+' · '+dW};const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none';sEl.style.background=/^⚠/.test(m||'')?'#8a2230':'#2a3f7a'};
+ const $c=i=>pan.querySelector('#'+i),lEl=$c('chl'),iEl=$c('chi'),sEl=$c('chs');let dR='đọc: chờ…',dW='ghi: —';const dg=()=>{const d=pan.querySelector('#chd');if(d){const t=/LỖI|>6s/.test(dR+dW)?dR+' · '+dW:'';d.textContent=t;d.style.display=t?'block':'none'}};const stt=m=>{sEl.textContent=m||'';sEl.style.display=m?'block':'none';sEl.style.background=/^⚠/.test(m||'')?'#8a2230':'#2a3f7a'};
  const btn=document.createElement('button');btn.type='button';btn.id='chbtn';btn.innerHTML='💬<i></i>';btn.title='Chat (phím Enter)';
  const cleanName=n=>String(n==null?'Bạn':n).replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,16)||'Bạn';
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -4920,6 +4921,8 @@ const CHAT=(()=>{
    setTimeout(()=>{try{db&&db.ref('chat/'+id).remove().catch(()=>{})}catch(e){}},15*60*1000)}catch(e){return false}return true};
  pan.addEventListener('pointerdown',e=>e.stopPropagation());pan.addEventListener('keydown',e=>e.stopPropagation());pan.addEventListener('keyup',e=>e.stopPropagation());
  $c('chx').onclick=()=>setOpen(0);
+ {const vv=window.visualViewport;const fit=()=>{try{if(!open||!vv){pan.classList.remove('kb');pan.style.top='';pan.style.maxHeight='';return}const kb=vv.height<innerHeight*.78;pan.classList.toggle('kb',kb);if(kb){pan.style.top=(vv.offsetTop+4)+'px';pan.style.maxHeight=(vv.height-8)+'px'}else{pan.style.top='';pan.style.maxHeight=''}}catch(e){}};
+  if(vv){vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit)}iEl.addEventListener('focus',()=>setTimeout(fit,250));iEl.addEventListener('blur',()=>setTimeout(fit,250));setInterval(fit,700)}
  pan.querySelector('#chf').onsubmit=e=>{e.preventDefault();if(send(iEl.value))iEl.value=''};
  const qk=['Xin chào các bạn! 👋','Bạn ở đâu vậy?','Cho mình đi cùng nhé','Mình ở đây nè 📍','Cảm ơn bạn! 😊','Giúp mình với!'],q=$c('chq');for(const t of qk){const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>send(t);q.appendChild(b)}
  btn.onclick=e=>{e.stopPropagation();setOpen(!open)};btn.addEventListener('pointerdown',e=>e.stopPropagation());
@@ -8437,15 +8440,15 @@ const FS=(()=>{const el=document.documentElement,LS='ttt3d_fs';
  const lock=()=>{try{const o=screen.orientation;if(o&&o.lock){const p=o.lock('landscape');if(p&&p.catch)p.catch(()=>{})}}catch(e){}};
  const enter=()=>{try{if(isFs()){lock();return}if(!can())return;const f=el.requestFullscreen||el.webkitRequestFullscreen;const p=f.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock()}catch(e){}};
  const exit=()=>{try{try{screen.orientation.unlock()}catch(e){}const f=document.exitFullscreen||document.webkitExitFullscreen;if(f&&isFs())f.call(document)}catch(e){}};
- let done=0;
- const first=()=>{if(done)return;if(!touch()||standalone()||!pref()||!can()){done=1;return}if(isFs()){done=1;return}done=1;enter()};
+ let off=0;
+ const first=()=>{if(off||!touch()||standalone()||!can()||isFs())return;enter()};
  document.addEventListener('pointerup',first,{capture:true});
- document.addEventListener('touchend',first,{capture:true});
+ document.addEventListener('touchend',first,{capture:true});document.addEventListener('click',first,{capture:true});
  const upd=()=>{try{const e=document.querySelector('#dk_fs b');if(e&&e.firstChild)e.firstChild.nodeValue=isFs()?'🗗':'⛶'}catch(x){}};
  document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
  return{toggle(){if(standalone()){say('Game đang chạy toàn màn hình rồi.',2200);return}
    if(!can()){say(ios()?'📱 iPhone/iPad: bấm nút Chia sẻ của Safari → "Thêm vào MH chính", rồi mở game từ biểu tượng trên màn hình để chơi toàn màn hình.':'Trình duyệt này chưa hỗ trợ toàn màn hình.',7000);return}
-   if(isFs()){setPref(0);exit();say('Đã thoát toàn màn hình.',1800)}else{setPref(1);enter();say('Đã vào toàn màn hình và xoay ngang.',1800)}},isFs,standalone}})();
+   if(isFs()){off=1;exit();say('Đã thoát toàn màn hình.',1800)}else{off=0;enter();say('Đã vào toàn màn hình và xoay ngang.',1800)}},isFs,standalone}})();
 
 /* ===== UI2: thanh biểu tượng tròn kiểu Play Together + chế độ gọn / đầy đủ ===== */
 /* ===== THẺ THÔNG TIN NGƯỜI CHƠI: chạm vào bạn đang chơi chung (hoặc bấm ℹ️ trong 🌐) để xem lớp, sao, thế mạnh, vị trí… ===== */
