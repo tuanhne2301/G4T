@@ -9162,13 +9162,34 @@ const SUB=(()=>{
 #sbbt button{width:clamp(44px,11vw,64px);height:clamp(44px,11vw,64px);border-radius:50%;border:3px solid #7fd8ff;background:rgba(10,30,46,.78);color:#fff;font-size:clamp(18px,5vw,26px);touch-action:none}
 #sbbt button:active,#sbbt button.h{background:#2a8ac0}
 #sbhud.ext #sbbt{top:2vh}`;document.head.appendChild(css);
+  /* Giao diện gọn cho màn hình điện thoại nằm ngang: không đè lên HUD, joystick và nút gợi ý */
+  const css2=document.createElement('style');css2.textContent=`@media(max-height:560px){
+#sbdash{height:19vh!important;min-height:56px;left:21vw!important;right:0;padding:.7vh 1vw;gap:.9vw;border-top-width:3px;border-radius:14px 0 0 0}
+#sbhud.ext #sbdash{height:17vh!important;min-height:52px}
+#sbdash .g{padding:0 .5vw;border-width:1.5px;border-radius:9px}
+#sbdash small{font-size:9px;letter-spacing:.03em}
+#sbdash b{font-size:clamp(13px,3vw,18px)}
+#sbdash .bar{min-height:6px;margin:2px 0}
+#sbso{font-size:9px!important;line-height:1.1}
+#sbrad{border-width:2px}
+#sbhelp{display:none}
+#sbwin{top:7vh;bottom:20vh}
+#sbtop{top:auto;bottom:calc(19vh + 5px);left:21vw;right:76px;height:auto;padding:0;justify-content:flex-start;gap:6px;font-size:11px;letter-spacing:.02em}
+#sbhud.ext #sbtop{bottom:calc(17vh + 5px)}
+#sbtop span:first-child{display:none}
+#sbtop span{background:rgba(6,18,30,.78);padding:2px 9px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sbal:empty{display:none}
+#sbbt,#sbhud.ext #sbbt{top:17vh;right:1.2vw;gap:6px}
+#sbbt button{width:42px;height:42px;font-size:19px;border-width:2px}
+body.insub #hint{bottom:calc(19vh + 34px)!important;max-width:44vw;font-size:12px!important;padding:5px 12px!important}
+}`;document.head.appendChild(css2);
   hud=document.createElement('div');hud.id='sbhud';
   hud.innerHTML='<div id="sbwin"></div><div id="sbtop"><span>🚢 TÀU NGẦM THÁM HIỂM</span><span id="sbzn">VÙNG NƯỚC NÔNG</span><span id="sbal"></span></div>'+
    '<div id="sbdash"><div class="g"><small>ĐỘ SÂU</small><b id="sbdp">0 m</b></div><div class="g"><small>TỐC ĐỘ</small><b id="sbsp">0 km/h</b></div>'+
    '<div class="g"><small>OXY</small><div class="bar"><i id="sbox"></i></div><b id="sbop">100%</b></div><div class="g"><small>SONAR</small><b id="sbso" style="font-size:clamp(10px,2.4vw,15px)">ĐANG HOẠT ĐỘNG</b><small id="sbdk" style="margin-top:.6vh"></small></div><canvas id="sbrad" width="130" height="130"></canvas>'+
    '<div id="sbhelp">W/S tiến-lùi · A/D rẽ · Space lặn · Shift nổi · V đổi góc nhìn · F/E rời tàu (khi về bến)</div></div>'+
    '<div id="sbbt"><button data-k="u">⬆</button><button data-k="d">⬇</button><button data-k="v">👁</button><button data-k="x">🚪</button></div>';
-  document.body.appendChild(hud);
+  document.body.appendChild(hud);try{new MutationObserver(()=>document.body.classList.toggle('insub',hud.classList.contains('on'))).observe(hud,{attributes:true,attributeFilter:['class']})}catch(e){}
   hud.querySelectorAll('#sbbt button').forEach(b=>{const k=b.dataset.k;
    const dn=e=>{e.preventDefault();if(k=='u'||k=='d'){st.btn[k]=1;b.classList.add('h')}else if(k=='v')SUB.toggleView();else if(k=='x')SUB.exit()},up=e=>{if(k=='u'||k=='d'){st.btn[k]=0;b.classList.remove('h')}};
    b.addEventListener('pointerdown',dn);b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);b.addEventListener('pointercancel',up)});
