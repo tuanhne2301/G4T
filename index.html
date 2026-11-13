@@ -555,13 +555,14 @@ body.full #sbx{top:calc(var(--mm) + 20px)!important}
 </div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* Chỉnh độ lớn: sửa số len (chiều dài mô hình) trong CFG bên dưới */
 /* ===== GLBX: thay ngoại hình Megalodon và Pliosaurus bằng mô hình GLB =====
    Cần 2 file đặt cùng thư mục với index.html: megalodon.glb và pliosaurus.glb.
    Nếu thiếu file hoặc tải lỗi, game tự dùng lại mô hình cũ (không bị lỗi). */
 window.GLBX=(()=>{
  const CFG={
-  megalodon:{url:'megalodon.glb',len:76,ctr:.3,clip:null},
-  pliosaurus:{url:'pliosaurus.glb',len:26.3,ctr:null,clip:'Swim_Slow'}
+  megalodon:{url:'megalodon.glb',len:34,ctr:.3,clip:null},
+  pliosaurus:{url:'pliosaurus.glb',len:12,ctr:null,clip:'Swim_Slow'}
  };
  const T={},PEND=[];
  const SRC={
@@ -593,19 +594,19 @@ window.GLBX=(()=>{
  /* Megalodon không có hoạt ảnh sẵn: tự uốn đuôi như cá mập đang bơi */
  const rigShark=cl=>{const root=cl.children[0],scn=root.children[0],up=new THREE.Vector3(0,0,1);
   const names=['spine_lower_6','pelvis_15','tail_1_14','tail_2_13','tail_3_10','tail_4_9','tail_5_8','tail_6_7'],
-   amp=[.03,.05,.09,.12,.16,.2,.25,.3],ph=[0,.5,.9,1.3,1.7,2.1,2.5,2.9],B=[];
+   amp=[.05,.08,.14,.19,.25,.31,.38,.45],ph=[0,.5,.9,1.3,1.7,2.1,2.5,2.9],B=[];
   cl.updateMatrixWorld(true);
   names.forEach((nm,i)=>{const b=scn.getObjectByName(nm);if(!b)return;
    const Q=new THREE.Quaternion();let n=b.parent;while(n&&n!==scn){Q.premultiply(n.quaternion);n=n.parent}
    B.push({b,rest:b.quaternion.clone(),ax:up.clone().applyQuaternion(Q.invert()),a:amp[i],p:ph[i]})});
   const ph0=Math.random()*6.28,dq=new THREE.Quaternion();
-  return t=>{for(const x of B){dq.setFromAxisAngle(x.ax,x.a*Math.sin(t*1.7+ph0-x.p));x.b.quaternion.copy(dq).multiply(x.rest)}}};
+  return t=>{for(const x of B){dq.setFromAxisAngle(x.ax,x.a*Math.sin(t*2.8+ph0-x.p));x.b.quaternion.copy(dq).multiply(x.rest)}}};
  const make=id=>{const d=T[id];if(!d||!THREE.SkeletonUtils)return null;
   try{const cl=THREE.SkeletonUtils.clone(d.N),g=new THREE.Group();g.add(cl);
    let hook=null;cl.traverse(o=>{if(o.isMesh&&!hook)hook=o});
    if(hook){
     if(CFG[id].clip){const clip=d.clips.find(c=>c.name==CFG[id].clip)||d.clips[0];
-     if(clip){const mx=new THREE.AnimationMixer(cl.children[0].children[0]),ac=mx.clipAction(clip);ac.play();ac.time=Math.random()*clip.duration;
+     if(clip){const mx=new THREE.AnimationMixer(cl.children[0].children[0]),ac=mx.clipAction(clip);mx.timeScale=1.6;ac.play();ac.time=Math.random()*clip.duration;
       let last=performance.now()/1000;hook.onBeforeRender=()=>{const n=performance.now()/1000,dt=n-last;if(dt>.001){last=n;mx.update(Math.min(dt,.1))}}}}
     else{const f=rigShark(cl);hook.onBeforeRender=()=>f(performance.now()/1000)}}
    return g}catch(e){try{console.warn('GLBX',id,e)}catch(_){}return null}};
