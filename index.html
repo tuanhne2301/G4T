@@ -4094,19 +4094,28 @@ const MKB=(THREE,scene,pid)=>{
   const lt=pv;[-1,1].forEach(sd=>K(r*.35,L*1.5,red,-L*.9,0,r*.6*sd,lt).rotation.z=PI/2);
   return{root:dino,hips,knees,tail:segs,head:hd,jaw:null}};
  /* Archaeopteryx mecha: thân chim có giáp, đầu có răng, cánh lông vũ kèm móng vuốt, đuôi xương dài mang lông */
- o.archM=P=>{const q=P.q,bl=P.bl,bh=P.bh,bw=P.bw,hipY=2.6*q,cy=hipY+.35;
-  B(bl,bh,bw,steel,0,cy,0,dino);B(bl*.8,.24,bw*.75,white,0,cy+bh/2+.05,0,dino);B(bl*.38,bh*.95,bw*.96,white,bl*.45,cy+.05,0,dino);B(bl*.7,.3,bw*.85,dark,.1,cy-bh/2-.04,0,dino);B(bl*.8,.05,.16,glow,0,cy+bh/2+.2,0,dino);
-  [-1,1].forEach(sd=>{C(.4*q,.06,dark,bl*.12,cy,(bw/2+.05)*sd,dino).rotation.x=PI/2;C(.28*q,.08,coreM,bl*.12,cy,(bw/2+.08)*sd,dino).rotation.x=PI/2;B(bl*.55,bh*.45,.1,red,-.2,cy+.05,(bw/2+.04)*sd,dino)});
-  const neck=G(bl*.5,cy+bh*.3,0,dino);B(.9*q,.9*q,.9*q,steel,.35*q,.35*q,0,neck).rotation.z=.6;B(.7*q,.7*q,.7*q,white,.95*q,.8*q,0,neck).rotation.z=.3;
-  const hg=G(1.5*q,1.0*q,0,neck);hg.rotation.z=-.15;const h=head(hg,P.hl,P.hh,P.hw,0);
-  for(let i=0;i<5;i++)B(.9,.22,.34,i%2?white:red,P.hl*.1-i*.55,P.hh*.5+.2+i*.08,0,h.head).rotation.z=.25;
-  const tl=tail(-bl/2,cy+.05,P.tn,P.tl,P.tr0,P.tr1,()=>0);
-  tl.t.forEach((sg,i)=>{[-1,1].forEach(sd=>{const f=B(P.tl*.95,.05,P.tr0*3.6*(1-i/(P.tn+2)),i%2?red:chrome,-P.tl/2,0,sd*P.tr0*1.6,sg);f.rotation.x=sd*.35})});
+ o.archM=P=>{const q=P.q,bl=P.bl,bh=P.bh,bw=P.bw,hipY=2.6*q,cy=hipY+.35,fm=[white,chrome,red,steel];
+  /* thân tròn phủ lông như chim: ức phồng, bụng sáng, lưng sẫm */
+  mk(sp,steel,bl*.52,bh*.6,bw*.56,0,cy,0,dino);mk(sp,chrome,bl*.42,bh*.4,bw*.46,.15,cy-bh*.22,0,dino);mk(sp,white,bl*.24,bh*.56,bw*.52,bl*.3,cy+.04,0,dino);
+  for(let k=0;k<6;k++)[-1,1].forEach(sd=>mk(sp,fm[k%3],.5,.07,.3,bl*.28-k*.34,cy+bh*.16-(k%2)*.12,sd*(bw*.5),dino).rotation.z=-.15);
+  [-1,1].forEach(sd=>{mk(sp,white,.5*q+.2,.75*q,.34*q,-bl*.04,hipY+.15,sd*bw*.42,dino)});
+  const neck=G(bl*.4,cy+bh*.3,0,dino);mk(sp,white,.32*q+.1,.6*q,.34*q,.12,.28,0,neck).rotation.z=-.5;mk(sp,chrome,.3*q+.08,.34*q,.3*q,.28,.5,0,neck);
+  const hg=G(.46*q+.2,.72*q+.2,0,neck);hg.rotation.z=.1;const h=head(hg,.82,.64,.58,1);
+  /* mỏ chim nhỏ nhọn, mắt tròn to, mào lông */
+  K(.2,.62,red,.99,-.02,0,h.head).rotation.z=-PI/2;K(.15,.46,chrome,.9,-.17,0,h.jaw).rotation.z=-PI/2;
+  [-1,1].forEach(sd=>{S(.12,eyeM,.38,.14,.3*sd,h.head);S(.17,white,.34,.12,.26*sd,h.head)});
+  for(let k=0;k<3;k++)K(.07,.4+k*.08,fm[(k+1)%3],-.02-k*.14,.34+k*.02,0,h.head).rotation.z=.9+k*.15;
+  const tl=tail(-bl*.46,cy+.05,P.tn,P.tl,.1,.04,()=>0);
+  tl.t.forEach((sg,i)=>{[-1,1].forEach(sd=>{const L=P.tl*(1.5+Math.min(i,3)*.25),f=mk(sp,fm[(i+sd+2)%3],L*.55,.025,.17+.02*i,-L*.35,0,sd*.13,sg);f.rotation.y=sd*(.1+i*.04)})});
+  mk(sp,red,P.tl*1.1,.03,.2,-P.tl*.9,0,0,tl.t[tl.t.length-1]);
   const L1=bleg(1,-bl*.05,hipY,q,0),L2=bleg(-1,-bl*.05,hipY,q,0);
+  /* cánh lông vũ: cánh tay ngắn + hàng lông bay (primaries) và lông phủ xếp lớp, đầu cánh có vuốt nhỏ */
   const wings=[1,-1].map(sd=>{const w=G(bl*.12,cy+bh*.35,sd*bw/2,dino),hs=P.hs,c1=P.cw;
-   B(c1,.1,hs*.5,white,-c1*.1,0,sd*hs*.25,w);B(c1*.7,.08,hs*.5,steel,-c1*.45,0,sd*hs*.72,w).rotation.y=-sd*.2;B(.22,.2,hs*1.0,red,c1*.4,.06,sd*hs*.5,w);B(.06,.05,hs*.9,glow,-c1*.5,.07,sd*hs*.45,w);C(.2,.5,dark,0,0,sd*.2,w).rotation.x=PI/2;
-   for(let i=0;i<8;i++)B(c1*(1.1-i*.07),.04,.34,i%2?red:chrome,-.2-i*.28,.07,sd*(i+1)*hs*.115,w);
-   K(.1,.9,chrome,c1*.45,0,sd*(hs*.5),w).rotation.x=sd*PI/2;K(.08,.7,red,c1*.5,0,sd*(hs*.35),w).rotation.x=sd*PI/2;return w});
+   B(.2,.16,hs*.3,steel,0,0,sd*hs*.15,w);B(.14,.12,hs*.3,chrome,.02,0,sd*hs*.42,w);
+   for(let i=0;i<11;i++){const t=i/10,zz=sd*(hs*.12+t*hs*.88),ch=c1*(.7+.7*Math.sin(Math.min(1,t*1.05)*PI*.85)+.15),m=fm[i%3];
+    mk(sp,m,ch*.6,.03,hs*.07+.05,-ch*.55,.03,zz,w).rotation.y=-sd*.12*t;
+    if(i<8)mk(sp,fm[(i+1)%3],ch*.34,.03,hs*.06+.04,-ch*.26,.07,zz*.93,w)}
+   K(.05,.3,chrome,.15,0,sd*hs*.07,w).rotation.z=-1.2;K(.05,.28,dark,.1,0,sd*hs*1.02,w).rotation.z=-1.3;return w});
   return{root:dino,hips:[L1.hip,L2.hip],knees:[L1.knee,L2.knee],tail:tl.t,head:h.head,jaw:h.jaw,wings}};
  return o};
 MECH.reg('raptor',(T,s)=>MKB(T,s,'raptor').biped({q:.95,bl:2.8,bh:1.15,bw:.95,k:.75,hl:2.5,hh:.72,hw:.6,tn:9,tl:.75,tr0:.38,tr1:.08,sick:1,feath:1,bsp:6}),11,1);
