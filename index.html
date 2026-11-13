@@ -1892,9 +1892,9 @@ return{init,zone,obsOf,solid,build,outskirts,RIV,lamps:LAMPSP,setRamp(v){RMP=v?1
 WORLD.init({P,W,S,rr,park,vd:VN.vd,ex:VN.ex});
 /* ===== THẾ GIỚI THIÊN NHIÊN: các vùng thiên nhiên rộng, ở xa thành phố (1 đơn vị = 10 cm) ===== */
 const NAT=(()=>{
- const RS=4000,TS=800,XMIN=-25400,XMAX=22600,YMIN=-15400,YMAX=18400,WMAX=XMAX,YB=YMAX;
+ const RS=4000,TS=800,XMIN=-27500,XMAX=25500,YMIN=-17000,YMAX=20500,WMAX=XMAX,YB=YMAX;
  /* lục địa hình bầu dục (elip) bao quanh biển; các đảo nằm ngoài khơi phía đông */
- const EAST=15250,EC=[2150,2600,14200,11000],hull=(x,y)=>{const a=(x-EC[0])/EC[2],b=(y-EC[1])/EC[3];return a*a+b*b};
+ const EAST=15250,EC=[2150,2600,14200,11000],hf=t=>{let d=t*180/Math.PI;d=((d%360)+360)%360;const g=(c,A,w)=>{let q=Math.abs(d-c);q=Math.min(q,360-q);return A*Math.exp(-(q/w)*(q/w))};return 1+g(92,-.2,15)+g(60,.22,15)+g(128,.13,9)+g(212,-.12,9)+g(318,-.09,13)+g(255,.06,18)+.022*Math.sin(4*t+.5)+.016*Math.sin(7*t+2)+.01*Math.sin(13*t)},EG=[EC[0],EC[1],EC[2]*1.4,EC[3]*1.4],hull=(x,y)=>{const a=(x-EC[0])/EC[2],b=(y-EC[1])/EC[3],f=hf(Math.atan2(b,a));return(a*a+b*b)/(f*f)};
  const sm=(a,b,x)=>{x=(x-a)/(b-a);x=x<0?0:x>1?1:x;return x*x*(3-2*x)};
  const lp=(a,b,t)=>a+(b-a)*t,mx=(a,b,t)=>[lp(a[0],b[0],t),lp(a[1],b[1],t),lp(a[2],b[2],t)];
  const fb=(u,v,a)=>Math.sin(u/310+a)*Math.cos(v/270+a*1.7)*.5+Math.sin((u+v)/170+a*3.1)*.3+Math.sin((u-v*.7)/90+a*5.3)*.2;
@@ -1912,7 +1912,7 @@ const NAT=(()=>{
  mkRoad([[1260,60],[1260,-200],[1340,-450],[1250,-650],[1290,-780],[1300,-1500],[1270,-2200],[1290,-2590]]);
  mkRoad([[2460,1260],[2800,1262],[3300,1300],[4400,1180],[5600,1120],[6800,1100],[7600,1100],[9000,1300],[10400,1350],[11800,1250],[13000,1300],[13600,1330]]);
  mkRoad([[7600,1100],[7520,2400],[7700,3700],[8200,4600],[9000,4880],[9800,4900]]);
- mkRoad([[1260,2460],[1260,2800]]);
+ mkRoad([[1260,2460],[1260,2800]]);mkRoad([[9800,8800],[9790,9100],[9780,9420]]);
  /* quốc lộ phía nam -> sa mạc (cạnh thảo nguyên), đầm lầy (dưới rừng), núi lửa (gần biển) */
  mkRoad([[-350,1300],[-430,2000],[-640,2800],[-950,3560],[-1700,3780],[-2900,3700],[-4100,3760],[-5400,3700],[-6800,3740],[-8000,3700],[-9400,3720],[-10800,3740],[-11000,3730]]);
  mkRoad([[-3000,3720],[-3000,4600],[-3000,5590]]);mkRoad([[-7200,3720],[-7200,4600],[-7200,5390]]);
@@ -1923,15 +1923,17 @@ const NAT=(()=>{
  const inRoad=(x,y)=>{const l=BK[Math.floor(x/500)+','+Math.floor(y/500)];if(!l)return false;for(const k of l){const g=SEG[k];if(segD(g,x,y)<g[4])return true}return false};
  const roadD=(x,y)=>{let d=1e9;const bi=Math.floor(x/500),bj=Math.floor(y/500);for(let i=bi-1;i<=bi+1;i++)for(let j=bj-1;j<=bj+1;j++){const l=BK[i+','+j];if(!l)continue;for(const k of l){const g=SEG[k],q=segD(g,x,y)-g[4];if(q<d)d=q}}return d<0?0:d};
  const RL=[];
- const mkRealm=(id,n,x0,y0,music,e)=>{const R=Object.assign({id,n,x0,y0,music,tl:[],built:false,H:{},fd:{w:1,n:1,s:1,e:1}},e||{});R.x1=R.x0+RS;R.y1=R.y0+RS;RL.push(R);return R};
+ const mkRealm=(id,n,x0,y0,music,e)=>{const R=Object.assign({id,n,x0,y0,music,tl:[],built:false,H:{},fd:{w:1,n:1,s:1,e:1}},e||{});R.K=R.K||1;R.W=RS*R.K;R.TS=TS*R.K;R.x1=R.x0+R.W;R.y1=R.y0+R.W;RL.push(R);return R};
  const FO=mkRealm('forest','Rừng nhiệt đới',-5600,-600,'forest'),GR=mkRealm('grass','Thảo nguyên',-10800,-600,'village'),SN=mkRealm('snow','Vùng tuyết',7600,-600,'snow'),
   MO=mkRealm('mount','Núi Fansipan thu nhỏ',7800,4900,'mount'),VI=mkRealm('village','Làng quê & ruộng lúa',-600,-6600,'village'),
-  BE=mkRealm('beach','Biển & bãi cát',12800,-600,'beach',{fd:{w:1,n:1,s:1,e:0}}),IS=mkRealm('island','Đảo nhiệt đới',17600,-600,'island',{fd:{w:0,n:0,s:0,e:0}}),
-  CA=mkRealm('cave','Hang động đá vôi',17200,5600,'cave',{fd:{w:0,n:0,s:0,e:0}}),DE=mkRealm('desert','Sa mạc & kim tự tháp',-9200,4800,'desert'),RE=mkRealm('reef','Rạn san hô & đáy biển',-6375,-14600,'reef',{fd:{w:0,n:0,s:0,e:0}}),
-  SW=mkRealm('swamp','Đầm lầy & rừng ngập nước',-5000,5600,'swamp'),VO=mkRealm('volcano','Núi lửa',-6375,13400,'volcano',{fd:{w:0,n:0,s:0,e:0}}),PH=mkRealm('prehis','Nguyên thủy (thời khủng long)',-24400,-600,'prehis',{fd:{w:0,n:0,s:0,e:0}}),DL=mkRealm('plateau','Cao nguyên Thông Xanh',-5600,-5600,'mount');
+  BE=mkRealm('beach','Biển & bãi cát',12800,-600,'beach',{fd:{w:1,n:1,s:1,e:0}}),IS=mkRealm('island','Đảo nhiệt đới',17200,-1800,'island',{K:1.6,fd:{w:0,n:0,s:0,e:0}}),
+  CA=mkRealm('cave','Hang động đá vôi',7800,9100,'cave',{fd:{w:0,n:0,s:0,e:0}}),DE=mkRealm('desert','Sa mạc & kim tự tháp',-9200,4800,'desert'),RE=mkRealm('reef','Rạn san hô & đáy biển',-7575,-15800,'reef',{K:1.6,fd:{w:0,n:0,s:0,e:0}}),
+  SW=mkRealm('swamp','Đầm lầy & rừng ngập nước',-5000,5600,'swamp'),VO=mkRealm('volcano','Núi lửa',-7575,12700,'volcano',{K:1.6,fd:{w:0,n:0,s:0,e:0}}),PH=mkRealm('prehis','Nguyên thủy (thời khủng long)',-25600,-1800,'prehis',{K:1.6,fd:{w:0,n:0,s:0,e:0}}),DL=mkRealm('plateau','Cao nguyên Thông Xanh',-5600,-5600,'mount');
  const realmAt=(x,y)=>{for(const R of RL)if(x>=R.x0&&x<R.x1&&y>=R.y0&&y<R.y1)return R;return null};
+ /* đảo phóng to K lần: toạ độ 'chuẩn' (0..4000) <-> toạ độ thật trong ô vuông của vùng */
+ const CX=(R,x)=>R.K>1?(x-R.x0-R.W/2)/R.K+2000:x-R.x0,CY=(R,y)=>R.K>1?(y-R.y0-R.W/2)/R.K+2000:y-R.y0,WK=(R,u)=>R.K>1?R.W/2+(u-2000)*R.K:u;
  /* hai đảo ngôi sao ngoài biển phía đông thành phố */
- const SIL=VN.ISL,sea2=(x,y)=>y>3800&&y<10500&&x<7000&&x>VN.east(Math.min(y,9900))+150,bayD=(x,y)=>Math.hypot(Math.max(VN.east(Math.min(y,9900))+150-x,0,x-7000),Math.max(3800-y,0,y-10500));
+ const SIL=VN.ISL,bayE=(x,y)=>Math.hypot((x-4300)/2700,(y-7150)/3350)+.045*Math.sin(y*.0021+1.3)+.03*Math.sin(x*.0033+y*.0017),sea2=(x,y)=>x>VN.east(Math.min(y,9900))+150&&bayE(x,y)<1,bayD=(x,y)=>Math.max(VN.east(Math.min(y,9900))+150-x,0,(bayE(x,y)-1)*2700);
  const isl=(x,y)=>{if(x<4500)return 0;for(const q of SIL){const dx=x-q[0],dy=y-q[1];if(dx>q[2]*1.3||dx<-q[2]*1.3||dy>q[2]*1.3||dy<-q[2]*1.3)continue;const d=Math.hypot(dx,dy),a=Math.atan2(dy,dx),R=q[2]*(1+.12*Math.sin(a*3+q[0]*.01)+.07*Math.sin(a*5+1.3));if(d<R)return Math.max(.5,Math.min(3.2,9*Math.pow(1-d/R,.8)))}return 0};
  const islSk=(x,y)=>{if(x<4500)return false;for(const q of SIL)if(Math.hypot(x-q[0],y-q[1])<q[2]*1.6)return true;return false};
  const seaOut=(x,y)=>(x>EAST||hull(x,y)>1||sea2(x,y))&&!(x>4500&&isl(x,y)>0)&&!(x>=CA.x0&&x<CA.x1&&y>=CA.y0&&y<CA.y1)&&!(x>=IS.x0&&x<IS.x1&&y>=IS.y0&&y<IS.y1)&&!(x>=BE.x0&&x<BE.x1&&y>=BE.y0&&y<BE.y1)&&!(x>=RE.x0&&x<RE.x1&&y>=RE.y0&&y<RE.y1)&&!(x>=PH.x0&&x<PH.x1&&y>=PH.y0&&y<PH.y1)&&!(x>=VO.x0&&x<VO.x1&&y>=VO.y0&&y<VO.y1);
@@ -2002,18 +2004,18 @@ const NAT=(()=>{
  const shapeF=(R,u,v)=>{const p=SHP[R.id];if(!p)return 1;const dx=u-2000,dy=v-2000,a=Math.atan2(dy,dx),rad=1800*(1+p[1]*Math.sin(3*a+p[0])+p[2]*Math.sin(5*a+2*p[0]+1)),d=Math.pow(Math.pow(Math.abs(dx),3)+Math.pow(Math.abs(dy),3),1/3);return sm(1.02,.86,d/rad)};
  const fadeOf=(R,u,v)=>{if(R===BE&&u>COAST(v)+60)return 1;const f=R.fd;let m=1e9;if(f.w)m=Math.min(m,u);if(f.n)m=Math.min(m,v);if(f.s)m=Math.min(m,RS-v);if(f.e)m=Math.min(m,RS-u);return Math.min(shapeF(R,u,v),m>1e8?1:sm(0,450,m))};
  const wet=(R,u,v)=>{switch(R.id){case'forest':return Math.abs(v-FRV(u))<78;case'village':return Math.hypot(u-3300,v-1500)<236||Math.abs(v-VRV(u))<78;case'desert':return Math.hypot(u-3200,v-1150)<236;case'beach':return u>COAST(v)+70;case'island':return raw(R,u,v)<-6;case'reef':return raw(R,u,v)<-2;case'swamp':return raw(R,u,v)<-3;case'prehis':return raw(R,u,v)<-3;case'volcano':return raw(R,u,v)<-8}return false};
-  const gh=(x,y)=>{const R=realmAt(x,y);if(!R){const I=x>4500?isl(x,y):0;if(I>0)return I;const dv=VN.dOut(x,y);if(dv<=250)return 0;const gv=gapH(x,y)*sm(0,500,bayD(x,y));return dv>=700?gv:gv*sm(250,700,dv)}const u=x-R.x0,v=y-R.y0,b=bridgeF(R,u,v);if(b!=null)return b;return raw(R,u,v)*fadeOf(R,u,v)};
+  const gh=(x,y)=>{const R=realmAt(x,y);if(!R){const I=x>4500?isl(x,y):0;if(I>0)return I;const dv=VN.dOut(x,y);if(dv<=250)return 0;const gv=gapH(x,y)*sm(0,500,bayD(x,y));return dv>=700?gv:gv*sm(250,700,dv)}const u=CX(R,x),v=CY(R,y),b=bridgeF(R,u,v);if(b!=null)return b;return raw(R,u,v)*fadeOf(R,u,v)};
  /* ---- vật cản ---- */
  const addC=(R,x,y,r)=>{const h=R.H;const k0=Math.floor((x-r)/128),k1=Math.floor((x+r)/128),j0=Math.floor((y-r)/128),j1=Math.floor((y+r)/128);for(let i=k0;i<=k1;i++)for(let j=j0;j<=j1;j++){const k=i+','+j;(h[k]||(h[k]=[])).push([x,y,r,0])}};
  const addRc=(R,x0,y0,x1,y1)=>{const h=R.H;for(let i=Math.floor(x0/128);i<=Math.floor(x1/128);i++)for(let j=Math.floor(y0/128);j<=Math.floor(y1/128);j++){const k=i+','+j;(h[k]||(h[k]=[])).push([x0,y0,x1,y1,1])}};
  const hit=(R,x,y)=>{const l=R.H[Math.floor(x/128)+','+Math.floor(y/128)];if(!l)return false;for(const o of l){if(o[4]){if(x>o[0]&&x<o[2]&&y>o[1]&&y<o[3])return true}else if((x-o[0])*(x-o[0])+(y-o[1])*(y-o[1])<o[2]*o[2])return true}return false};
  /* ---- bố trí vật thể (dữ liệu, dùng chung cho va chạm và dựng hình) ---- */
  const ST={};
- const gen=(R)=>{if(R.gen)return;R.gen=1;const L=R.L=[],rd=mkr(R.id.length*131+R.x0+R.y0),X=(u)=>R.x0+u,Y=(v)=>R.y0+v;
+ const gen=(R)=>{if(R.gen)return;R.gen=1;const L=R.L=[],rd=mkr(R.id.length*131+R.x0+R.y0),X=(u)=>R.x0+WK(R,u),Y=(v)=>R.y0+WK(R,v),REP=R.K>1?Math.round(R.K*R.K)-1:0;
   const put=(t,u,v,a,b,c,sol)=>{const o={t,x:X(u),y:Y(v),a,b,c};L.push(o);if(sol==='c')addC(R,o.x,o.y,sol===undefined?0:b||4);return o};
-  const tree=(t,u,v,h,r)=>{const o={t,x:X(u),y:Y(v),h,r,s:rd()};L.push(o);addC(R,o.x,o.y,r)};
+  const tree=(t,u,v,h,r)=>{const o={t,x:X(u),y:Y(v),h,r,s:rd()};L.push(o);addC(R,o.x,o.y,r);for(let c=0;c<REP;c++){const a=rd()*6.28,d=40+rd()*110,u2=u+Math.cos(a)*d,v2=v+Math.sin(a)*d;if(u2>60&&v2>60&&u2<3940&&v2<3940&&ok(u2,v2)){const o2={t,x:X(u2),y:Y(v2),h:h*(.85+rd()*.3),r,s:rd()};L.push(o2);addC(R,o2.x,o2.y,r)}}};
   const rect=(t,u0,v0,w,d,h,c,ry)=>{const o={t,x0:X(u0),y0:Y(v0),w,d,h,c,x:X(u0+w/2),y:Y(v0+d/2),ry:ry||0};L.push(o);addRc(R,o.x0,o.y0,o.x0+w,o.y0+d);return o};
-  const deco=(t,u,v,a,b,c)=>L.push({t,x:X(u),y:Y(v),a,b,c});
+  const deco=(t,u,v,a,b,c)=>{L.push({t,x:X(u),y:Y(v),a,b,c});if(REP&&(t=='fern'||t=='coralb'||t=='coralt'||t=='coralm'||t=='fan'||t=='kelp'||t=='basalt'||t=='drock'||t=='bam'))for(let q=0;q<REP;q++){const a2=rd()*6.28,d=30+rd()*120,u2=u+Math.cos(a2)*d,v2=v+Math.sin(a2)*d;if(u2>60&&v2>60&&u2<3940&&v2<3940&&(t=='fern'||t=='basalt'||t=='drock'||t=='bam'?ok(u2,v2):true))L.push({t,x:X(u2),y:Y(v2),a,b,c})}};
   const GU=(u,v)=>raw(R,u,v)*fadeOf(R,u,v);
   const ok=(u,v)=>!wet(R,u,v)&&shapeF(R,u,v)>.5&&(R!==BE||u<COAST(v)-20)&&(R!==IS||ISR(u,v)<.97);
   if(R===FO){ /* rừng nhiệt đới: tầng vượt tán 30-45 m, tầng tán 20-30 m, tầng dưới */
@@ -2148,6 +2150,10 @@ const NAT=(()=>{
    for(let i=0;i<4;i++)deco('bones',300+rd()*3400,300+rd()*3400,rd()*6.28,1,0);
    for(const q of[[2450,2000],[2590,2090],[2380,2140],[2610,1960]])deco('skull',q[0],q[1],rd()*6.28,0,0);
    for(let i=0;i<8;i++){const an=i/8*6.28,d=70+(i%2)*90,u=950+Math.cos(an)*d*.7,v=1780+Math.sin(an)*d*.7;deco('nest',u,v,i,0,0)}
+   /* tổ Archaeopteryx: cây cao ~17 m có tổ, trứng và chim */
+   R.AN=[];{const sites=[];for(let t=0;t<900&&sites.length<7;t++){const u=500+rd()*3000,v=500+rd()*3000;if(!ok(u,v)||!free(u,v,90)||PLD(u,v)<120)continue;if(sites.some(q=>Math.hypot(q[0]-u,q[1]-v)<420))continue;sites.push([u,v])}
+    sites.forEach((q,i)=>{const H=150+(i%3)*18;deco('anest',q[0],q[1],rd()*6.28,H,0);addC(R,X(q[0]),Y(q[1]),9);R.AN.push([X(q[0]),Y(q[1]),H]);if(i==0)ST.archa=[X(q[0]),Y(q[1])]});
+    if(!ST.archa)ST.archa=[X(1900),Y(1500)]}
    for(let i=0;i<70;i++){const t=rd(),u=700+t*2400+(rd()-.5)*40,v=1800+Math.sin(t*6)*90+(rd()-.5)*40;if(ok(u,v)&&PLD(u,v)>10)deco('print',u,v,Math.PI/2+(rd()-.5)*.5,0,0)}
    put('tar',2300,1950,0,110,0,'c');put('tar',1900,2950,0,80,0,'c');
    for(let i=0;i<3;i++){const an=i*2.1,u=PVO[0]+Math.cos(an)*55,v=PVO[1]+Math.sin(an)*55;deco('vent',u,v,0,.9+rd()*.4,0)}
@@ -2158,14 +2164,14 @@ const NAT=(()=>{
   if(R===SN||R===DE||R===MO)R.RF=1;
  };
  for(const R of RL)gen(R);
- const rsolid=(R,x,y,v,sw)=>{const u=x-R.x0,w=y-R.y0;if(wet(R,u,w)&&bridgeF(R,u,w)==null)return v||sw?false:true;
+ const rsolid=(R,x,y,v,sw)=>{const u=CX(R,x),w=CY(R,y);if(wet(R,u,w)&&bridgeF(R,u,w)==null)return v||sw?false:true;
   if(R===CA&&u>=MASS[0]&&u<=MASS[2]&&w>=MASS[1]&&w<=MASS[3]){const i=Math.floor(u/10),j=Math.floor(w/10);return R.grid[i*400+j]==1}
   return hit(R,x,y)};
- const solid=(x,y,v,sw)=>{if(inRoad(x,y))return false;const R=realmAt(x,y);if(!R&&gapWet(x,y))return !sw;if(R){if(Math.abs(x-R.x0-RS/2)>RS/2-6||Math.abs(y-R.y0-RS/2)>RS/2-6)return false;return rsolid(R,x,y,v,sw)}return sw?!(x>XMIN&&x<XMAX&&y>YMIN&&y<YMAX):!walk(x,y)};
- const waterAt=(x,y)=>{if(inRoad(x,y))return false;const R=realmAt(x,y);if(!R)return gapWet(x,y)||seaOut(x,y);const u=x-R.x0,w=y-R.y0;return wet(R,u,w)&&bridgeF(R,u,w)==null};
+ const solid=(x,y,v,sw)=>{if(inRoad(x,y))return false;const R=realmAt(x,y);if(!R&&gapWet(x,y))return !sw;if(R){if(Math.abs(x-R.x0-R.W/2)>R.W/2-6||Math.abs(y-R.y0-R.W/2)>R.W/2-6)return false;return rsolid(R,x,y,v,sw)}return sw?!(x>XMIN&&x<XMAX&&y>YMIN&&y<YMAX):!walk(x,y)};
+ const waterAt=(x,y)=>{if(inRoad(x,y))return false;const R=realmAt(x,y);if(!R)return gapWet(x,y)||seaOut(x,y);const u=CX(R,x),w=CY(R,y);return wet(R,u,w)&&bridgeF(R,u,w)==null};
  const noCar=(x,y)=>{if(x>-50&&x<S+50&&y>-50&&y<S+50)return false;if(inRoad(x,y))return false;if(gapWet(x,y))return true;for(const R of RL)if(x>R.x0-30&&x<R.x1+30&&y>R.y0-30&&y<R.y1+30)return true;return !walk(x,y)};
  const seaFloor=(x,y)=>seaOut(x,y)?Math.max(-100,-5.7-Math.max(0,x-EAST,(Math.sqrt(hull(x,y))-1)*10200)*.083):gh(x,y);
- return{EAST,SIL,isl,islSk,SHP,bdist,PHD,EC,hull,seaFloor,RL,ROADS,RS,YB,XMIN,XMAX,YMIN,YMAX,RYc,VRV,RX0,RX1,seaOut,waterAt,gapWet,rdist,roadD,solid,noCar,gh,realmAt,inRoad,walk,ST,raw,fadeOf,sm,fb,mkr,COAST,FRV,ISR,CAVE_PL,MASS,cfree,cdist,inHole,bridgeF,gen,RLx:{FO,VI,BE,MO,CA,IS,SN,DE,GR,RE,SW,VO,PH},ldist,LAVA,LPOOL,PLK,PVO,PCL,PLD,WMAX,lp,mx,
+ return{hf,EG,bayE,CX,CY,WK,EAST,SIL,isl,islSk,SHP,bdist,PHD,EC,hull,seaFloor,RL,ROADS,RS,YB,XMIN,XMAX,YMIN,YMAX,RYc,VRV,RX0,RX1,seaOut,waterAt,gapWet,rdist,roadD,solid,noCar,gh,realmAt,inRoad,walk,ST,raw,fadeOf,sm,fb,mkr,COAST,FRV,ISR,CAVE_PL,MASS,cfree,cdist,inHole,bridgeF,gen,RLx:{FO,VI,BE,MO,CA,IS,SN,DE,GR,RE,SW,VO,PH},ldist,LAVA,LPOOL,PLK,PVO,PCL,PLD,WMAX,lp,mx,
   camSolid:(x,y)=>{const R=realmAt(x,y);if(R!==CA)return false;const u=x-R.x0,w=y-R.y0;if(u>=MASS[0]&&u<=MASS[2]&&w>=MASS[1]&&w<=MASS[3])return R.grid[Math.floor(u/10)*400+Math.floor(w/10)]==1;return false},
   inCave:(x,y)=>{const R=realmAt(x,y);if(R!==CA)return false;const u=x-R.x0,v=y-R.y0;return u>MASS[0]&&u<MASS[2]&&v>MASS[1]&&v<MASS[3]&&!inHole(u,v)}}})();
 const GHy=(x,y)=>{if(x>=0&&x<=S&&y>=0&&y<=S)return 0;const h=NAT.gh(x,y)+1.6;return NAT.waterAt(x,y)?Math.max(-3.2,Math.min(h,-1.4)):Math.max(h,-3.2)};
@@ -2183,12 +2189,12 @@ const NATV=(()=>{
  const N=NAT,mat=new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide}),matG=new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide}),TS=800,RS=N.RS;seeThru(mat);seeThru(matG);
  const{Mesh,stackY,shade}=K3;
  const C=c=>{if(Array.isArray(c))return c;if(typeof c=='string'){c=c.replace('#','');if(c.length==3)c=c.replace(/./g,'$&$&');c=parseInt(c,16)}return[((c>>16)&255)/255,((c>>8)&255)/255,(c&255)/255]},sm=N.sm,lp=N.lp,mx=N.mx;
- const FLC=h=>{const k=Math.max(0,Math.min(1,-h/100)),st=[[0,'#efe3b6'],[.12,'#d9e8b8'],[.3,'#8fd6c4'],[.6,'#2f9bb8'],[1,'#1b5c86']];for(let i=1;i<st.length;i++)if(k<=st[i][0]){const a=st[i-1],b=st[i];return mx(C(a[1]),C(b[1]),(k-a[0])/(b[0]-a[0]))}return C('#1b5c86')};
- const matW=new THREE.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.14,depthWrite:false,side:THREE.DoubleSide});
- const matWC=new THREE.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.1,depthWrite:false,side:THREE.DoubleSide}); /* nước hồ khủng long: trong hơn để thấy Mosasaurus */
+ const FLC=h=>{const k=Math.max(0,Math.min(1,-h/100)),st=[[0,'#efe3b6'],[.12,'#e6e8b8'],[.3,'#bfe3c8'],[.6,'#8cc8d0'],[1,'#5f9fb8']];for(let i=1;i<st.length;i++)if(k<=st[i][0]){const a=st[i-1],b=st[i];return mx(C(a[1]),C(b[1]),(k-a[0])/(b[0]-a[0]))}return C('#5f9fb8')};
+ const matW=new THREE.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.03,depthWrite:false,side:THREE.DoubleSide});
+ const matWC=new THREE.MeshLambertMaterial({vertexColors:true,transparent:true,opacity:.04,depthWrite:false,side:THREE.DoubleSide}); /* nước hồ khủng long: trong hơn để thấy Mosasaurus */
  const GC={leaf:['#2f6b34','#3b7d3a','#2d6a2e','#467f3e'],wall:['#f2e6c8','#e8dcc0','#efe0b8','#e3d5b5','#f5ecd2'],roof:['#b4472f','#a33d2a','#8a4a2f'],sw:['#3f6f3a','#4f7f3a','#355f34']};
  const PI2=Math.PI;
- const gt=(R,x,y)=>{const u=x-R.x0,v=y-R.y0;return N.raw(R,u,v)*N.fadeOf(R,u,v)};
+ const gt=(R,x,y)=>{const u=N.CX(R,x),v=N.CY(R,y);return N.raw(R,u,v)*N.fadeOf(R,u,v)},gc=(R,u,v)=>N.raw(R,u,v)*N.fadeOf(R,u,v),wk=(R,u)=>R.x0+N.WK(R,u),wz=(R,v)=>R.y0+N.WK(R,v);
  /* rìa môi trường sống pha dần sang màu nền chung của vùng đệm để không còn đường ranh giới */
  const EBA={};{const q={forest:'#4a9a3a',village:'#8fca48',mount:'#6f9a4c',snow:'#dfe9f0',desert:'#e3c274',swamp:'#5f7a3c',volcano:'#4a403a',plateau:'#7cc05a',prehis:'#4f7a30'};for(const k in q)EBA[k]=C(q[k])}
  const EB=(R,u,v,h,c)=>{const bq=EBA[R.id];if(!bq||h<-.5)return c;const f=N.fadeOf(R,u,v);if(f>=.98)return c;return mx(c,bq,(1-f)*.9)};
@@ -2213,7 +2219,7 @@ const NATV=(()=>{
  const nrm=(a,b,c)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let x=uy*vz-uz*vy,y=uz*vx-ux*vz,z=ux*vy-uy*vx;const l=Math.hypot(x,y,z)||1;x/=l;y/=l;z/=l;return y<0?[-x,-y,-z]:[x,y,z]};
  function setup(R){
   R.q=[];R.tm=[];R.tiles=[];R.gl=null;
-  const bm=(x,z)=>{const i=Math.min(4,Math.max(0,Math.floor((x-R.x0)/TS))),j=Math.min(4,Math.max(0,Math.floor((z-R.y0)/TS))),k=i*5+j;return R.tm[k]||(R.tm[k]=new Mesh())};
+  const bm=(x,z)=>{const i=Math.min(4,Math.max(0,Math.floor((x-R.x0)/R.TS))),j=Math.min(4,Math.max(0,Math.floor((z-R.y0)/R.TS))),k=i*5+j;return R.tm[k]||(R.tm[k]=new Mesh())};
   const gm=()=>R.gl||(R.gl=new Mesh());
   const box=(w,h,d,c,x,y,z,ry)=>bm(x,z).box(w,h,d,c,{t:[x,y+h/2,z],r:[0,ry||0,0]});
   const cyl=(r,h,c,x,y,z,n,r2)=>bm(x,z).loft(stackY([[0,r,r,0,0],[h,r2==null?r:r2,r2==null?r:r2,0,0]],n||8,2),{col:c,cap0:c,cap1:c},{t:[x,y,z]});
@@ -2225,10 +2231,10 @@ const NATV=(()=>{
   const hull=(x,y,z,L,c,ry)=>{bm(x,z).loft(stackY([[0,.01,.01,0,0],[L*.03,L*.04,L*.1,0,0],[L*.05,L*.025,L*.085,0,0]],8,2),{col:c},{t:[x,y,z],r:[0,ry,0]})};
   /* ---- địa hình ---- */
   const step=R.id=='forest'?25:R.id=='beach'?40:R.id=='desert'?40:R.id=='reef'?40:R.id=='swamp'?40:R.id=='volcano'?40:R.id=='prehis'?40:50,nn=RS/step;
-  for(let ti=0;ti<5;ti++)for(let tj=0;tj<5;tj++){const t0=ti,t1=tj;R.q.push(()=>{const per=TS/step;for(let a=0;a<per;a++)for(let b=0;b<per;b++){const u=t0*TS+a*step,v=t1*TS+b*step,x=R.x0+u,z=R.y0+v,
-    h00=gt(R,x,z),h10=gt(R,x+step,z),h01=gt(R,x,z+step),h11=gt(R,x+step,z+step);
-    const hm=(h00+h10+h01+h11)/4,sl=(Math.max(h00,h10,h01,h11)-Math.min(h00,h10,h01,h11))/step,c=EB(R,u+step/2,v+step/2,hm,col(R,u+step/2,v+step/2,hm,sl)),m=bm(x+1,z+1);
-    const A=[x,h00,z],Bp=[x+step,h10,z],Cc=[x,h01,z+step],D=[x+step,h11,z+step];
+  for(let ti=0;ti<5;ti++)for(let tj=0;tj<5;tj++){const t0=ti,t1=tj;R.q.push(()=>{const per=TS/step;for(let a=0;a<per;a++)for(let b=0;b<per;b++){const u=t0*TS+a*step,v=t1*TS+b*step,x=wk(R,u),z=wz(R,v),x2=wk(R,u+step),z2=wz(R,v+step),sw_=x2-x,
+    h00=gc(R,u,v),h10=gc(R,u+step,v),h01=gc(R,u,v+step),h11=gc(R,u+step,v+step);
+    const hm=(h00+h10+h01+h11)/4,sl=(Math.max(h00,h10,h01,h11)-Math.min(h00,h10,h01,h11))/sw_,c=EB(R,u+step/2,v+step/2,hm,col(R,u+step/2,v+step/2,hm,sl)),m=bm(x+1,z+1);
+    const A=[x,h00,z],Bp=[x2,h10,z],Cc=[x,h01,z2],D=[x2,h11,z2];
     m.tri(A,Cc,Bp,nrm(A,Cc,Bp),nrm(A,Cc,Bp),nrm(A,Cc,Bp),c);m.tri(Bp,Cc,D,nrm(Bp,Cc,D),nrm(Bp,Cc,D),nrm(Bp,Cc,D),c)}},)}
   /* ---- mặt nước ---- */
   R.q.push(()=>{const wc='#2d8ac7',m=(x,z)=>bm(x,z),W=-.5;
@@ -2239,13 +2245,13 @@ const NATV=(()=>{
    if(R.id=='village'){wdisc(236,R.x0+3300,R.y0+1500,28);for(let u=0;u<4000;u+=50){const v0=N.VRV(u),v1=N.VRV(u+50);quad(R.x0+u,R.y0+v0-98,R.x0+u+50,R.y0+v1+98,'#3f9fd0')}}
    if(R.id=='desert'){wdisc(236,R.x0+3200,R.y0+1150,24)}
    if(R.id=='swamp'){const w2=R.wt||(R.wt=new Mesh());for(let u=0;u<4000;u+=50)for(let v=0;v<4000;v+=50){if(N.raw(R,u+25,v+25)<-1.5||N.raw(R,u,v)<-3||N.raw(R,u+50,v+50)<-3){w2.poly([[R.x0+u,W,R.y0+v],[R.x0+u+50,W,R.y0+v],[R.x0+u+50,W,R.y0+v+50],[R.x0+u,W,R.y0+v+50]],((u+v)/50)%2?'#4f8a66':'#468060',null)}}}
-   if(R.id=='prehis'){const w2=R.wt||(R.wt=new Mesh());for(let u=0;u<4000;u+=50)for(let v=0;v<4000;v+=50){if(N.raw(R,u+25,v+25)<-1.5||N.raw(R,u,v)<-3||N.raw(R,u+50,v+50)<-3){w2.poly([[R.x0+u,W,R.y0+v],[R.x0+u+50,W,R.y0+v],[R.x0+u+50,W,R.y0+v+50],[R.x0+u,W,R.y0+v+50]],((u+v)/50)%2?'#8fdcec':'#86d4e6',null)}}R.wtM=matWC}
-   if(R.id=='volcano'){const G=gm(),hh=(u,v)=>gt(R,R.x0+u,R.y0+v);
+   if(R.id=='prehis'){const w2=R.wt||(R.wt=new Mesh());for(let u=0;u<4000;u+=50)for(let v=0;v<4000;v+=50){if(N.raw(R,u+25,v+25)<-1.5||N.raw(R,u,v)<-3||N.raw(R,u+50,v+50)<-3){w2.poly([[wk(R,u),W,wz(R,v)],[wk(R,u+50),W,wz(R,v)],[wk(R,u+50),W,wz(R,v+50)],[wk(R,u),W,wz(R,v+50)]],((u+v)/50)%2?'#8fdcec':'#86d4e6',null)}}R.wtM=matWC}
+   if(R.id=='volcano'){const G=gm(),hh=(u,v)=>gc(R,u,v),WX=u=>wk(R,u),WZ=v=>wz(R,v);
     for(const P of N.LAVA)for(let i=0;i+1<P.length;i++){const a=P[i],b=P[i+1],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,nx=-dy/L*32,ny=dx/L*32,c=i%2?'#ff7a1a':'#ffa530';
-     G.poly([[R.x0+a[0]+nx,hh(a[0]+nx,a[1]+ny)+1.5,R.y0+a[1]+ny],[R.x0+b[0]+nx,hh(b[0]+nx,b[1]+ny)+1.5,R.y0+b[1]+ny],[R.x0+b[0]-nx,hh(b[0]-nx,b[1]-ny)+1.5,R.y0+b[1]-ny],[R.x0+a[0]-nx,hh(a[0]-nx,a[1]-ny)+1.5,R.y0+a[1]-ny]],c,null)}
-    for(const p of N.LPOOL){const y=hh(p[0],p[1])+7.5;G.loft(stackY([[0,p[2],p[2],0,0],[.6,p[2],p[2],0,0]],18,2),{col:'#ff8a22',cap0:'#ffb040',cap1:'#ffb040'},{t:[R.x0+p[0],y,R.y0+p[1]]})}}})
+     G.poly([[WX(a[0]+nx),hh(a[0]+nx,a[1]+ny)+1.5,WZ(a[1]+ny)],[WX(b[0]+nx),hh(b[0]+nx,b[1]+ny)+1.5,WZ(b[1]+ny)],[WX(b[0]-nx),hh(b[0]-nx,b[1]-ny)+1.5,WZ(b[1]-ny)],[WX(a[0]-nx),hh(a[0]-nx,a[1]-ny)+1.5,WZ(a[1]-ny)]],c,null)}
+    for(const p of N.LPOOL){const y=hh(p[0],p[1])+7.5;G.loft(stackY([[0,p[2],p[2],0,0],[.6,p[2],p[2],0,0]],18,2),{col:'#ff8a22',cap0:'#ffb040',cap1:'#ffb040'},{t:[WX(p[0]),y,WZ(p[1])]})}}})
   /* ---- vật thể ---- */
-  const byTile={};for(const o of R.L){const x=o.x,z=o.y;const i=Math.min(4,Math.max(0,Math.floor((x-R.x0)/TS))),j=Math.min(4,Math.max(0,Math.floor((z-R.y0)/TS)));(byTile[i*5+j]||(byTile[i*5+j]=[])).push(o)}
+  const byTile={};for(const o of R.L){const x=o.x,z=o.y;const i=Math.min(4,Math.max(0,Math.floor((x-R.x0)/R.TS))),j=Math.min(4,Math.max(0,Math.floor((z-R.y0)/R.TS)));(byTile[i*5+j]||(byTile[i*5+j]=[])).push(o)}
   const CP=['#ff6f91','#ff9a3c','#ffd23f','#b06bff','#4dc4c9','#ef476f','#9ad46a','#f78fb3'];
   const draw=o=>{const x=o.x,z=o.y,y=Y(x,z),s=o.s||0;
    switch(o.t){
@@ -2284,7 +2290,7 @@ const NATV=(()=>{
    case'hut':{box(o.w,18,o.d,['#e8d8b0','#d9c9a0'][o.c%2],x,y,z);gable(o.x0,o.y0,o.w,o.d,y+18,14,'#b89a52');break}
    case'flagp':{box(2,o.h,2,'#dddddd',x,y,z);box(36,24,1,'#da251d',x+19,y+o.h-26,z);box(10,10,1.1,'#ffcd00',x+19,y+o.h-19,z);break}
    case'fbridge':{box(48,3,280,'#8a6a45',x,4.5,z);for(let k=-3;k<=3;k++){cyl(3,24,'#5a4630',x-22,-18,z+k*42,5);cyl(3,24,'#5a4630',x+22,-18,z+k*42,5)}box(1.6,1.6,280,'#6b4a2b',x-24,13,z);box(1.6,1.6,280,'#6b4a2b',x+24,13,z);for(let k=-3;k<=3;k++){box(1.6,9,1.6,'#6b4a2b',x-24,6,z+k*45);box(1.6,9,1.6,'#6b4a2b',x+24,6,z+k*45)}break}
-   case'ibridge':{box(920,3,52,'#8a6a45',x+70,4.5,z);bm(x,z).poly([[R.x0,0,z-26],[R.x0+120,6,z-26],[R.x0+120,6,z+26],[R.x0,0,z+26]],'#8a6a45',null);for(let k=0;k<=15;k++){cyl(3.4,26,'#5a4630',R.x0+130+k*50,-20,z-24,5);cyl(3.4,26,'#5a4630',R.x0+130+k*50,-20,z+24,5)}box(920,1.6,1.8,'#6b4a2b',x+70,13,z-26);box(920,1.6,1.8,'#6b4a2b',x+70,13,z+26);break}
+   case'ibridge':{const Kk=R.K||1;box(920*Kk,3,52,'#8a6a45',x+70*Kk,4.5,z);bm(x,z).poly([[R.x0,0,z-26],[R.x0+120*Kk,6,z-26],[R.x0+120*Kk,6,z+26],[R.x0,0,z+26]],'#8a6a45',null);for(let k=0;k<=15;k++){cyl(3.4,26,'#5a4630',R.x0+(130+k*50)*Kk,-20,z-24,5);cyl(3.4,26,'#5a4630',R.x0+(130+k*50)*Kk,-20,z+24,5)}box(920*Kk,1.6,1.8,'#6b4a2b',x+70*Kk,13,z-26);box(920*Kk,1.6,1.8,'#6b4a2b',x+70*Kk,13,z+26);break}
    case'jetty':{box(240,3,40,'#8a6a45',x,3.5,z);for(let k=0;k<=4;k++){cyl(3,20,'#5a4630',x-110+k*55,-15,z-17,5);cyl(3,20,'#5a4630',x-110+k*55,-15,z+17,5)}break}
    case'ship':{const L=o.b||180,y0=.2,a=o.a;box(L,9,34,['#274f8a','#a8342c'][o.c%2],x,y0,z,a);box(L*.92,2,36,'#f2f2f2',x,y0+9,z,a);box(L*.34,16,26,'#f2f2f2',x-L*.1,y0+11,z,a);box(L*.3,5,28,'#3b7dd8',x-L*.1,y0+27,z,a);cyl(5,16,'#d94b4b',x-L*.2,y0+27,z,8);box(26,9,26,['#274f8a','#a8342c'][o.c%2],x+L/2,y0,z,a+.785);break}
    case'sail':{const c=['#f2f2f2','#d94b4b','#3b7dd8','#f5c518'][o.c%4],y0=.2,a=o.a;box(46,5,15,c,x,y0,z,a);box(1.6,52,1.6,'#8a6a45',x,y0+5,z);box(26,36,1,'#fffbe8',x-2,y0+14,z,a);break}
@@ -2309,6 +2315,11 @@ const NATV=(()=>{
    case'bones':{const k=o.b,B=bm(x,z),a=o.a;B.box(52*k,3,3,'#e8e0cc',{t:[x,y+3,z],r:[0,a,0]});for(let i=0;i<7;i++){const t=(i-3)*7*k,cx=x+Math.cos(a)*t,cz=z-Math.sin(a)*t;for(const sd of[-1,1]){B.box(1.7,24*k,1.7,'#efe8d4',{t:[cx+Math.sin(a)*sd*7*k,y+11*k,cz+Math.cos(a)*sd*7*k],r:[Math.cos(a)*-sd*.45,0,Math.sin(a)*sd*.45]})}}break}
    case'skull':{const B=bm(x,z),a=o.a;B.box(15,9,9,'#efe8d4',{t:[x,y+5,z],r:[0,a,0]});B.box(11,6,6,'#e8e0cc',{t:[x+Math.cos(a)*11,y+4,z-Math.sin(a)*11],r:[0,a,0]});for(let i=0;i<5;i++)for(const sd of[-1,1])B.box(.9,2.2,.9,'#fffcee',{t:[x+Math.cos(a)*(8+i*2.1)+Math.sin(a)*sd*2.8,y+1.2,z-Math.sin(a)*(8+i*2.1)+Math.cos(a)*sd*2.8]});for(const sd of[-1,1])B.box(2.6,2.6,1,'#2a2420',{t:[x+Math.cos(a)*3+Math.sin(a)*sd*4.6,y+6.2,z-Math.sin(a)*3+Math.cos(a)*sd*4.6],r:[0,a,0]});break}
    case'nest':{cyl(17,3,'#6a5030',x,y-.5,z,12,15);cyl(11,3.4,'#4a3820',x,y+.5,z,10,9);for(let k=0;k<5;k++){const a=k/5*6.28+o.a;cyl(3.6,6.5,k%2?'#e8dcb8':'#d9e0c0',x+Math.cos(a)*5,y+2,z+Math.sin(a)*5,8,2.5)}break}
+   case'anest':{const H=o.b;cyl(9,H+8,'#6a4a32',x,y-2,z,8,5.5);cone(H*.34,H*.2,'#2f6b3a',x,y+H*.3,z,8);cone(H*.26,H*.18,'#3a7a40',x,y+H*.5,z,8);cone(H*.18,H*.16,'#4a8a46',x,y+H*.68,z,8);
+    for(let k=0;k<4;k++){const a=k*1.57+o.a;box(52,3.2,3.2,'#5a3a22',x+Math.cos(a)*14,y+H+2,z-Math.sin(a)*14,a)}
+    cyl(33,6,'#6a5030',x,y+H-1,z,14,27);cyl(24,6,'#4a3820',x,y+H+3.5,z,12,19);
+    for(let k=0;k<6;k++){const a=k/6*6.28+o.a;cyl(6,11,k%2?'#fff1c8':'#bfe8d8',x+Math.cos(a)*11,y+H+8,z+Math.sin(a)*11,8,4)}
+    for(let k=0;k<10;k++){const a=k/10*6.28;box(10,.9,2.4,k%2?'#e0457a':'#ffd23f',x+Math.cos(a)*30,y+H+6,z+Math.sin(a)*30,-a)}break}
    case'tar':{cyl(o.b,.6,'#17131c',x,y-.2,z,18);for(let k=0;k<5;k++){const a=k*1.7;cone(2.2,5,'#17131c',x+Math.cos(a)*o.b*.45,y+.2,z+Math.sin(a)*o.b*.45,6)}break}
    case'print':{const B=bm(x,z),a=o.a;for(const d of[-.55,0,.55])B.box(2,.3,7,'#5a4a2e',{t:[x+Math.cos(a+d)*3.5,y+.2,z+Math.sin(a+d)*3.5],r:[0,-(a+d)+PI/2,0]});break}
    case'sign':{break}
@@ -2338,10 +2349,10 @@ const NATV=(()=>{
    if(!R.q)setup(R);
    while(R.q.length&&performance.now()-t0<ms){const f=R.q.shift();f();any=1;if(R.q.length==0||R.q.length<=1){}}
    /* tạo mesh cho các ô đã có dữ liệu khi hàng đợi xong */
-   if(!R.q.length&&!R.done){R.done=1;for(const k in R.tm){const m=mk(R.tm[k],mat),i=Math.floor(k/5),j=k%5;scene.add(m);R.tiles.push({m,x:R.x0+(i+.5)*TS,z:R.y0+(j+.5)*TS})}R.tm=[];if(R.gl){scene.add(mk(R.gl,matG))}if(R.wt){const wm=mk(R.wt,R.wtM||matW);wm.renderOrder=1;scene.add(wm);R.wt=null}}
+   if(!R.q.length&&!R.done){R.done=1;for(const k in R.tm){const m=mk(R.tm[k],mat),i=Math.floor(k/5),j=k%5;scene.add(m);R.tiles.push({m,x:R.x0+(i+.5)*R.TS,z:R.y0+(j+.5)*R.TS})}R.tm=[];if(R.gl){scene.add(mk(R.gl,matG))}if(R.wt){const wm=mk(R.wt,R.wtM||matW);wm.renderOrder=1;scene.add(wm);R.wt=null}}
    if(performance.now()-t0>=ms)break}
   return any}
- const upd=(px,py,fogFar)=>{pump(px,py,6);for(const R of N.RL){if(!R.tiles)continue;for(const t of R.tiles)t.m.visible=Math.hypot(t.x-px,t.z-py)<fogFar+900}};
+ const upd=(px,py,fogFar)=>{pump(px,py,6);for(const R of N.RL){if(!R.tiles)continue;for(const t of R.tiles)t.m.visible=Math.hypot(t.x-px,t.z-py)<fogFar+900+(R.K>1?500:0)}};
  const pre=(px,py)=>{pump(px,py,2500,0);return 1};
  const roads=()=>{const B=new Mesh(),Q=(x0,z0,x1,z1,y,c)=>B.poly([[x0,y,z0],[x1,y,z0],[x1,y,z1],[x0,y,z1]],c,null);
   for(const rd of N.ROADS){const P=rd.p,w=rd.w/2;let acc=0;
@@ -2351,11 +2362,11 @@ const NATV=(()=>{
     if(Math.floor(acc/80)%2==0){const ux=dx/L*1.5,uz=dz/L*1.5,t=1.5;B.poly([[a[0]-nx/w*t,.8,a[1]-nz/w*t],[b[0]-nx/w*t,.8,b[1]-nz/w*t],[b[0]+nx/w*t,.8,b[1]+nz/w*t],[a[0]+nx/w*t,.8,a[1]+nz/w*t]],'#f5c518',null)}
     acc+=L}}
   {const W2=new Mesh(),Y0=N.YMIN-3000,Y1=N.YMAX+3000;W2.poly([[N.EAST,-.5,Y0],[40000,-.5,Y0],[40000,-.5,Y1],[N.EAST,-.5,Y1]],'#3fb3dc',null);const wm=new THREE.Mesh(kgeo(W2.build()),matW);wm.renderOrder=1;scene.add(wm);
-   {const W3=new Mesh();W3.poly([[1500,-.5,3800],[7000,-.5,3800],[7000,-.5,10500],[1500,-.5,10500]],'#3fb3dc',null);const w3=new THREE.Mesh(kgeo(W3.build()),matW);w3.renderOrder=1;scene.add(w3);const F3=new Mesh();F3.poly([[1500,-5.7,3800],[7000,-5.7,3800],[7000,-5.7,10500],[1500,-5.7,10500]],FLC(-5.7),null);scene.add(new THREE.Mesh(kgeo(F3.build()),mat))}
+   {const BP=h=>{const q=[];for(let k=0;k<48;k++){const a=k/48*6.2832;let r0=0,r1=4000;const dx=Math.cos(a),dy=Math.sin(a);for(let t=0;t<20;t++){const m=(r0+r1)/2;N.bayE(4300+dx*m,7150+dy*m*1.24)<1?r0=m:r1=m}q.push([4300+dx*r0,h,7150+dy*r0*1.24])}return q};const W3=new Mesh();W3.poly(BP(-.5),'#3fb3dc',null);const w3=new THREE.Mesh(kgeo(W3.build()),matW);w3.renderOrder=1;scene.add(w3);const F3=new Mesh();F3.poly(BP(-5.7),FLC(-5.7),null);scene.add(new THREE.Mesh(kgeo(F3.build()),mat))}
    const F=new Mesh(),X0=N.EAST,X1=N.EAST+1150,sx=150,sy=800,hf=x=>Math.max(-100,-5.7-(x-X0)*.083);
    for(let x=X0;x<X1;x+=sx)for(let y=Y0;y<Y1;y+=sy){const a=hf(x),b=hf(x+sx);F.poly([[x,a,y],[x+sx,b,y],[x+sx,b,y+sy],[x,a,y+sy]],FLC((a+b)/2),null)}
    F.poly([[X1,-100,Y0],[60000,-100,Y0],[60000,-100,Y1],[X1,-100,Y1]],FLC(-100),null);scene.add(new THREE.Mesh(kgeo(F.build()),mat))}
-  {const WR=new Mesh(),FR=new Mesh(),EC=N.EC,P=(q,i)=>{const a=i/120*6.2832;return[EC[0]+Math.cos(a)*EC[2]*q,EC[1]+Math.sin(a)*EC[3]*q]},SS=[.985,1,1.05,1.12,2.6],HH=[-1,-5.7,-47,-100,-100];
+  {const WR=new Mesh(),FR=new Mesh(),EC=N.EC,P=(q,i)=>{const a=i/120*6.2832,f=N.hf(a)*(q>2?1:1);return[EC[0]+Math.cos(a)*EC[2]*q*f,EC[1]+Math.sin(a)*EC[3]*q*f]},SS=[.985,1,1.05,1.12,2.6],HH=[-1,-5.7,-47,-100,-100];
    for(let i=0;i<120;i++){if(P(1,i)[0]>N.EAST-150&&P(1,i+1)[0]>N.EAST-150)continue;
     for(let k=0;k<4;k++){const A=P(SS[k],i),B=P(SS[k],i+1),C2=P(SS[k+1],i+1),D=P(SS[k+1],i);FR.poly([[A[0],HH[k],A[1]],[B[0],HH[k],B[1]],[C2[0],HH[k+1],C2[1]],[D[0],HH[k+1],D[1]]],FLC((HH[k]+HH[k+1])/2),null)}
     const A=P(.97,i),B=P(.97,i+1),C2=P(2.6,i+1),D=P(2.6,i);WR.poly([[A[0],-.5,A[1]],[B[0],-.5,B[1]],[C2[0],-.5,C2[1]],[D[0],-.5,D[1]]],'#3fb3dc',null)}
@@ -2974,8 +2985,8 @@ VR('cabuom','carophi','Cá rô phi','🐟','desert',3,{s:1,long:1.1,tall:1,c1:'#
 VR('cabuom','cachosm','Cá chó sa mạc','🐟','desert',3,{s:.55,long:1,tall:.9,c1:'#4a7ac8',c2:'#c8d8f0',c3:'#3a5aa0',belly:1,stripes:0},'Cá chó sa mạc là loài cá bé xíu sống sót trong những vũng nước hiếm hoi giữa sa mạc, chịu được nước rất mặn và rất nóng.','Ốc đảo',{z:'wlake',rm:90,alt:[2,10]}),
 VR('cabuom','catre','Cá trê','🐟','swamp',3,{s:1.2,long:1.5,tall:.6,c1:'#4a4a3a',c2:'#8a8a6a',c3:'#3a3a2c',belly:0,stripes:0},'Cá trê có râu dài như râu mèo để cảm nhận thức ăn trong nước đục. Chúng còn thở được bằng cơ quan phụ nên sống được trong bùn ít nước.','Ao đầm, ruộng, bùn lầy',{z:'sw',rm:40,alt:[1,6]}),
 VR('cabuom','luon','Lươn','🐍','swamp',3,{s:.9,long:3,tall:.3,c1:'#8a6a2a',c2:'#d8c888',c3:'#6a4a1a',belly:1,stripes:0},'Lươn có thân dài như con rắn nhưng là loài cá, không có vảy, sống trong hang bùn ở ruộng và đầm. Ban đêm chúng mới ra kiếm ăn.','Hang bùn ở đầm lầy',{z:'sw',rm:40,alt:[0,4]}),
-VR('cabuom','cavaytay','Cá vây tay','🐟','prehis',3,{s:1.8,long:1.3,tall:.9,c1:'#2a6fb8',c2:'#f4f8fc',c3:'#f0b43a',belly:1,stripes:0},'Cá vây tay (Coelacanth) từng được cho là đã tuyệt chủng cùng khủng long, cho đến khi được tìm thấy còn sống năm 1938. Vây của chúng có thân thịt giống chi, họ hàng xa của động vật bốn chân.','Hồ, biển cổ đại',{z:'pl',rm:55,alt:[3,14]}),
-VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a',c2:'#9fe06a',c3:'#8a4ad0'},'Belemnite là họ hàng của mực ống thời khủng long. Trong thân có bộ xương hình viên đạn bằng đá vôi, mà ngày nay vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại',{m:'glide',z:'pl',alt:[3,12],rm:55}),
+VR('cabuom','cavaytay','Cá vây tay','🐟','prehis',3,{s:1.8,long:1.3,tall:.9,c1:'#2a6fb8',c2:'#f4f8fc',c3:'#f0b43a',belly:1,stripes:0},'Cá vây tay (Coelacanth) từng được cho là đã tuyệt chủng cùng khủng long, cho đến khi được tìm thấy còn sống năm 1938. Vây của chúng có thân thịt giống chi, họ hàng xa của động vật bốn chân.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:75,alt:[3,20],k:3.4,nl:240}),
+VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a',c2:'#9fe06a',c3:'#8a4ad0'},'Belemnite là họ hàng của mực ống thời khủng long. Trong thân có bộ xương hình viên đạn bằng đá vôi, mà ngày nay vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại quanh đảo nguyên thủy',{m:'glide',z:'psea',alt:[3,18],rm:75,k:3.6,nl:240}),
  );
  SPS.push(
  /* ===== ĐẦM LẦY ===== */
@@ -3017,8 +3028,10 @@ VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a'
  {id:'ptera',n:'Pteranodon',e:'🦅',r:'prehis',b:'ptero',m:'fly',c:4,v:.9,rm:420,k:3,nl:170,alt:[90,200],dino:0,p:{s:1,ws:3.6,c1:'#e8602a',c2:'#ffd05a',c3:'#2a1a18',leg:4,H:2},t:'Pteranodon là loài bò sát bay (thằn lằn bay), KHÔNG phải khủng long. Sải cánh rộng khoảng 6–7 m, đầu có mào dài, mỏ không có răng. Chúng lướt trên mặt biển và hồ để bắt cá.',h:'Bầu trời, bờ hồ thời Phấn trắng'},
  {id:'rampho',n:'Rhamphorhynchus',e:'🦅',r:'prehis',b:'ptero',m:'fly',c:5,v:1.1,rm:360,k:2.8,nl:150,alt:[50,120],dino:0,p:{s:.6,ws:3.8,rh:1,c1:'#30b070',c2:'#b8f080',c3:'#e8902a',cw:'#6a8a6a',cw2:'#8aa88a',leg:3,H:2},t:'Rhamphorhynchus là thằn lằn bay đuôi dài, đầu đuôi có miếng da hình thoi giống bánh lái. Hàm của nó đầy răng nhọn hướng ra ngoài để chộp cá. Cũng như Pteranodon, nó không phải khủng long.',h:'Bầu trời, bờ biển thời Jura'},
  {id:'mosa',n:'Mosasaurus',e:'🐊',r:'prehis',b:'mosa',m:'swim',c:3,v:.5,rm:130,k:2.6,nl:210,z:'pl',dive:1,dino:0,p:{s:1.2,c1:'#2a6fb8',c2:'#cfeaf8',c3:'#f0b43a',leg:2,H:2},t:'Mosasaurus là thằn lằn biển khổng lồ dài tới 12–15 m, thống trị đại dương cuối kỷ Phấn trắng. Nó không phải khủng long mà là họ hàng của thằn lằn và rắn ngày nay, và phải trồi lên mặt nước để thở bằng phổi.',h:'Biển và hồ lớn thời Phấn trắng'}, VR('yen','archae','Archaeopteryx (thủy tổ chim)','🐦','prehis',4,{c1:'#3a4a5a',c2:'#d9b86a',ch:'#3a4a5a',cb:'#d0a050',cw:'#2a3a4a',cw2:'#c09040',s:1.5,belly:0},'Archaeopteryx có lông vũ như chim nhưng vẫn còn răng, vuốt trên cánh và chiếc đuôi dài có xương. Nó là "mắt xích" nối giữa khủng long và chim, sống cách đây khoảng 150 triệu năm.','Rừng thưa thời Jura',{alt:[30,70],rm:300}),
- VR('buom','megan','Chuồn chuồn khổng lồ Meganeura','🪰','prehis',6,{s:3.2,c1:'#2a8a7a',c2:'#d6f4ee'},'Meganeura là loài côn trùng bay khổng lồ giống chuồn chuồn, sải cánh tới khoảng 70 cm. Nó sống cách đây khoảng 300 triệu năm, trước cả thời khủng long, khi không khí có nhiều ôxi hơn bây giờ.','Rừng đầm lầy cổ đại',{k:1.6}),
- VR('ret','arthro','Rết khổng lồ Arthropleura','🐛','prehis',4,{s:2.6,c1:'#5a4a3a',c2:'#9a8a6a'},'Arthropleura là loài chân đốt (họ hàng xa của rết và cuốn chiếu) dài tới khoảng 2 m, sống cách đây gần 300 triệu năm. Nó ăn thực vật mục trong rừng và sống trước cả thời khủng long.','Rừng ẩm cổ đại',{k:1.8})
+ VR('buom','megan','Chuồn chuồn khổng lồ Meganeura','🪰','prehis',6,{s:3.2,c1:'#1fb8a4',c2:'#d6f7ef',c3:'#ff8a3d'},'Meganeura là loài côn trùng bay khổng lồ giống chuồn chuồn, sải cánh tới khoảng 70 cm. Nó sống cách đây khoảng 300 triệu năm, trước cả thời khủng long, khi không khí có nhiều ôxi hơn bây giờ.','Rừng đầm lầy cổ đại',{k:3.4,nl:170,alt:[6,40]}),
+ VR('ret','arthro','Rết khổng lồ Arthropleura','🐛','prehis',4,{s:2.6,c1:'#8a4ad0',c2:'#e9d8ff',c3:'#ffd23f'},'Arthropleura là loài chân đốt (họ hàng xa của rết và cuốn chiếu) dài tới khoảng 2 m, sống cách đây gần 300 triệu năm. Nó ăn thực vật mục trong rừng và sống trước cả thời khủng long.','Rừng ẩm cổ đại',{k:3.6,nl:170}),
+ /* Archaeopteryx: thủy tổ chim, làm tổ trên ngọn cây cao */
+ {id:'archaeo',n:'Archaeopteryx (thủy tổ chim)',e:'🪶',r:'prehis',b:'bird',m:'fly',c:6,v:1,rm:380,k:3,nl:230,alt:[30,95],dino:0,p:{s:1.6,fly:1,c1:'#e0457a',c2:'#fff0d8',c3:'#ffd23f',ch:'#fff0d8',cw:'#e0457a',cw2:'#ffd23f',cb:'#2a1a18',tail:1.8,tw:.5,ws:1.6},t:'Archaeopteryx sống cách đây khoảng 150 triệu năm, cỡ một con quạ. Nó vừa có lông vũ và đôi cánh như chim, vừa có răng, đuôi dài đầy xương và móng vuốt ở cánh như khủng long, nên được gọi là "thủy tổ của loài chim". Chúng làm tổ trên cây cao, đẻ trứng và ấp trứng như chim ngày nay.',h:'Rừng thông cổ, tổ trên ngọn cây cao'}
 
  );
  SPS.push(
@@ -3132,6 +3145,7 @@ VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a'
    else if(z=='oasis'){const a=rnd(0,6.28),r=rnd(250,480);u=3200+Math.cos(a)*r;v=1150+Math.sin(a)*r}
    else if(z=='sw'){u=rnd(500,3500);v=rnd(500,3500)}
    else if(z=='pl'){const an=rnd(0,6.28),rr=rnd(0,170);u=NAT.PLK[0]+Math.cos(an)*rr;v=NAT.PLK[1]+Math.sin(an)*rr}
+   else if(z=='psea'){u=rnd(160,3840);v=rnd(160,3840)}
    else if(z=='lake'){const a=rnd(0,6.28),r=rnd(0,520);u=2700+Math.cos(a)*r;v=1500+Math.sin(a)*r}
    else if(z=='slope'||z=='peak'){const a=rnd(0,6.28),r=z=='peak'?rnd(0,300):rnd(350,1000);u=2000+Math.cos(a)*r;v=2000+Math.sin(a)*r}
    else if(z=='cave'){const k=Math.floor(rnd(0,NAT.CAVE_PL.length-1)),t=R2(),a=NAT.CAVE_PL[k],b=NAT.CAVE_PL[k+1];u=a[0]+(b[0]-a[0])*t;v=a[1]+(b[1]-a[1])*t}
@@ -3142,10 +3156,11 @@ VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a'
    else if(z=='sea'){if(R.id=='beach'){v=rnd(600,3400);u=NAT.COAST(v)+rnd(300,560)}else{const a=rnd(0,6.28),r=rnd(1450,1650);u=2100+Math.cos(a)*r;v=2000+Math.sin(a)*r}}
    else if(z=='lag'||z=='crest'||z=='deep'||z=='rf'){const a=rnd(0,6.28),r=z=='lag'?rnd(300,1150):z=='crest'?rnd(1350,1700):z=='deep'?rnd(1600,1950):rnd(300,1900);u=2000+Math.cos(a)*r;v=2000+Math.sin(a)*r}
    else{u=rnd(400,3600);v=rnd(400,3600)}
-   const x=R.x0+u,y=R.y0+v;
+   const x=R.x0+NAT.WK(R,u),y=R.y0+NAT.WK(R,v);
    if(z=='wlake'||z=='wriver'){if(NAT.waterAt(x,y))return[x,y];continue}
    if(z=='sw'){if(NAT.raw(R,u,v)<-9)return[x,y];continue}
    if(z=='pl'){if(NAT.raw(R,u,v)<-9)return[x,y];continue}
+   if(z=='psea'){const dd=NAT.PHD(u,v);if(dd>150&&dd<1300&&NAT.raw(R,u,v)<-12)return[x,y];continue}
    if(z=='lag'||z=='crest'||z=='deep'||z=='rf'){if(NAT.raw(R,u,v)<-8)return[x,y];continue}
    if(z=='sea'){if(NAT.raw(R,u,v)<-8&&u>200&&v>200&&u<3800&&v<3800)return[x,y];continue}
    if(R.id=='plain'&&(NAT.realmAt(x,y)||(x>-150&&x<S+150&&y>-150&&y<S+150)||!NAT.walk(x,y)||NAT.gh(x,y)<.5||NAT.inRoad(x,y)))continue;
@@ -3846,7 +3861,7 @@ var white=M(MPC('mosa','w',0xdde3e8),0.3,0.5), steel=M(MPC('mosa','s',0x4b5864),
 var glow=new THREE.MeshBasicMaterial({color:0xff4a24}),plasma=new THREE.MeshBasicMaterial({color:0x3a0e08});
 var flameM=new THREE.MeshBasicMaterial({color:0xffa23a,transparent:true,opacity:.85});
 var eyeM=new THREE.MeshBasicMaterial({color:0xff2a1a}),coreM=new THREE.MeshBasicMaterial({color:0xff4a24});
-var waterM=new THREE.MeshStandardMaterial({color:0x1e6a82,transparent:true,opacity:.3,roughness:.2,metalness:.1,depthWrite:false});
+var waterM=new THREE.MeshStandardMaterial({color:0x1e6a82,transparent:true,opacity:.1,roughness:.2,metalness:.1,depthWrite:false});
 var mats=[white,steel,dark,red,chrome,glow,plasma,flameM,eyeM,coreM];
 var bx=new THREE.BoxGeometry(1,1,1),cy=new THREE.CylinderGeometry(1,1,1,14),cn=new THREE.ConeGeometry(1,1,4);
 var cnF=new THREE.ConeGeometry(0.5,1,4);cnF.rotateY(Math.PI/4);var sgm=new THREE.SphereGeometry(1,10,8);
@@ -4051,6 +4066,48 @@ const MKB=(THREE,scene,pid)=>{
   for(let a=0;a<10;a++){const yy=(a%5-2)*bh*.22,zz=(a<5?-1:1)*bw*.3,L=a%5==2?bl*.65:bl*.45,sp=(a<5?-1:1)*(.05+(a%5)*.015);
    const g1=G(bh*.7,yy,zz,hd);g1.rotation.y=sp*2.2;B(L*.55,.22,.22,a%2?steel:white,L*.27,0,0,g1);const g2=G(L*.55,0,0,g1);g2.rotation.y=sp;B(L*.45,.16,.16,chrome,L*.22,0,0,g2);K(.1,.45,red,L*.5,0,0,g2).rotation.z=-PI/2}
   return{root:dino,hips:[],knees:[],tail:[],head:hd,jaw:null,wings}};
+ /* chuồn chuồn khổng lồ Meganeura mecha: ngực bọc giáp, mắt kép đỏ, bụng nhiều đốt, hai đôi cánh lưới */
+ o.dragonM=P=>{const bl=P.bl,bh=P.bh,bw=P.bw,hs=P.hs,cw=P.cw;
+  B(bl*.3,bh*1.3,bw*1.25,steel,bl*.16,0,0,dino);B(bl*.26,bh*.4,bw*1.3,white,bl*.16,bh*.68,0,dino);B(bl*.28,.05,.16,glow,bl*.16,bh*.92,0,dino);B(bl*.22,bh*.5,bw*1.3,dark,bl*.16,-bh*.62,0,dino);
+  [-1,1].forEach(sg=>{C(bh*.5,.08,dark,bl*.2,0,bw*.66*sg,dino).rotation.x=PI/2;C(bh*.36,.1,coreM,bl*.2,0,bw*.68*sg,dino).rotation.x=PI/2;B(bl*.2,bh*.7,.1,red,bl*.12,.05,bw*.64*sg,dino)});
+  const hd=G(bl*.34,bh*.12,0,dino);B(bh*.9,bh*.85,bw*1.1,white,bh*.3,0,0,hd);B(bh*.3,bh*.5,bw*.8,steel,bh*.82,-bh*.08,0,hd);
+  [-1,1].forEach(sg=>{S(bh*.56,eyeM,bh*.4,bh*.18,bw*.6*sg,hd);S(bh*.3,dark,bh*.5,bh*.22,bw*.7*sg,hd);K(bh*.12,bh*.8,chrome,bh*.9,-bh*.35,bw*.28*sg,hd).rotation.z=PI;B(bh*1.1,.05,.05,chrome,bh*.9,bh*.5,bw*.3*sg,hd).rotation.z=.5});
+  const tl=tail(-bl*.02,-bh*.05,P.tn,P.tl,P.tr0,P.tr1,()=>0);
+  tl.t.forEach((sg,i)=>{B(P.tl*.5,.05,P.tr0*2.2,i%2?red:chrome,-P.tl*.5,P.tr0*.95+.02,0,sg)});
+  K(P.tr1*.7,P.tl*.9,red,-P.tl*.9,0,0,tl.last).rotation.z=PI/2;
+  [-1,1].forEach(sg=>{[.12,0,-.12].forEach((fx,i)=>{const lg=G(bl*(.22+fx),-bh*.6,bw*.45*sg,dino);B(.14,bh*1.1,.14,steel,0,-bh*.5,0,lg).rotation.x=sg*.5;K(.06,.5,chrome,0,-bh*1.1,sg*bh*.4,lg).rotation.x=PI})});
+  const wings=[1,-1].map(sg=>{const w=G(bl*.2,bh*.7,sg*bw*.55,dino);
+   [[bl*.1,cw,1],[-bl*.12,cw*.92,.9]].forEach((q,i)=>{const ox=q[0],c=q[1],L=hs*q[2];
+    B(c,.05,L,i?white:chrome,ox-c*.3,0,sg*L*.5,w);B(.2,.12,L,red,ox+c*.12,.05,sg*L*.5,w);B(c*.9,.05,.08,glow,ox-c*.3,.07,sg*L*.34,w);B(c*.9,.05,.08,glow,ox-c*.3,.07,sg*L*.7,w);
+    for(let k=1;k<5;k++)B(.07,.06,L*.2,chrome,ox-c*.1*k,.06,sg*L*(.12+k*.17),w)});return w});
+  return{root:dino,hips:[],knees:[],tail:tl.t,head:hd,jaw:null,wings}};
+ /* rết khổng lồ Arthropleura mecha: thân nhiều giáp đốt, mỗi đôt có đôi chân, đầu có râu và hàm kẹp */
+ o.centiM=P=>{const n=P.n,L=P.sl,r=P.r,segs=[],hips=[],knees=[];let pv=null;
+  for(let k=0;k<n;k++){const sg=k==0?G(n*L*.5-L*.5,r*1.5,0,dino):G(-L,0,0,pv);
+   B(L*1.04,r*1.7,r*2.6,k%2?white:steel,0,0,0,sg);B(L*.92,.22,r*2.9,k%2?red:chrome,0,r*.88,0,sg);B(L*.9,r*.5,r*2.7,dark,0,-r*.75,0,sg);B(L*.7,.05,.16,glow,0,r*1.05,0,sg);
+   [-1,1].forEach(sd=>{B(L*.3,r*.9,.1,k%2?steel:white,0,0,(r*1.3+.06)*sd,sg)});
+   if(k%2==0)[-1,1].forEach(sd=>{const hip=G(0,-r*.7,r*1.3*sd,sg);B(.3,r*.5,.3,dark,0,-r*.1,0,hip);const kn=G(0,-r*.35,.1*sd,hip);B(.2,r*1.6,.2,steel,0,-r*.7,sd*r*.25,kn).rotation.x=sd*.4;
+    for(let c=-1;c<=1;c++)K(.06,.4,chrome,c*.14,-r*1.55,sd*r*.55,kn).rotation.x=PI;hips.push(hip);knees.push(kn)});
+   segs.push(sg);pv=sg}
+  const hd=G(n*L*.5+L*.55,r*1.4,0,dino);B(L*1.1,r*1.6,r*2.3,white,0,0,0,hd);B(L*.5,r*.9,r*1.7,steel,L*.55,-r*.3,0,hd);
+  [-1,1].forEach(sd=>{S(r*.42,eyeM,L*.25,r*.5,r*.9*sd,hd);K(r*.22,r*1.1,red,L*.85,-r*.55,r*.35*sd,hd).rotation.z=PI/2+.3*sd;B(L*1.5,.07,.07,chrome,L*.8,r*.7,r*.5*sd,hd).rotation.y=sd*.5});
+  const lt=pv;[-1,1].forEach(sd=>K(r*.35,L*1.5,red,-L*.9,0,r*.6*sd,lt).rotation.z=PI/2);
+  return{root:dino,hips,knees,tail:segs,head:hd,jaw:null}};
+ /* Archaeopteryx mecha: thân chim có giáp, đầu có răng, cánh lông vũ kèm móng vuốt, đuôi xương dài mang lông */
+ o.archM=P=>{const q=P.q,bl=P.bl,bh=P.bh,bw=P.bw,hipY=2.6*q,cy=hipY+.35;
+  B(bl,bh,bw,steel,0,cy,0,dino);B(bl*.8,.24,bw*.75,white,0,cy+bh/2+.05,0,dino);B(bl*.38,bh*.95,bw*.96,white,bl*.45,cy+.05,0,dino);B(bl*.7,.3,bw*.85,dark,.1,cy-bh/2-.04,0,dino);B(bl*.8,.05,.16,glow,0,cy+bh/2+.2,0,dino);
+  [-1,1].forEach(sd=>{C(.4*q,.06,dark,bl*.12,cy,(bw/2+.05)*sd,dino).rotation.x=PI/2;C(.28*q,.08,coreM,bl*.12,cy,(bw/2+.08)*sd,dino).rotation.x=PI/2;B(bl*.55,bh*.45,.1,red,-.2,cy+.05,(bw/2+.04)*sd,dino)});
+  const neck=G(bl*.5,cy+bh*.3,0,dino);B(.9*q,.9*q,.9*q,steel,.35*q,.35*q,0,neck).rotation.z=.6;B(.7*q,.7*q,.7*q,white,.95*q,.8*q,0,neck).rotation.z=.3;
+  const hg=G(1.5*q,1.0*q,0,neck);hg.rotation.z=-.15;const h=head(hg,P.hl,P.hh,P.hw,0);
+  for(let i=0;i<5;i++)B(.9,.22,.34,i%2?white:red,P.hl*.1-i*.55,P.hh*.5+.2+i*.08,0,h.head).rotation.z=.25;
+  const tl=tail(-bl/2,cy+.05,P.tn,P.tl,P.tr0,P.tr1,()=>0);
+  tl.t.forEach((sg,i)=>{[-1,1].forEach(sd=>{const f=B(P.tl*.95,.05,P.tr0*3.6*(1-i/(P.tn+2)),i%2?red:chrome,-P.tl/2,0,sd*P.tr0*1.6,sg);f.rotation.x=sd*.35})});
+  const L1=bleg(1,-bl*.05,hipY,q,0),L2=bleg(-1,-bl*.05,hipY,q,0);
+  const wings=[1,-1].map(sd=>{const w=G(bl*.12,cy+bh*.35,sd*bw/2,dino),hs=P.hs,c1=P.cw;
+   B(c1,.1,hs*.5,white,-c1*.1,0,sd*hs*.25,w);B(c1*.7,.08,hs*.5,steel,-c1*.45,0,sd*hs*.72,w).rotation.y=-sd*.2;B(.22,.2,hs*1.0,red,c1*.4,.06,sd*hs*.5,w);B(.06,.05,hs*.9,glow,-c1*.5,.07,sd*hs*.45,w);C(.2,.5,dark,0,0,sd*.2,w).rotation.x=PI/2;
+   for(let i=0;i<8;i++)B(c1*(1.1-i*.07),.04,.34,i%2?red:chrome,-.2-i*.28,.07,sd*(i+1)*hs*.115,w);
+   K(.1,.9,chrome,c1*.45,0,sd*(hs*.5),w).rotation.x=sd*PI/2;K(.08,.7,red,c1*.5,0,sd*(hs*.35),w).rotation.x=sd*PI/2;return w});
+  return{root:dino,hips:[L1.hip,L2.hip],knees:[L1.knee,L2.knee],tail:tl.t,head:h.head,jaw:h.jaw,wings}};
  return o};
 MECH.reg('raptor',(T,s)=>MKB(T,s,'raptor').biped({q:.95,bl:2.8,bh:1.15,bw:.95,k:.75,hl:2.5,hh:.72,hw:.6,tn:9,tl:.75,tr0:.38,tr1:.08,sick:1,feath:1,bsp:6}),11,1);
 MECH.reg('parasau',(T,s)=>MKB(T,s,'parasau').biped({q:1.15,bl:4.0,bh:2.0,bw:1.7,k:1,hl:2.6,hh:.9,hw:.8,tn:7,tl:.95,tr0:.7,tr1:.14,crest:1,duck:1,nt:1,bsp:5}),15,1);
@@ -4059,8 +4116,11 @@ MECH.reg('brachio',(T,s)=>MKB(T,s,'brachio').quad({bl:6,bh:2.3,bw:2.2,fy:4.8,ry:
 MECH.reg('diplo',(T,s)=>MKB(T,s,'diplo').quad({bl:7,bh:2,bw:2,fy:3.7,ry:3.9,nn:10,nl:1.1,nr0:.62,nr1:.25,nang:[.35,.1,.08,.02,0,0,-.02,-.02,0,.1],hl:1.7,hh:.6,hw:.55,hr:-.45,tn:14,tl:1.1,tr0:.66,tr1:.08,wf:1.1,wr:1.15,tb:k=>k<3?0:-.012}),32,1);
 MECH.reg('ptera',(T,s)=>MKB(T,s,'ptera').flyer({bl:3.2,bh:1,bw:1.1,hs:7.5,ch:2.6,hl:5,hh:.7,hw:.6,nt:1,crest:1,tn:2,tl:.6,tr0:.3,tr1:.18}),15,0);
 MECH.reg('rampho',(T,s)=>MKB(T,s,'rampho').flyer({bl:2.6,bh:.8,bw:.8,hs:6.5,ch:1.6,hl:2.4,hh:.55,hw:.5,tn:9,tl:.75,tr0:.22,tr1:.07,vane:1}),11,0);
-MECH.reg('cavaytay',(T,s)=>MKB(T,s,'cavaytay').fishM({bl:5,bh:1.8,bw:1.5,hl:2.2,hh:1.1,hw:.9,tn:3,tl:.8,tr0:.5,tr1:.35,fh:1.3}),10,0);
-MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),7,0);
+MECH.reg('cavaytay',(T,s)=>MKB(T,s,'cavaytay').fishM({bl:5,bh:1.8,bw:1.5,hl:2.2,hh:1.1,hw:.9,tn:3,tl:.8,tr0:.5,tr1:.35,fh:1.3}),13,0);
+MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),9,0);
+MECH.reg('megan',(T,s)=>MKB(T,s,'megan').dragonM({bl:3,bh:.55,bw:.5,hs:3.4,cw:1.2,tn:9,tl:.55,tr0:.2,tr1:.08}),13,0);
+MECH.reg('arthro',(T,s)=>MKB(T,s,'arthro').centiM({n:12,sl:.9,r:.55}),18,1);
+MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl:1.5,hh:.62,hw:.55,tn:8,tl:.8,tr0:.26,tr1:.08,hs:3.6,cw:1.5}),14,0);
  const inst=s=>{if(!s.tp){const bf=MECH.get(s.id);if(bf){try{s.tp=bf()}catch(e){s.tp=null;try{ERR(e)}catch(_){}}}if(!s.tp)s.tp=BU[s.b](s.p)}const mp=new Map(),g=dup(s.tp,mp),u=s.tp.userData,d=g.userData;
   for(const k of['legs','wings','seg'])if(u[k])d[k]=u[k].map(x=>mp.get(x)||x);if(u.sp)d.sp=u.sp;if(u.rig){try{u.rig(mp)}catch(e){}}return g};
  const HERD={walk:1,dash:1,hop:1,slide:1,side:1,school:1};
@@ -4070,16 +4130,17 @@ MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),7
  /* vùng đệm giữa các môi trường: thú của môi trường gần nhất lan ra, càng gần càng nhiều (chuyển tiếp mượt) */
  const PNOK=new Set(['forest','grass','snow','mount','village','desert','swamp','volcano','plateau']);
  const PN=(R,s)=>{if(!PNOK.has(s.r)||s.z||s.alt||(s.m!='walk'&&s.m!='dash'&&s.m!='hop'))return 0;const Q=NAT.RL.find(q=>q.id==s.r);if(!Q)return 0;const cx=R.x0+R.W/2,cy=R.y0+R.W/2,d=NAT.bdist(Q,cx,cy);if(d>2600)return 0;return 1.6/(1+Math.pow(d/1100,3))};
- const spawnRealm=R=>{R.an=1;const mult=R.id=='plain'?1.6:2.6;for(const s of SPS){let n;if(s.r==R.id||(R.id=='grass'&&s.r=='plain'))n=Math.max(1,Math.round(s.c*mult));else if(R.id=='plain'){n=Math.round(s.c*PN(R,s));if(n<1)continue}else continue;
+ const spawnRealm=R=>{R.an=1;const mult=(R.id=='plain'?1.6:2.6)*(R.K>1?R.K*R.K:1);for(const s of SPS){let n;if(s.r==R.id||(R.id=='grass'&&s.r=='plain'))n=Math.max(1,Math.round(s.c*mult));else if(R.id=='plain'){n=Math.round(s.c*PN(R,s));if(n<1)continue}else continue;
    const herd=n>=2&&HERD[s.m]&&s.z!='cave'&&s.z!='sea';let i=0,guard=0;
    while(i<n&&guard++<n*3){let q=spot(R,s);if(!q)continue;{const h=BH.habPos(R,s);if(h)q=h}const sch=s.m=='school',ga=rnd(0,6.28),hn=herd?Math.min(n-i,sch?4+Math.floor(R2()*5):GS(s)):1;
     for(let j=0;j<hn;j++,i++){let x=q[0],y=q[1];
      if(j>0&&!sch){const a=rnd(0,6.28),r=rnd(12,60)*Math.max(1,(s.k||1)*.9),nx=q[0]+Math.cos(a)*r,ny=q[1]+Math.sin(a)*r;if(ok(R,nx,ny)&&(R.id!='plain'||NAT.walk(nx,ny))){x=nx;y=ny}}
      ALL.push({ld:j>0&&!sch?ALL[ALL.length-j]:null,s,g:null,x,y,hx:sch?q[0]:x,hy:sch?q[1]:y,a:rnd(0,6.28),t:rnd(0,120),md:'idle',tx:x,ty:y,ph:rnd(0,6.28),R,alt:s.alt?rnd(s.alt[0],s.alt[1]):0,ang:sch?ga+rnd(-.12,.12):rnd(0,6.28),ox:sch?rnd(-18,18):0,oy:sch?rnd(-18,18):0,on:0,d:0,want:0})}}}
   /* vách đá Dực long: vài bạn đậu trên đỉnh, vài bạn bay vòng quanh */
-  if(R.id=='prehis'){try{const cx=R.x0+NAT.PCL[0],cy=R.y0+NAT.PCL[1],mkO=(id,x,y,a,e)=>{const s=BYID[id];if(!s)return;ALL.push(Object.assign({s,g:null,x,y,hx:x,hy:y,a,t:0,md:'idle',tx:x,ty:y,ph:rnd(0,6.28),R,alt:0,ang:0,ox:0,oy:0,on:0,d:0,want:0},e||{}))};
+  if(R.id=='prehis'){try{const cx=R.x0+NAT.WK(R,NAT.PCL[0]),cy=R.y0+NAT.WK(R,NAT.PCL[1]),mkO=(id,x,y,a,e)=>{const s=BYID[id];if(!s)return;ALL.push(Object.assign({s,g:null,x,y,hx:x,hy:y,a,t:0,md:'idle',tx:x,ty:y,ph:rnd(0,6.28),R,alt:0,ang:0,ox:0,oy:0,on:0,d:0,want:0},e||{}))};
    [['ptera',.5],['ptera',-.75],['rampho',1.85],['rampho',-1.95]].forEach(q=>mkO(q[0],cx+Math.cos(q[1])*52,cy+Math.sin(q[1])*52,q[1],{perch:1}));
-   [['ptera',0],['ptera',3.1],['rampho',1.5],['rampho',4.6]].forEach(q=>mkO(q[0],cx,cy,0,{ang:q[1],rr:q[0]=='ptera'?250:190,alt:q[0]=='ptera'?rnd(120,190):rnd(70,120)}))}catch(e){}}};
+   [['ptera',0],['ptera',3.1],['rampho',1.5],['rampho',4.6]].forEach(q=>mkO(q[0],cx,cy,0,{ang:q[1],rr:q[0]=='ptera'?250:190,alt:q[0]=='ptera'?rnd(120,190):rnd(70,120)}));
+   (R.AN||[]).forEach((q,i)=>{for(let k=0;k<2;k++){const a=k*3.14+i;mkO('archaeo',q[0]+Math.cos(a)*16,q[1]+Math.sin(a)*16,a+1.57,{perch:1,lift:q[2]+9})}mkO('archaeo',q[0],q[1],0,{ang:i*1.1,rr:130+(i%3)*30,alt:rnd(55,110)})})}catch(e){}}};
  /* tạo/bỏ con vật theo khoảng cách: chỉ giữ các con gần nhất để máy không bị nặng */
  const MAXV=()=>PF.lite?80:180,RAD=()=>PF.lite?600:1000;
  /* ban đêm: chim, bướm và ong đi ngủ; dơi, cú, đom đóm và các loài săn đêm thức dậy */
@@ -4103,7 +4164,7 @@ MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),7
   const trees=R=>{if(R.tg)return R.tg;const g=R.tg={};for(const q of R.L||[]){if(q.r==null||q.h==null||q.h<90||q.r<3||BADT[q.t])continue;const k=Math.floor(q.x/200)+','+Math.floor(q.y/200);(g[k]||(g[k]=[])).push(q)}return g};
   const nearTree=(R,x,y,rad,skip,mr)=>{if(!R||!R.L)return null;const g=trees(R);let b=null,bd=rad*rad;for(let i=Math.floor((x-rad)/200);i<=Math.floor((x+rad)/200);i++)for(let j=Math.floor((y-rad)/200);j<=Math.floor((y+rad)/200);j++){const l=g[i+','+j];if(l)for(const q of l){if(q===skip||(mr&&q.r>mr))continue;const d=(q.x-x)*(q.x-x)+(q.y-y)*(q.y-y);if(d<bd){bd=d;b=q}}}return b};
   const banks=R=>{if(R.bk)return R.bk;const L=R.bk=[];if(!R.L||R.id=='plain'||R.id=='reef')return L;
-   for(let n=0;n<700&&L.length<36;n++){const x=R.x0+120+Math.random()*3760,y=R.y0+120+Math.random()*3760;if(NAT.waterAt(x,y)||NAT.solid(x,y,0))continue;
+   for(let n=0;n<700&&L.length<36;n++){const x=R.x0+120+Math.random()*(R.W-240),y=R.y0+120+Math.random()*(R.W-240);if(NAT.waterAt(x,y)||NAT.solid(x,y,0))continue;
     for(let k=0;k<8;k++){const f=k*PI/4+Math.random()*.3;if(NAT.waterAt(x+Math.cos(f)*30,y+Math.sin(f)*30)&&!NAT.waterAt(x+Math.cos(f)*10,y+Math.sin(f)*10)){L.push({x,y,f});break}}}
    return L};
   const bankNear=(R,x,y)=>{const L=banks(R);let b=null,bd=1e9;for(const q of L){const d=Math.hypot(q.x-x,q.y-y)+Math.random()*250;if(d<bd){bd=d;b=q}}return bd<1100?b:null};
@@ -5504,7 +5565,7 @@ function buildDec(){const N=NAT,rnd=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.im
  const nearR=(x,y,d)=>{const cx=Math.floor(x/300),cy=Math.floor(y/300),m=Math.ceil(d/300);for(let i=-m;i<=m;i++)for(let j=-m;j<=m;j++){const a=G.get((cx+i)+','+(cy+j));if(a)for(const p of a)if(Math.hypot(p[0]-x,p[1]-y)<d)return true}return false};
  const inReg=(x,y,s)=>{for(const r of N.RL){const cx=(r.x0+r.x1)/2,cy=(r.y0+r.y1)/2,hw=(r.x1-r.x0)/2*s,hh=(r.y1-r.y0)/2*s;if(r.id=='beach'){if(x>r.x0-200*s&&y>r.y0-200&&y<r.y1+200)return true;continue}if(Math.pow(Math.abs(x-cx)/hw,3.3)+Math.pow(Math.abs(y-cy)/hh,3.3)<1)return true}return false};
  const inCity=(x,y,m)=>(x>-250-m&&x<S+250+m&&y>-250-m&&y<S+250+m)||VN.dOut(x,y)<m+250;
- const free=(x,y,rd,s)=>!inCity(x,y,rd*.5)&&!inReg(x,y,s||1.12)&&!nearR(x,y,rd);
+ const free=(x,y,rd,s)=>!N.waterAt(x,y)&&!N.waterAt(x+rd*.5,y)&&!N.waterAt(x-rd*.5,y)&&!N.waterAt(x,y+rd*.5)&&!N.waterAt(x,y-rd*.5)&&!inCity(x,y,rd*.5)&&!inReg(x,y,s||1.12)&&!nearR(x,y,rd);
  const X0=N.XMIN+400,X1=N.EAST+200,Y0=N.YMIN+400,Y1=N.YMAX-400;
  const gen=(n,fn)=>{let k=0;for(let i=0;i<n*60&&k<n;i++){const x=X0+rnd()*(X1-X0),y=Y0+rnd()*(Y1-Y0);if(fn(x,y))k++}};
  const D={hills:[],ponds:[],trees:[],flw:[],houses:[],trails:[]};
@@ -5528,15 +5589,15 @@ function drawDec(c,X,Y,sc,W,H){if(!DEC)DEC=buildDec();const D=DEC,vis=(x,y,m)=>{
 /* ---------- nền sinh thái trên bản đồ: các môi trường lan rộng, viền uốn lượn, hòa vào nhau ---------- */
 let FIELD=null;
 const blobF=(R,u,v)=>{const N=NAT,p=N.SHP[R.id]||[R.x0*.0007+.3,.1,.06],dx=u-2000,dy=v-2000,a=Math.atan2(dy,dx),rad=1800*(1+p[1]*Math.sin(3*a+p[0])+p[2]*Math.sin(5*a+2*p[0]+1)),d=Math.pow(Math.pow(Math.abs(dx),3)+Math.pow(Math.abs(dy),3),1/3);return N.sm(1.02,.86,d/rad)};
-const fieldW=(x,y)=>{const N=NAT;let sw=0,r=0,g=0,b=0,best=0,bid=null;for(const R of N.RL){const P=FPAL[R.id];if(!P)continue;const ins=x>=R.x0&&x<R.x1&&y>=R.y0&&y<R.y1,d=ins?(1-blobF(R,x-R.x0,y-R.y0))*700:N.bdist(R,x,y),q=d/1400,k=1/(1+q*q*q);sw+=k;r+=P[0]*k;g+=P[1]*k;b+=P[2]*k;if(k>best){best=k;bid=R.id}}return{sw,r,g,b,best,bid}};
+const fieldW=(x,y)=>{const N=NAT;let sw=0,r=0,g=0,b=0,best=0,bid=null;for(const R of N.RL){const P=FPAL[R.id];if(!P)continue;const ins=x>=R.x0&&x<R.x1&&y>=R.y0&&y<R.y1,d=ins?(1-blobF(R,N.CX(R,x),N.CY(R,y)))*700:N.bdist(R,x,y),q=d/1400,k=1/(1+q*q*q);sw+=k;r+=P[0]*k;g+=P[1]*k;b+=P[2]*k;if(k>best){best=k;bid=R.id}}return{sw,r,g,b,best,bid}};
 const FPAL={};
-const bakeField=()=>{const N=NAT,E=N.EC,x0=E[0]-E[2],y0=E[1]-E[3],st=100,w=Math.ceil(2*E[2]/st),h=Math.ceil(2*E[3]/st),cv=document.createElement('canvas');cv.width=w;cv.height=h;const g=cv.getContext('2d'),im=g.createImageData(w,h),dt=im.data;
+const bakeField=()=>{const N=NAT,E=N.EG,x0=E[0]-E[2],y0=E[1]-E[3],st=100,w=Math.ceil(2*E[2]/st),h=Math.ceil(2*E[3]/st),cv=document.createElement('canvas');cv.width=w;cv.height=h;const g=cv.getContext('2d'),im=g.createImageData(w,h),dt=im.data;
  for(const R of N.RL){const q=ZCB[R.id];if(q&&R.id!='beach'&&/^#[0-9a-f]{6}$/i.test(q))FPAL[R.id]=[parseInt(q.slice(1,3),16),parseInt(q.slice(3,5),16),parseInt(q.slice(5),16)]}
  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const x=x0+(i+.5)*st,y=y0+(j+.5)*st;if(N.hull(x,y)>1.04||x>NAT.EAST||(x>-40&&x<S+40&&y>-40&&y<S+40))continue;const f=fieldW(x,y),a=f.sw/(f.sw+.3);if(a<.03)continue;const o=(j*w+i)*4;dt[o]=f.r/f.sw;dt[o+1]=f.g/f.sw;dt[o+2]=f.b/f.sw;dt[o+3]=Math.round(255*Math.min(1,a*1.15)*.94)}
  g.putImageData(im,0,0);FIELD={cv,x0,y0,w:w*st,h:h*st}};
 const DOMC=new Map(),MKS=330;
-const domCell=(i,j)=>{const key=i*10007+j;let d=DOMC.get(key);if(d!==undefined)return d;const N=NAT,E=N.EC,x=E[0]-E[2]+(i+.5)*MKS,y=E[1]-E[3]+(j+.5)*MKS;d=null;if(!(N.hull(x,y)>1||x>NAT.EAST||(x>-60&&x<S+60&&y>-60&&y<S+60))){const f=fieldW(x,y);if(f.bid&&f.best/(f.sw+.3)>.5)d=f.bid}DOMC.set(key,d);return d};
-const drawMarks=(c,X,Y,sc,MW_,MH_,CX,CY)=>{if(sc<.0025)return;const N=NAT,E=N.EC,gx=E[0]-E[2],gy=E[1]-E[3],wx0=(0-MW_/2)/sc+CX,wx1=(MW_-MW_/2)/sc+CX,wy0=(0-MH_/2)/sc+CY,wy1=(MH_-MH_/2)/sc+CY,i0=Math.floor((wx0-gx)/MKS)-1,i1=Math.ceil((wx1-gx)/MKS)+1,j0=Math.floor((wy0-gy)/MKS)-1,j1=Math.ceil((wy1-gy)/MKS)+1;if((i1-i0)*(j1-j0)>9000)return;
+const domCell=(i,j)=>{const key=i*10007+j;let d=DOMC.get(key);if(d!==undefined)return d;const N=NAT,E=N.EG,x=E[0]-E[2]+(i+.5)*MKS,y=E[1]-E[3]+(j+.5)*MKS;d=null;if(!(N.hull(x,y)>1||x>NAT.EAST||(x>-60&&x<S+60&&y>-60&&y<S+60))){const f=fieldW(x,y);if(f.bid&&f.best/(f.sw+.3)>.5)d=f.bid}DOMC.set(key,d);return d};
+const drawMarks=(c,X,Y,sc,MW_,MH_,CX,CY)=>{if(sc<.0025)return;const N=NAT,E=N.EG,gx=E[0]-E[2],gy=E[1]-E[3],wx0=(0-MW_/2)/sc+CX,wx1=(MW_-MW_/2)/sc+CX,wy0=(0-MH_/2)/sc+CY,wy1=(MH_-MH_/2)/sc+CY,i0=Math.floor((wx0-gx)/MKS)-1,i1=Math.ceil((wx1-gx)/MKS)+1,j0=Math.floor((wy0-gy)/MKS)-1,j1=Math.ceil((wy1-gy)/MKS)+1;if((i1-i0)*(j1-j0)>9000)return;
  for(let i=i0;i<=i1;i++)for(let j=j0;j<=j1;j++){const id=domCell(i,j);if(!id)continue;const hsh=Math.sin(i*12.9898+j*78.233)*43758.5453,r1=hsh-Math.floor(hsh),h2=Math.sin(i*39.346+j*11.135)*24634.634,r2=h2-Math.floor(h2),x=X(gx+(i+.15+r1*.7)*MKS),y=Y(gy+(j+.15+r2*.7)*MKS),rr=Math.max(1.1,(id=='mount'||id=='plateau'?150:id=='desert'?190:70)*sc);
   if(id=='forest'||id=='swamp'){c.fillStyle='rgba(15,70,30,.30)';c.beginPath();c.arc(x,y,rr*(.8+r1*.6),0,6.3);c.fill()}
   else if(id=='mount'||id=='plateau'){const q=rr*(.9+r2*.6);c.fillStyle='rgba(70,64,56,.45)';c.beginPath();c.moveTo(x-q,y+q*.7);c.lineTo(x,y-q);c.lineTo(x+q,y+q*.7);c.closePath();c.fill();c.fillStyle='rgba(255,255,255,.7)';c.beginPath();c.moveTo(x-q*.35,y-q*.3);c.lineTo(x,y-q);c.lineTo(x+q*.35,y-q*.3);c.closePath();c.fill()}
@@ -5545,17 +5606,19 @@ const drawMarks=(c,X,Y,sc,MW_,MH_,CX,CY)=>{if(sc<.0025)return;const N=NAT,E=N.EC
   else if(id=='grass'||id=='village'){c.fillStyle='rgba(120,150,40,.30)';c.beginPath();c.arc(x,y,rr*.8,0,6.3);c.fill()}
   else{c.fillStyle='rgba(40,30,60,.22)';c.beginPath();c.arc(x,y,rr*.8,0,6.3);c.fill()}}};
 function mapBase(c,CX,CY,sc,MW_,MH_,fs){MW_=MW_||240;MH_=MH_||240;fs=fs||7;
- const X=x=>(x-CX)*sc+MW_/2,Y=y=>(y-CY)*sc+MH_/2,Rc=(x,y,w,h)=>c.fillRect(X(x),Y(y),w*sc,h*sc),N=NAT;
+ const X=x=>(x-CX)*sc+MW_/2,Y=y=>(y-CY)*sc+MH_/2,Rc=(x,y,w,h)=>c.fillRect(X(x),Y(y),w*sc,h*sc),N=NAT;const hpath=k=>{c.beginPath();for(let i=0;i<=120;i++){const t=i/120*6.2832,f=N.hf(t),E=N.EC,x=X(E[0]+Math.cos(t)*(E[2]*f+k)),y=Y(E[1]+Math.sin(t)*(E[3]*f+k));i?c.lineTo(x,y):c.moveTo(x,y)}c.closePath()};
  c.fillStyle='#1d2230';c.fillRect(0,0,MW_,MH_);
- c.fillStyle='#2d6ea8';Rc(N.XMIN,N.YMIN,N.XMAX-N.XMIN,N.YMAX-N.YMIN);{const E=N.EC,el=(k)=>{c.beginPath();c.ellipse(X(E[0]),Y(E[1]),(E[2]+k)*sc,(E[3]+k)*sc,0,0,6.3);c.fill()};c.fillStyle='rgba(120,200,225,.5)';el(520);c.fillStyle='#e6d6a0';el(150);c.fillStyle='#8fd87a';el(0)}
+ c.fillStyle='#2d6ea8';Rc(N.XMIN,N.YMIN,N.XMAX-N.XMIN,N.YMAX-N.YMIN);{const E=N.EC,el=(k)=>{hpath(k);c.fill()};c.fillStyle='rgba(120,200,225,.16)';el(2600);c.fillStyle='rgba(120,200,225,.24)';el(1600);c.fillStyle='rgba(120,200,225,.34)';el(900);c.fillStyle='rgba(120,200,225,.5)';el(520);c.fillStyle='#e6d6a0';el(150);c.fillStyle='#8fd87a';el(0)}
  {if(!DTX){const tc=document.createElement('canvas');tc.width=tc.height=96;const g=tc.getContext('2d');let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;g.lineCap='round';
   for(let i=0;i<30;i++){const x=r()*90+3,y=r()*88+6;g.strokeStyle='rgba(50,140,55,.30)';g.lineWidth=1.6;g.beginPath();g.moveTo(x-3,y);g.lineTo(x-1,y-5);g.moveTo(x,y);g.lineTo(x,y-6);g.moveTo(x+3,y);g.lineTo(x+1,y-5);g.stroke()}
   for(let i=0;i<12;i++){g.fillStyle='rgba(255,255,255,.2)';g.beginPath();g.arc(r()*96,r()*96,1.3,0,6.3);g.fill()}DTX=c.createPattern(tc,'repeat')}
-  c.save();c.beginPath();c.ellipse(X(N.EC[0]),Y(N.EC[1]),N.EC[2]*sc,N.EC[3]*sc,0,0,6.3);c.clip();c.translate(((X(N.XMIN)%96)+96)%96,((Y(N.YMIN)%96)+96)%96);c.fillStyle=DTX;c.fillRect(-96,-96,MW_+192,MH_+192);c.restore()}
+  c.save();hpath(0);c.clip();c.translate(((X(N.XMIN)%96)+96)%96,((Y(N.YMIN)%96)+96)%96);c.fillStyle=DTX;c.fillRect(-96,-96,MW_+192,MH_+192);c.restore()}
  {if(!FIELD)bakeField();c.save();c.imageSmoothingEnabled=true;c.drawImage(FIELD.cv,X(FIELD.x0),Y(FIELD.y0),FIELD.w*sc,FIELD.h*sc);c.restore();drawMarks(c,X,Y,sc,MW_,MH_,CX,CY)}
  {const wv=y=>90*Math.sin(y/520)+50*Math.sin(y/230+1),band=(xf,col,xr)=>{c.fillStyle=col;c.beginPath();for(let y=N.YMIN;y<=N.YMAX;y+=120){const px=X(xf(y)),py=Y(y);y==N.YMIN?c.moveTo(px,py):c.lineTo(px,py)}c.lineTo(X(xr),Y(N.YMAX));c.lineTo(X(xr),Y(N.YMIN));c.closePath();c.fill()};
-  c.save();c.beginPath();c.ellipse(X(N.EC[0]),Y(N.EC[1]),N.EC[2]*sc,N.EC[3]*sc,0,0,6.3);c.clip();band(y=>N.EAST-550+wv(y+700),'#e6d6a0',N.XMAX);c.restore();band(y=>N.EAST+wv(y),'#2d6ea8',N.XMAX);
-  c.fillStyle='#2d6ea8';c.beginPath();let f0=1;for(let y=3800;y<=10500;y+=120){const px=X(VN.east(Math.min(y,9900))+150),py=Y(y);f0?(c.moveTo(px,py),f0=0):c.lineTo(px,py)}c.lineTo(X(7000),Y(10500));c.lineTo(X(7000),Y(3800));c.closePath();c.fill()}
+  c.save();hpath(0);c.clip();band(y=>N.EAST-550+wv(y+700),'#e6d6a0',N.XMAX);c.restore();band(y=>N.EAST+wv(y),'#2d6ea8',N.XMAX);
+  const bE=(x,y)=>Math.hypot((x-4300)/2700,(y-7150)/3350)+.045*Math.sin(y*.0021+1.3)+.03*Math.sin(x*.0033+y*.0017),eE=y=>{let a=4300,b=7500;for(let k=0;k<22;k++){const m=(a+b)/2;bE(m,y)<1?a=m:b=m}return a},ys=[];for(let y=3800;y<=10500;y+=100)if(bE(4300,y)<1)ys.push(y);const ptsW=ys.map(y=>[X(VN.east(Math.min(y,9900))+150),Y(y)]),ptsE=ys.map(y=>[X(eE(y)),Y(y)]).reverse(),pp=ptsW.concat(ptsE);
+  const bp=()=>{c.beginPath();pp.forEach((q,k)=>k?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath()};
+  c.save();c.lineJoin='round';c.fillStyle='#9fdcf0';bp();c.strokeStyle='#9fdcf0';c.lineWidth=26*sc*10;c.stroke();c.fill();c.fillStyle='#5fb8e0';bp();c.strokeStyle='#5fb8e0';c.lineWidth=14*sc*10;c.stroke();c.fill();c.fillStyle='#2d6ea8';bp();c.strokeStyle='#2d6ea8';c.lineWidth=6*sc*10;c.stroke();c.fill();c.restore()}
  const blob=(r,col)=>{const cx=(r.x0+r.x1)/2,cy=(r.y0+r.y1)/2,hw=(r.x1-r.x0)/2,hh=(r.y1-r.y0)/2,s=r.x0*.0013+r.y0*.0007,pts=[];for(let i=0;i<=80;i++){const a=i/80*6.2832,u=Math.cos(a),v=Math.sin(a),n=3.3,rad=Math.pow(Math.pow(Math.abs(u),n)+Math.pow(Math.abs(v),n),-1/n),w=1+.05*Math.sin(3*a+s)+.032*Math.sin(5*a+2*s+1)+.02*Math.sin(8*a+3*s);pts.push([X(cx+u*rad*w*hw*.98),Y(cy+v*rad*w*hh*.98)])}
   const path=()=>{c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath()};
   /* bản đồ: mỗi môi trường là một mảng màu đặc, viền mềm, có hoa văn riêng (cây, núi, cồn cát...) cho dễ nhìn và hài hòa */
@@ -5568,7 +5631,7 @@ function mapBase(c,CX,CY,sc,MW_,MH_,fs){MW_=MW_||240;MH_=MH_||240;fs=fs||7;
    c.save();path();c.clip();
    {const g=c.createRadialGradient(X(cx),Y(cy),0,X(cx),Y(cy),Math.max(hw,hh)*sc);g.addColorStop(0,'rgba('+lt+',.55)');g.addColorStop(.7,'rgba('+lt+',.08)');g.addColorStop(1,'rgba('+dk+',.05)');c.fillStyle=g;c.fillRect(X(r.x0),Y(r.y0),(r.x1-r.x0)*sc,(r.y1-r.y0)*sc)}
    if(sc>=.0025){let sd=(Math.abs(r.x0*7+r.y0*13)|0)%2147483647||7;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647,id=r.id,st=id=='mount'||id=='plateau'?420:id=='desert'?520:id=='snow'?480:300,rr=Math.max(1.1,(id=='mount'?150:id=='desert'?190:70)*sc);
-    for(let u=260;u<3800;u+=st)for(let v=260;v<3800;v+=st){const x=X(r.x0+u+(rn()-.5)*st*.8),y=Y(r.y0+v+(rn()-.5)*st*.8);if(x<-8||x>MW_+8||y<-8||y>MH_+8)continue;
+    for(let u=260;u<3800;u+=st)for(let v=260;v<3800;v+=st){const x=X(r.x0+N.WK(r,u+(rn()-.5)*st*.8)),y=Y(r.y0+N.WK(r,v+(rn()-.5)*st*.8));if(x<-8||x>MW_+8||y<-8||y>MH_+8)continue;
      if(id=='forest'||id=='prehis'||id=='island'||id=='swamp'){c.fillStyle='rgba(15,70,30,.30)';c.beginPath();c.arc(x,y,rr*(.8+rn()*.6),0,6.3);c.fill()}
      else if(id=='mount'||id=='plateau'){const q=rr*(.9+rn()*.6);c.fillStyle='rgba(70,64,56,.45)';c.beginPath();c.moveTo(x-q,y+q*.7);c.lineTo(x,y-q);c.lineTo(x+q,y+q*.7);c.closePath();c.fill();c.fillStyle='rgba(255,255,255,.7)';c.beginPath();c.moveTo(x-q*.35,y-q*.3);c.lineTo(x,y-q);c.lineTo(x+q*.35,y-q*.3);c.closePath();c.fill()}
      else if(id=='desert'){c.strokeStyle='rgba(176,130,50,.40)';c.lineWidth=Math.max(.8,26*sc);c.beginPath();c.arc(x,y+rr*.4,rr*(.8+rn()*.5),Math.PI*1.1,Math.PI*1.9);c.stroke()}
@@ -5578,18 +5641,21 @@ function mapBase(c,CX,CY,sc,MW_,MH_,fs){MW_=MW_||240;MH_=MH_||240;fs=fs||7;
      else{c.fillStyle='rgba(40,30,60,.22)';c.beginPath();c.arc(x,y,rr*.8,0,6.3);c.fill()}}}
    c.restore();
    }};
+ {const E=N.EC;c.save();c.setLineDash([Math.max(4,260*sc),Math.max(4,200*sc)]);c.lineCap='round';c.lineWidth=Math.max(1.5,70*sc);c.strokeStyle='rgba(255,255,255,.55)';
+  for(const r of N.RL){const mx=(r.x0+r.x1)/2,my=(r.y0+r.y1)/2;if(N.hull(mx,my)<=1.02||r.id=='beach')continue;let a=0,b=1;for(let k=0;k<24;k++){const m=(a+b)/2;N.hull(mx+(E[0]-mx)*m,my+(E[1]-my)*m)>1?a=m:b=m}
+   const px=mx+(E[0]-mx)*b,py=my+(E[1]-my)*b;c.beginPath();c.moveTo(X(px),Y(py));c.lineTo(X(mx),Y(my));c.stroke()}c.restore()}
  for(const r of N.RL){if(X(r.x1)<-5||X(r.x0)>MW_+5||Y(r.y1)<-5||Y(r.y0)>MH_+5)continue;
-  {const col=ZCB[r.id]||'#6a6';if(r.id=='beach'){c.fillStyle=col;c.beginPath();const R=700;c.moveTo(X(r.x0+R),Y(r.y0));for(let v=0;v<=4000;v+=100)c.lineTo(X(r.x0+N.COAST(v)),Y(r.y0+v));c.lineTo(X(r.x0+R),Y(r.y1));c.arcTo(X(r.x0),Y(r.y1),X(r.x0),Y(r.y1-R),R*sc);c.lineTo(X(r.x0),Y(r.y0+R));c.arcTo(X(r.x0),Y(r.y0),X(r.x0+R),Y(r.y0),R*sc);c.closePath();c.fill()}else if(r.id=='reef'){const cx=X(r.x0+2000),cy=Y(r.y0+2000);const ci=(rad,f)=>{c.fillStyle=f;c.beginPath();c.arc(cx,cy,rad*sc,0,6.3);c.fill()};ci(1980,'#3b86c4');ci(1700,'#4fa6d6');c.strokeStyle='#f0a0a8';c.lineWidth=Math.max(1.5,150*sc);c.beginPath();c.arc(cx,cy,1520*sc,0,6.3);c.stroke();ci(1250,'#8fe3e8');c.fillStyle='#2d6ea8';c.beginPath();c.arc(X(r.x0+2650),Y(r.y0+1650),1290*sc,0,6.3);c.fill();c.fillStyle='#f1e3b0';c.beginPath();c.arc(X(r.x0+1150),Y(r.y0+2250),190*sc,0,6.3);c.fill();c.fillStyle='#5fbf6a';c.beginPath();c.arc(X(r.x0+1150),Y(r.y0+2250),110*sc,0,6.3);c.fill()}else if(r.id=='volcano'){const cx=X(r.x0+2000),cy=Y(r.y0+2000),ci=(rad,f)=>{c.fillStyle=f;c.beginPath();c.arc(cx,cy,rad*sc,0,6.3);c.fill()};ci(2150,'rgba(120,200,225,.45)');ci(1880,'#d9c79a');ci(1740,'#86625a');ci(660,'#d9c79a');ci(560,'#3fb3dc');ci(170,'#6a4a44')}else if(r.id=='prehis'){const g=Math.max(40,Math.min(250,Math.round(2.5/sc/10)*10));for(const pass of[[110,'#ecdcaa'],[8,'#5fa04a']]){c.fillStyle=pass[1];for(let uu=0;uu<4000;uu+=g)for(let vv=0;vv<4000;vv+=g)if(N.PHD(uu+g/2,vv+g/2)<pass[0])c.fillRect(X(r.x0+uu),Y(r.y0+vv),g*sc+.8,g*sc+.8)}}else if(!/^(forest|grass|snow|mount|village|desert|swamp|plateau|cave)$/.test(r.id))blob(r,col)}
+  {const col=ZCB[r.id]||'#6a6';if(r.id=='beach'){c.fillStyle=col;c.beginPath();const R=700;c.moveTo(X(r.x0+R),Y(r.y0));for(let v=0;v<=4000;v+=100)c.lineTo(X(r.x0+N.COAST(v)),Y(r.y0+v));c.lineTo(X(r.x0+R),Y(r.y1));c.arcTo(X(r.x0),Y(r.y1),X(r.x0),Y(r.y1-R),R*sc);c.lineTo(X(r.x0),Y(r.y0+R));c.arcTo(X(r.x0),Y(r.y0),X(r.x0+R),Y(r.y0),R*sc);c.closePath();c.fill()}else if(r.id=='reef'){const cx=X(r.x0+N.WK(r,2000)),cy=Y(r.y0+N.WK(r,2000));const ci=(rad,f)=>{c.fillStyle=f;c.beginPath();c.arc(cx,cy,rad*sc,0,6.3);c.fill()};ci(1980*(r.K||1),'#3b86c4');ci(1700*(r.K||1),'#4fa6d6');c.strokeStyle='#f0a0a8';c.lineWidth=Math.max(1.5,150*(r.K||1)*sc);c.beginPath();c.arc(cx,cy,1520*(r.K||1)*sc,0,6.3);c.stroke();ci(1250*(r.K||1),'#8fe3e8');c.fillStyle='#2d6ea8';c.beginPath();c.arc(X(r.x0+N.WK(r,2650)),Y(r.y0+N.WK(r,1650)),1290*(r.K||1)*sc,0,6.3);c.fill();c.fillStyle='#f1e3b0';c.beginPath();c.arc(X(r.x0+N.WK(r,1150)),Y(r.y0+N.WK(r,2250)),190*(r.K||1)*sc,0,6.3);c.fill();c.fillStyle='#5fbf6a';c.beginPath();c.arc(X(r.x0+N.WK(r,1150)),Y(r.y0+N.WK(r,2250)),110*(r.K||1)*sc,0,6.3);c.fill()}else if(r.id=='volcano'){const cx=X(r.x0+N.WK(r,2000)),cy=Y(r.y0+N.WK(r,2000)),ci=(rad,f)=>{c.fillStyle=f;c.beginPath();c.arc(cx,cy,rad*sc,0,6.3);c.fill()};ci(2150*(r.K||1),'rgba(120,200,225,.45)');ci(1880*(r.K||1),'#d9c79a');ci(1740*(r.K||1),'#86625a');ci(660*(r.K||1),'#d9c79a');ci(560*(r.K||1),'#3fb3dc');ci(170*(r.K||1),'#6a4a44')}else if(r.id=='prehis'){const g=Math.max(40,Math.min(250,Math.round(2.5/sc/(r.K||1)/10)*10));for(const pass of[[110,'#ecdcaa'],[8,'#5fa04a']]){c.fillStyle=pass[1];for(let uu=0;uu<4000;uu+=g)for(let vv=0;vv<4000;vv+=g)if(N.PHD(uu+g/2,vv+g/2)<pass[0])c.fillRect(X(r.x0+N.WK(r,uu)),Y(r.y0+N.WK(r,vv)),g*(r.K||1)*sc+.8,g*(r.K||1)*sc+.8)}}else if(!/^(forest|grass|snow|mount|village|desert|swamp|plateau|cave)$/.test(r.id))blob(r,col)}
   if(r.id=='beach'){c.fillStyle='#2d6ea8';c.beginPath();for(let v=0;v<=4000;v+=100){const x=X(r.x0+N.COAST(v)),y=Y(r.y0+v);v?c.lineTo(x,y):c.moveTo(x,y)}c.lineTo(X(r.x1),Y(r.y1));c.lineTo(X(r.x1),Y(r.y0));c.closePath();c.fill();
    c.strokeStyle='#8a6a45';c.lineWidth=Math.max(1.2,60*sc);c.beginPath();c.moveTo(X(r.x0+N.COAST(2800)-100),Y(r.y0+2800));c.lineTo(X(r.x0+N.COAST(2800)+720),Y(r.y0+2800));c.stroke()}
-  if(r.id=='island'){c.fillStyle='#74c466';c.beginPath();{const g=110;for(let uu=0;uu<4000;uu+=g)for(let vv=0;vv<4000;vv+=g)if(N.ISR(uu+g/2,vv+g/2)<1)c.fillRect(X(r.x0+uu),Y(r.y0+vv),g*sc+.6,g*sc+.6)}c.beginPath();c.arc(X(r.x0+3700),Y(r.y0+2000),230*sc,0,6.3);c.fill();
-   c.strokeStyle='#8a6a45';c.lineWidth=Math.max(1,50*sc);c.beginPath();c.moveTo(X(r.x0),Y(r.y0+2000));c.lineTo(X(r.x0+920),Y(r.y0+2000));c.stroke()}
+  if(r.id=='island'){c.fillStyle='#74c466';c.beginPath();{const g=110;for(let uu=0;uu<4000;uu+=g)for(let vv=0;vv<4000;vv+=g)if(N.ISR(uu+g/2,vv+g/2)<1)c.fillRect(X(r.x0+N.WK(r,uu)),Y(r.y0+N.WK(r,vv)),g*(r.K||1)*sc+.6,g*(r.K||1)*sc+.6)}c.beginPath();c.arc(X(r.x0+N.WK(r,3700)),Y(r.y0+N.WK(r,2000)),230*(r.K||1)*sc,0,6.3);c.fill();
+   c.strokeStyle='#8a6a45';c.lineWidth=Math.max(1,50*sc);c.beginPath();c.moveTo(X(r.x0+N.WK(r,0)),Y(r.y0+N.WK(r,2000)));c.lineTo(X(r.x0+N.WK(r,920)),Y(r.y0+N.WK(r,2000)));c.stroke()}
   if(r.id=='forest'){c.strokeStyle='#4aa3df';c.lineWidth=Math.max(1,150*sc);c.beginPath();for(let u=0;u<=4000;u+=200){const x=X(r.x0+u),y=Y(r.y0+N.FRV(u));u?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
   if(r.id=='village'){c.fillStyle='#4aa0b8';c.beginPath();c.arc(X(r.x0+3300),Y(r.y0+1500),236*sc,0,6.3);c.fill()}
   if(r.id=='desert'){c.fillStyle='#2fb59a';c.beginPath();c.arc(X(r.x0+3200),Y(r.y0+1150),236*sc,0,6.3);c.fill()}
-  if(r.id=='volcano'){c.strokeStyle='#ff8a2a';c.lineCap='round';c.lineWidth=Math.max(1.2,60*sc);for(const P of N.LAVA){c.beginPath();P.forEach((q,i)=>i?c.lineTo(X(r.x0+q[0]),Y(r.y0+q[1])):c.moveTo(X(r.x0+q[0]),Y(r.y0+q[1])));c.stroke()}c.fillStyle='#ff8a2a';for(const q of N.LPOOL){c.beginPath();c.arc(X(r.x0+q[0]),Y(r.y0+q[1]),q[2]*sc,0,6.3);c.fill()}}
+  if(r.id=='volcano'){c.strokeStyle='#ff8a2a';c.lineCap='round';c.lineWidth=Math.max(1.2,60*sc);for(const P of N.LAVA){c.beginPath();P.forEach((q,i)=>i?c.lineTo(X(r.x0+N.WK(r,q[0])),Y(r.y0+N.WK(r,q[1]))):c.moveTo(X(r.x0+N.WK(r,q[0])),Y(r.y0+N.WK(r,q[1]))));c.stroke()}c.fillStyle='#ff8a2a';for(const q of N.LPOOL){c.beginPath();c.arc(X(r.x0+N.WK(r,q[0])),Y(r.y0+N.WK(r,q[1])),q[2]*(r.K||1)*sc,0,6.3);c.fill()}}
   if(r.id=='swamp'){c.fillStyle='#3f7a8a';for(let u=500;u<3500;u+=250)for(let v=500;v<3500;v+=250){if(N.raw(r,u,v)<-3){c.beginPath();c.arc(X(r.x0+u),Y(r.y0+v),130*sc,0,6.3);c.fill()}}}
-  if(r.id=='prehis'){c.fillStyle='#4a9aa8';c.beginPath();c.arc(X(r.x0+N.PLK[0]),Y(r.y0+N.PLK[1]),N.PLK[2]*sc,0,6.3);c.fill();c.fillStyle='#5a4a44';c.beginPath();c.arc(X(r.x0+N.PVO[0]),Y(r.y0+N.PVO[1]),N.PVO[2]*.55*sc,0,6.3);c.fill();c.fillStyle='#17131c';c.beginPath();c.arc(X(r.x0+3050),Y(r.y0+900),110*sc,0,6.3);c.fill()}}
+  if(r.id=='prehis'){c.fillStyle='#4a9aa8';c.beginPath();c.arc(X(r.x0+N.WK(r,N.PLK[0])),Y(r.y0+N.WK(r,N.PLK[1])),N.PLK[2]*r.K*sc,0,6.3);c.fill();c.fillStyle='#5a4a44';c.beginPath();c.arc(X(r.x0+N.WK(r,N.PVO[0])),Y(r.y0+N.WK(r,N.PVO[1])),N.PVO[2]*.55*r.K*sc,0,6.3);c.fill();c.fillStyle='#17131c';c.beginPath();c.arc(X(r.x0+N.WK(r,3050)),Y(r.y0+N.WK(r,900)),110*r.K*sc,0,6.3);c.fill()}}
  drawDec(c,X,Y,sc,MW_,MH_);
  c.strokeStyle='#4aa3df';c.lineWidth=Math.max(1.2,150*sc);c.beginPath();for(let x=N.RX0;x<=N.RX1;x+=200){const y=N.RYc(x);x==N.RX0?c.moveTo(X(x),Y(y)):c.lineTo(X(x),Y(y))}c.stroke();
  for(const q of N.SIL){c.save();c.beginPath();for(let k=0;k<=48;k++){const a=k/48*6.2832,R=q[2]*(1+.12*Math.sin(a*3+q[0]*.01)+.07*Math.sin(a*5+1.3)),x=X(q[0]+Math.cos(a)*R),y=Y(q[1]+Math.sin(a)*R);k?c.lineTo(x,y):c.moveTo(x,y)}c.closePath();c.fillStyle='#da251d';c.fill();c.strokeStyle='#e8d9a0';c.lineWidth=Math.max(1.5,45*sc);c.stroke();
@@ -7167,8 +7233,8 @@ const QB=[
 ];
 const SPOS={gt:[860,460],toan:[460,860],ly:[1260,460],hoa:[1660,1260],sinh:[460,1660],dia:[1260,2060],su:[860,1260],van:[860,2460],anh:[1660,1660]};
 const H_SCH=82,PLACES=[{n:'Trường THCS An Quang',e:'🏫',x:150,y:1660,tx:175,ty:1660}];
-const ZST=[['dalat','🌸','Cao nguyên Thông Xanh',NAT.ST['dalat'][0],NAT.ST['dalat'][1],0xe88ab0],['grass','🦁','Thảo nguyên',NAT.ST['grass'][0],NAT.ST['grass'][1],0xa6c83a],['port','⛴️','Cảng tàu',NAT.ST['port'][0],NAT.ST['port'][1],0x3f8fe0],['forest','🌲','Rừng nhiệt đới',NAT.ST['forest'][0],NAT.ST['forest'][1],0x2e9a4a],['beach','🏖️','Bãi biển',NAT.ST['beach'][0],NAT.ST['beach'][1],0x2fa8e0],['light','🗼','Hải đăng',NAT.ST['light'][0],NAT.ST['light'][1],0xe05a3a],['rice','🌾','Ruộng lúa',NAT.ST['rice'][0],NAT.ST['rice'][1],0xb5c93a],['vill','🌸','Làng quê',NAT.ST['vill'][0],NAT.ST['vill'][1],0xe88ab0],['peak','⛰️','Chân núi',NAT.ST['peakb'][0],NAT.ST['peakb'][1],0x9a9a90],['snow','❄️','Vùng tuyết',NAT.ST['snow'][0],NAT.ST['snow'][1],0x7ec8ff],['ice','🧊','Nhà tuyết',NAT.ST['ice'][0],NAT.ST['ice'][1],0x9ad6ee],['desert','🏜️','Sa mạc',NAT.ST['desert'][0],NAT.ST['desert'][1],0xe0a93a],['oasis','🌴','Ốc đảo',NAT.ST['oasis'][0],NAT.ST['oasis'][1],0x2fb59a],['pyr','🔺','Kim tự tháp',NAT.ST['pyr'][0],NAT.ST['pyr'][1],0xd8b45a],['island','🏝️','Đảo hoang',NAT.ST['island'][0],NAT.ST['island'][1],0x25b5b5],['spratly','🇻🇳','Đảo tiền tiêu',NAT.ST['spratly'][0],NAT.ST['spratly'][1],0xd62f2f],['cave','🦇','Hang động pha lê',NAT.ST['cave'][0],NAT.ST['cave'][1],0xb06bff],['reef','🐠','Rạn san hô',NAT.ST['reef'][0],NAT.ST['reef'][1],0x2aa5c8],['swamp','🐸','Đầm lầy',NAT.ST['swamp'][0],NAT.ST['swamp'][1],0x4f9a6a],['mang','🌿','Rừng ngập nước',NAT.ST['mang'][0],NAT.ST['mang'][1],0x3f8a5a],['volc','🌋','Chân núi lửa',NAT.ST['volc'][0],NAT.ST['volc'][1],0xe0603a],['crater','🔥','Miệng núi lửa',NAT.ST['crater'][0],NAT.ST['crater'][1],0xff8a2a],['prehis','🦖','Thời khủng long',NAT.ST['prehis'][0],NAT.ST['prehis'][1],0x6aa83a],['fossil','🦴','Bãi hóa thạch',NAT.ST['fossil'][0],NAT.ST['fossil'][1],0xd9cfa0],['nest','🥚','Tổ trứng khủng long',NAT.ST['nest'][0],NAT.ST['nest'][1],0xe8c870],['cliff','🪨','Vách đá Dực long',NAT.ST['cliff'][0],NAT.ST['cliff'][1],0xb5a183]];
-for(const z of ZST)if(['grass','port','forest','beach','rice','vill','peak','snow','desert','island','cave','reef','swamp','volc','prehis','fossil','nest','cliff','dalat'].includes(z[0]))PLACES.push({n:z[2],e:z[1],x:z[3],y:z[4],tx:z[3],ty:z[4]});
+const ZST=[['dalat','🌸','Cao nguyên Thông Xanh',NAT.ST['dalat'][0],NAT.ST['dalat'][1],0xe88ab0],['grass','🦁','Thảo nguyên',NAT.ST['grass'][0],NAT.ST['grass'][1],0xa6c83a],['port','⛴️','Cảng tàu',NAT.ST['port'][0],NAT.ST['port'][1],0x3f8fe0],['forest','🌲','Rừng nhiệt đới',NAT.ST['forest'][0],NAT.ST['forest'][1],0x2e9a4a],['beach','🏖️','Bãi biển',NAT.ST['beach'][0],NAT.ST['beach'][1],0x2fa8e0],['light','🗼','Hải đăng',NAT.ST['light'][0],NAT.ST['light'][1],0xe05a3a],['rice','🌾','Ruộng lúa',NAT.ST['rice'][0],NAT.ST['rice'][1],0xb5c93a],['vill','🌸','Làng quê',NAT.ST['vill'][0],NAT.ST['vill'][1],0xe88ab0],['peak','⛰️','Chân núi',NAT.ST['peakb'][0],NAT.ST['peakb'][1],0x9a9a90],['snow','❄️','Vùng tuyết',NAT.ST['snow'][0],NAT.ST['snow'][1],0x7ec8ff],['ice','🧊','Nhà tuyết',NAT.ST['ice'][0],NAT.ST['ice'][1],0x9ad6ee],['desert','🏜️','Sa mạc',NAT.ST['desert'][0],NAT.ST['desert'][1],0xe0a93a],['oasis','🌴','Ốc đảo',NAT.ST['oasis'][0],NAT.ST['oasis'][1],0x2fb59a],['pyr','🔺','Kim tự tháp',NAT.ST['pyr'][0],NAT.ST['pyr'][1],0xd8b45a],['island','🏝️','Đảo hoang',NAT.ST['island'][0],NAT.ST['island'][1],0x25b5b5],['spratly','🇻🇳','Đảo tiền tiêu',NAT.ST['spratly'][0],NAT.ST['spratly'][1],0xd62f2f],['cave','🦇','Hang động pha lê',NAT.ST['cave'][0],NAT.ST['cave'][1],0xb06bff],['reef','🐠','Rạn san hô',NAT.ST['reef'][0],NAT.ST['reef'][1],0x2aa5c8],['swamp','🐸','Đầm lầy',NAT.ST['swamp'][0],NAT.ST['swamp'][1],0x4f9a6a],['mang','🌿','Rừng ngập nước',NAT.ST['mang'][0],NAT.ST['mang'][1],0x3f8a5a],['volc','🌋','Chân núi lửa',NAT.ST['volc'][0],NAT.ST['volc'][1],0xe0603a],['crater','🔥','Miệng núi lửa',NAT.ST['crater'][0],NAT.ST['crater'][1],0xff8a2a],['prehis','🦖','Thời khủng long',NAT.ST['prehis'][0],NAT.ST['prehis'][1],0x6aa83a],['fossil','🦴','Bãi hóa thạch',NAT.ST['fossil'][0],NAT.ST['fossil'][1],0xd9cfa0],['nest','🥚','Tổ trứng khủng long',NAT.ST['nest'][0],NAT.ST['nest'][1],0xe8c870],['archa','🪺','Tổ Archaeopteryx',NAT.ST['archa'][0],NAT.ST['archa'][1],0xe0457a],['cliff','🪨','Vách đá Dực long',NAT.ST['cliff'][0],NAT.ST['cliff'][1],0xb5a183]];
+for(const z of ZST)if(['grass','port','forest','beach','rice','vill','peak','snow','desert','island','cave','reef','swamp','volc','prehis','fossil','nest','archa','cliff','dalat'].includes(z[0]))PLACES.push({n:z[2],e:z[1],x:z[3],y:z[4],tx:z[3],ty:z[4]});
 const shops=[];for(const k in SPOS){const s=SUBJ[k];shops.push({n:'Trạm '+s.n,type:k,sub:k,x:SPOS[k][0],y:SPOS[k][1],c:s.c})}
 shops.push({n:'Tiệm quần áo',type:'cloth',x:930,y:1060,c:0xb06bff},{n:'Gara sơn xe',type:'garage',x:1260,y:1260,c:0xf0f0f0});
 /* ---------- BẢN ĐỒ LỚN toàn màn hình: xem cả thế giới, chạm vào địa điểm để tự đi tới ---------- */
@@ -8047,7 +8113,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   pet.position.set(u.x,(ply.z||0)+(INT.cur||u.x<-15000?0:GHy(u.x,u.y))+(mv&&!hv?Math.abs(Math.sin(fc*.35))*1.2:0)+jump+hv,u.y);pet.rotation.y=-u.h;u.lb.rotation.y=u.h};
  /* ---- cỡ thú cưỡi: phóng to theo cỡ thật để nhân vật ngồi vừa lưng (nhân vật cao ~16, hông ở độ cao ~4,5) ---- */
  const MREL={voi:1.8,voiphi:1.9,hama:1.35,tegiac:1.4,caoco:1.3,trau:1,trauchau:1.05,bo:.95,bototr:1.05,boxa:.9,yak:.95,ngua:1,nguavan:.95,lacda:1.05,lama:.8,llama:.8,nai:.9,huou:.85,tuanloc:.9,lua:.8,mang:.7,cuu:.65,cuuden:.65,cuunui:.7,de:.6,denui:.65,denuilua:.65,ibex:.7,heo:.65,lonrung:.7,lonbuou:.7,ho:.85,sutu:.85,baosan:.75,bao:.7,baogam:.7,baotuyet:.7,puma:.7,linhmieu:.5,gauden:.85,gautrang:1,gauchoi:.7,gautruc:.6,soi:.65,linhcau:.65,gnu:.85,oryx:.9,gazelle:.65,linhduong:.7,sduong:.65,cayhuong:.45,dadieu:.9,gatieu:.8,casau:1.2,
-  trex:2.1,allosau:1.9,spino:2.1,raptor:1,brachio:2.6,diplo:2.5,tricera:1.7,stego:1.6,ankylo:1.2,parasau:1.8,mosa:2.4,
+  arthro:2,cavaytay:1.8,belemnite:1.6,trex:2.1,allosau:1.9,spino:2.1,raptor:1,brachio:2.6,diplo:2.5,tricera:1.7,stego:1.6,ankylo:1.2,parasau:1.8,mosa:2.4,
   caheo:.9,caheo2:.9,caheoden:.9,caheomui:.9,camap:1.5,camapden:1.2,camapvoi:2,orca:1.8,cavoi:2.3,cadua:.9,duoimanta:1.1,rua:.8,rua2:.8,ruaxanh:.8,ruanuoc:.5,haicau:.6,haicauxam:.6};
  /* đo độ cao lưng thú ngay chỗ người ngồi (dựng từ đỉnh lưới thật) để hông người nằm sát lưng, không lún cũng không lơ lửng */
  V.deckY=(g,lim)=>{const ys=[],mul=(A,B)=>{const o=[];for(let r=0;r<3;r++){for(let c=0;c<3;c++)o.push(A[r*4]*B[c]+A[r*4+1]*B[4+c]+A[r*4+2]*B[8+c]);o.push(A[r*4]*B[3]+A[r*4+1]*B[7]+A[r*4+2]*B[11]+A[r*4+3])}return o};
@@ -8294,7 +8360,7 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
  const BUS=(x,z)=>{B(110,24,26,'#2f7fd6',x,5,z);B(110,2,26.4,'#e8e8ee',x,29,z);B(110.4,3,26.6,'#f5c518',x,9,z);B(104,9,26.8,'#bfe6ff',x,17,z);B(.6,16,22,'#9fd3f5',x+55.1,12,z);
   for(const dx of[-34,34])for(const dz of[-13,13])C(5,3.4,'#222',x+dx,0,z+dz*1.02,12).rotation.x=PI/2;
   placeLabel('🚌 XE BUÝT',40,7,x,21,z+13.6,'rgba(20,60,120,.85)',0);placeLabel('🚌 XE BUÝT',40,7,x,21,z-13.6,'rgba(20,60,120,.85)',PI)};
- const STOPS=[{n:'Trường THCS An Quang',x:1135,y:2004,bx:1135,bz:2018},{n:'Chợ Tri Thức',x:1010,y:1196,bx:1010,bz:1210},{n:'Công viên Tri Thức',x:1860,y:1596,bx:1860,bz:1612}].concat([{n:'🚪 Cổng Nam thành phố',x:1260,y:2650,bx:1260,bz:2664,f:5}],[['forest','🌲 Khu rừng nhiệt đới',-760,1320],['grass','🦁 Thảo nguyên',-7530,-690],['snow','❄️ Vùng tuyết',11270,-690],['mount','⛰️ Núi Fansipan thu nhỏ',9800,4400],['village','🌾 Làng quê & ruộng lúa',1360,-760],['beach','🏖️ Biển & cảng tàu',12760,1330],['cave','🦇 Hang động đá vôi',19180,5900],['desert','🏜️ Sa mạc & kim tự tháp',-9500,3880],['swamp','🐸 Đầm lầy & rừng ngập nước',-2900,3880],['volcano','🌋 Núi lửa',-7700,3880],['prehis','🦖 Khu nguyên thủy (khủng long)',-11000,3880],['island','🏝️ Đảo nhiệt đới']].map(a=>{if(a[0]=='island'){const r=NAT.RL.find(q=>q.id=='island');return{n:a[1],x:r.x0+170,y:r.y0+2010,bx:r.x0+170,bz:r.y0+2090,f:10,nat:1}}return{n:a[1],x:a[2],y:a[3],bx:a[2],bz:a[3]+14,f:10,nat:1,id:a[0]}}));
+ const STOPS=[{n:'Trường THCS An Quang',x:1135,y:2004,bx:1135,bz:2018},{n:'Chợ Tri Thức',x:1010,y:1196,bx:1010,bz:1210},{n:'Công viên Tri Thức',x:1860,y:1596,bx:1860,bz:1612}].concat([{n:'🚪 Cổng Nam thành phố',x:1260,y:2650,bx:1260,bz:2664,f:5}],[['forest','🌲 Khu rừng nhiệt đới',-760,1320],['grass','🦁 Thảo nguyên',-7530,-690],['snow','❄️ Vùng tuyết',11270,-690],['mount','⛰️ Núi Fansipan thu nhỏ',9800,4400],['village','🌾 Làng quê & ruộng lúa',1360,-760],['beach','🏖️ Biển & cảng tàu',12760,1330],['cave','🦇 Hang động đá vôi',9780,9400],['desert','🏜️ Sa mạc & kim tự tháp',-9500,3880],['swamp','🐸 Đầm lầy & rừng ngập nước',-2900,3880],['volcano','🌋 Núi lửa',-7700,3880],['prehis','🦖 Khu nguyên thủy (khủng long)',-11000,3880],['island','🏝️ Đảo nhiệt đới']].map(a=>{if(a[0]=='island'){const r=NAT.RL.find(q=>q.id=='island');return{n:a[1],x:r.x0+NAT.WK(r,170),y:r.y0+NAT.WK(r,2010),bx:r.x0+NAT.WK(r,170),bz:r.y0+NAT.WK(r,2090),f:10,nat:1}}return{n:a[1],x:a[2],y:a[3],bx:a[2],bz:a[3]+14,f:10,nat:1,id:a[0]}}));
  V.ride=i=>{const d=STOPS[i],fr=d.f||5;if(cash<fr){say('Em chưa đủ '+fr+' xu để đi xe buýt.',2200);return}cash-=fr;saveEdu();V.close();SND.p('bus');V.ev('bus');
   fadeDo(()=>{INT.cur=null;if(d.x<-30||d.x>S+30||d.y<-30||d.y>S+30)try{NATV.pre(d.x,d.y);SCN.pre(d.x,d.y)}catch(e){}let x=d.x-24,y=d.y-8,k=0;while(solid(x,y)&&k++<40){x=d.x-24+rnd(-14,14);y=d.y-8+rnd(-10,10)}ply.x=x;ply.y=y;ply.a=-PI/2;cy=ply.a;V.tm=Math.min(1439,V.tm+10);say('🚌 Xe buýt đã tới trạm '+d.n+'.',2800)})};
 /* ---- câu đố nhỏ sau mỗi con vật (tự sinh từ dữ liệu của loài) ---- */
@@ -8332,8 +8398,8 @@ V.onLoad=()=>{V.sel=EDU.cls||'';V.uiCls();V.markCls();try{V.quests()}catch(e){}t
   mk('🪢 Bắt '+sp.n+' (làm thú cưng / thú cưỡi)',()=>V.catchUI(sp),'#c0452f');const qd=document.createElement('div');box.appendChild(qd);V.aqUI(sp,box,qd);mk('📖 Xem sổ động vật',()=>V.book(),'#6b5bd6');mk('Đóng',V.close,'#555');P.innerHTML='';P.appendChild(box);P.style.display='flex'};
  /* ===================== BẮT THÚ · THÚ CƯNG · THÚ CƯỠI ===================== */
  const CAPN=7,CAPW=3,CAPFEE=150,CAPMAX=3;
- const MWATER={ruaxanh:1,rua:1,rua2:1,haicau:1,haicauxam:1,casau:1,ruanuoc:1,mosa:1},MLAND={dadieu:1,gatieu:1,trex:1,tricera:1,stego:1,ankylo:1,parasau:1,allosau:1,spino:1,raptor:1,brachio:1,diplo:1};
- const MFLY={ptera:1,rampho:1};
+ const MWATER={ruaxanh:1,rua:1,rua2:1,haicau:1,haicauxam:1,casau:1,ruanuoc:1,mosa:1,cavaytay:1,bachtuoc:1,belemnite:1},MLAND={dadieu:1,gatieu:1,trex:1,tricera:1,stego:1,ankylo:1,parasau:1,allosau:1,spino:1,raptor:1,brachio:1,diplo:1,arthro:1};
+ const MFLY={ptera:1,rampho:1,archaeo:1,megan:1};
  const envN=e=>e=='f'?'cưỡi bay trên trời':e=='w'?'cưỡi dưới nước':'cưỡi trên cạn';
  const mEnv=sp=>{if(!sp)return'';if(MFLY[sp.id])return'f';if(sp.b=='dolphin'||sp.b=='shark'||sp.b=='ray'||MWATER[sp.id])return'w';if(MLAND[sp.id]||(sp.b=='quad'&&sp.m=='walk'&&sp.p&&(sp.p.L||0)>=3.2))return'l';return''};
  const AQB={dolphin:1,shark:1,ray:1,fish:1,jelly:1,octo:1,star:1,lobster:1};
@@ -8611,6 +8677,7 @@ cull(c=>!inYard(c.x,c.y));
   DOORS.push({fn:'act',id:'fossil',x:ZP('fossil',0,0)[0],y:ZP('fossil',0,0)[1],r:40,txt:'F: tìm hiểu hóa thạch khủng long (Sinh, Địa)'});
   NL(...ZP('fossil',-20,20),'Cô Thảo (kĩ thuật viên khai quật)',1,2,16,{g:['Chào em! Cô đang làm sạch bộ xương này bằng chổi nhỏ.','Nhẹ tay thôi, xương hóa thạch rất dễ vỡ!'],t:['Hóa thạch là dấu vết hoặc di tích của sinh vật cổ xưa được giữ lại trong đá. Xương bị chôn vùi, khoáng chất ngấm dần vào và biến xương thành đá em ạ.','Em có biết không, đá hóa thạch có thể được đo tuổi bằng cách đo các nguyên tố phóng xạ trong lớp đá xung quanh.','Có nhiều loại hóa thạch: xương, răng, dấu chân, trứng, và cả phân hóa thạch nữa đó. Mỗi loại cho ta biết một điều về cuộc sống của khủng long.']});
   ZSG(...ZP('nest',18,-20),'🥚 TỔ TRỨNG KHỦNG LONG',58,'rgba(190,150,60,.95)');
+  ZSG(...ZP('archa',34,-22),'🪺 TỔ THỦY TỔ CHIM (ARCHAEOPTERYX)',92,'rgba(224,69,122,.95)');
   DOORS.push({fn:'act',id:'nest',x:ZP('nest',0,0)[0],y:ZP('nest',0,0)[1],r:40,txt:'F: tìm hiểu tổ trứng khủng long (Sinh, Địa)'});
   NL(...ZP('nest',-20,20),'Anh Khoa (sinh viên địa chất)',0,0,16,{g:['Chào em! Anh đang đếm số trứng trong tổ này.','Mình nói nhỏ thôi nhé, kẻo khủng long mẹ nghe thấy!'],t:['Khủng long đẻ trứng, và nhiều loài làm tổ rồi canh giữ trứng giống như chim ngày nay.','Các nhà khoa học tìm thấy tổ trứng hóa thạch ở nhiều nơi. Nhờ đó ta biết có loài khủng long chăm sóc con non rất chu đáo.','Chim ngày nay được cho là hậu duệ của một nhóm khủng long ăn thịt nhỏ có lông vũ, nên mỗi lần nhìn thấy con gà, em đang nhìn một người họ hàng xa của khủng long đó.']});
   ZSG(...ZP('crater',18,-20),'🔥 MIỆNG NÚI LỬA',52,'rgba(220,90,30,.95)');
