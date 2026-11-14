@@ -9480,14 +9480,53 @@ const SUB=(()=>{
  /* --- tàu ngầm --- */
  const buildSub=()=>{
   subG=new THREE.Group();subG.rotation.order='YZX';scene.add(subG);
-  S(50,15,15,M.yel,0,0,0,subG);S(46,6.5,13.6,M.drk,0,-9,0,subG);const bd=C(15.3,5,M.red,6,0,0,subG);bd.rotation.z=Math.PI/2;const bd2=C(15.1,3,M.wht,-14,0,0,subG);bd2.rotation.z=Math.PI/2;
-  S(11,10,12,M.glass,36,3.5,0,subG);B(14,9,8,M.yel,-8,16,0,subG);B(2,1.5,10,M.wht,-1,16.5,0,subG);C(1,14,M.met,-6,26,0,subG);B(5,1.2,1.2,M.met,-3,32,0,subG);
-  B(12,1,28,M.yel,-42,0,0,subG);B(12,24,1,M.yel,-42,0,0,subG);for(const z of[-1,1])B(10,2,6,M.met,8,-12,z*8,subG);
-  for(const z of[-1,1])for(const x of[-16,0,16])S(2.4,2.4,1,M.win,x,3,z*14.6,subG);
-  for(const z of[-1,1]){S(2.6,2.6,2.6,M.lamp,45,-3,z*7,subG);const bm=mk(cng,new THREE.MeshBasicMaterial({color:0xfff1b0,transparent:true,opacity:.13,blending:THREE.AdditiveBlending,depthWrite:false}),105,-3,z*7,subG);bm.scale.set(16,120,16);bm.rotation.z=Math.PI/2;beams.push(bm)}
+  /* ===== CÁ MẬP MECHA SIÊU CẤP: thân thép hai tông, mõm nhọn có sừng, hàm răng, mắt đỏ phát sáng, mang có đường sáng, vây lưng/ngực, đuôi liềm + chân vịt ===== */
+  const K={steel:LB(0x46556a),armor:LB(0x8fa3b8),navy:LB(0x1a2330),belly:LB(0xe6edf4),red:LB(0xe33b2a),dred:LB(0x9c2418),tooth:LB(0xf7f5e8),
+   glass:LB(0x7fd8ff,{transparent:true,opacity:.45}),eye:BS(0xff2a14,{fog:false}),cyan:BS(0x39e6ff,{fog:false}),amb:BS(0xff7a22,{fog:false}),lamp:BS(0xfff3b0,{fog:false})};
+  const cn10=new THREE.ConeGeometry(1,1,10);
+  const cone=(r,h,m,x,y,z,rz,p)=>{const q=mk(cn10,m,x,y,z,p);q.scale.set(r,h,r);q.rotation.z=rz||0;return q};
+  const fin=(pts,th,m,x,y,z,p)=>{const sh=new THREE.Shape();pts.forEach((q,i)=>i?sh.lineTo(q[0],q[1]):sh.moveTo(q[0],q[1]));sh.closePath();const geo=new THREE.ExtrudeGeometry(sh,{depth:th,bevelEnabled:false});geo.translate(0,0,-th/2);return mk(geo,m,x,y,z,p)};
+  const ez=(x,y)=>15*Math.sqrt(Math.max(0,1-Math.pow((x+2)/54,2)-Math.pow(y/17,2))),ty=x=>17*Math.sqrt(Math.max(0,1-Math.pow((x+2)/54,2)));
+  /* thân: lưng thép xanh, bụng trắng */
+  S(54,17,15,K.steel,-2,0,0,subG);S(50,10,14.2,K.belly,-1,-6.5,0,subG);
+  /* mõm nhọn + sừng + cằm */
+  cone(10,26,K.armor,56,0,0,-Math.PI/2,subG);
+  for(const z of[-1,1]){cone(1.7,13,K.red,38,9.5,z*5,-Math.PI/2+.3,subG);cone(1.2,9,K.red,30,11,z*7,-Math.PI/2+.45,subG)}
+  B(36,4,15,K.navy,32,-13.5,0,subG).rotation.z=.07;B(30,1.2,13,K.dred,31,-11.2,0,subG);
+  /* hàm răng: hàng trên chúc xuống, hàng dưới chĩa lên */
+  for(let i=0;i<10;i++){const x=12+i*4.4,zz=11-i*.95;for(const z of[-1,1]){cone(.95,4.6,K.tooth,x,-11.8,z*zz,Math.PI,subG);cone(.85,4,K.tooth,x+2,-11.2,z*(zz-.8),0,subG)}}
+  /* mắt đỏ + mày giận dữ */
+  for(const z of[-1,1]){S(3.1,2.3,1.5,K.eye,36,4,z*10.3,subG);B(8,1.4,3,K.navy,35,7.4,z*9.6,subG).rotation.z=-.35}
+  /* buồng lái kính trên lưng */
+  S(13,6.5,8.5,K.glass,18,13.2,0,subG);B(16,1.2,10,K.navy,18,11.6,0,subG);
+  /* đèn pha (giữ vị trí logic cũ: chùm sáng + hlight) */
+  for(const z of[-1,1]){S(2.5,2.5,2.5,K.lamp,46,-2,z*7.4,subG);const bm=mk(cng,new THREE.MeshBasicMaterial({color:0xfff1b0,transparent:true,opacity:.13,blending:THREE.AdditiveBlending,depthWrite:false}),106,-2,z*7.4,subG);bm.scale.set(16,120,16);bm.rotation.z=Math.PI/2;beams.push(bm)}
   hlight=new THREE.PointLight(0xfff1c0,0,320,1.3);hlight.position.set(85,0,0);subG.add(hlight);
-  prop=new THREE.Group();prop.position.set(-52,0,0);subG.add(prop);S(3,3,3,M.met,0,0,0,prop);for(let i=0;i<3;i++){const b=B(1,12,3,M.met,0,0,0,prop);b.position.y=6;const pv=new THREE.Group();pv.rotation.x=i*Math.PI*2/3;prop.add(pv);pv.add(b)}
-  const sh=new THREE.Mesh(new THREE.TorusGeometry(10,1,8,20),M.drk);sh.rotation.y=Math.PI/2;sh.position.set(-52,0,0);subG.add(sh)};
+  /* nòng pháo dưới cằm */
+  for(const z of[-1,1]){const c1=C(1.5,20,K.navy,38,-8.2,z*5.5,subG);c1.rotation.z=Math.PI/2;const c2=C(2.2,4,K.steel,28,-8.2,z*5.5,subG);c2.rotation.z=Math.PI/2;S(1.7,1.7,1.7,K.amb,48.5,-8.2,z*5.5,subG)}
+  /* mang: 5 khe sáng mỗi bên + vạch xanh dọc thân + sọc đỏ giáp */
+  for(let i=0;i<5;i++){const x=8-i*3.6;for(const z of[-1,1]){const w=B(.9,9-i*.6,.7,K.amb,x,2,z*(ez(x,2)+.1),subG);w.rotation.z=-.28}}
+  for(const z of[-1,1]){for(let x=-30;x<=12;x+=8){B(8.4,.6,.7,K.cyan,x+4,-4.5,z*(ez(x+4,-4.5)+.15),subG)}
+   for(let x=-22;x<=-2;x+=7){B(7.2,2.2,.9,K.red,x+3.5,6,z*(ez(x+3.5,6)+.25),subG)}
+   for(const x of[-16,-6,22]){S(2,2,.8,K.cyan,x,3.2,z*(ez(x,3.2)*.97),subG)}}
+  /* gai sống lưng */
+  for(let i=0;i<6;i++){const x=-14-i*6;cone(1.6-i*.12,7-i*.5,K.red,x,ty(x)+2.4,0,0,subG)}
+  /* vây lưng chính + vây lưng phụ */
+  fin([[18,0],[2,16],[-8,32],[-13,19],[-17,0]],2,K.steel,2,11,0,subG);fin([[-1,18],[-8,32],[-12,20]],2.5,K.red,2,11,0,subG);
+  fin([[8,0],[-4,9],[-10,0]],1.6,K.steel,-34,ty(-34)-3,0,subG);
+  /* vây ngực lớn dạng cánh quét sau, hơi chúc xuống */
+  for(const z of[-1,1]){const f=fin([[14,0],[-12,34],[-22,32],[-8,0]],1.8,K.steel,10,-9,z*11,subG);f.rotation.x=z*(Math.PI/2+.25);
+   const f2=fin([[-11,32],[-21,31],[-17,22]],2.3,K.red,10,-9,z*11,subG);f2.rotation.x=z*(Math.PI/2+.25)}
+  /* cánh đuôi ngang */
+  for(const z of[-1,1]){const f=fin([[8,0],[-8,14],[-12,13],[-4,0]],1.4,K.steel,-44,-1,z*5,subG);f.rotation.x=z*(Math.PI/2+.1)}
+  /* cuống đuôi + đuôi liềm + chân vịt trong khung */
+  const bo=cone(9,20,K.steel,-52,0,0,Math.PI/2,subG);
+  const tp=[[0,4],[-10,12],[-26,40],[-16,10],[-14,0],[-18,-18],[-9,-8],[0,-4]].map(q=>[q[0]*.78,q[1]*.78]);
+  fin(tp,2,K.steel,-62,0,0,subG);fin([[-14,29],[-20,31],[-12.5,8]],2.6,K.red,-62,0,0,subG);
+  prop=new THREE.Group();prop.position.set(-58,0,0);subG.add(prop);S(3,3,3,K.armor,0,0,0,prop);for(let i=0;i<3;i++){const b=B(1,12,3,K.red,0,0,0,prop);b.position.y=6;const pv=new THREE.Group();pv.rotation.x=i*Math.PI*2/3;prop.add(pv);pv.add(b)}
+  const sh=new THREE.Mesh(new THREE.TorusGeometry(13.5,1.1,8,24),K.navy);sh.rotation.y=Math.PI/2;sh.position.set(-58,0,0);subG.add(sh);
+  for(const d of[[0,6.8,0],[0,-6.8,0],[0,0,6.8],[0,0,-6.8]])B(.8,d[1]?13:.8,d[2]?13:.8,K.navy,-58,d[1],d[2],subG);
+  for(const z of[-1,1])S(2.2,2.2,2.2,K.amb,-47,0,z*5.6,subG)};
  const place=()=>{subG.position.set(st.x,-st.d,st.y);subG.rotation.y=-st.h;subG.rotation.z=-st.vy*.18;subG.rotation.x=-st.w*3};
  const moor=()=>{st.x=PX;st.y=PY;st.d=5;st.h=H0;st.v=st.w=st.vy=0;place()};
  /* --- giao diện buồng lái (chỉ tạo khi cần) --- */
