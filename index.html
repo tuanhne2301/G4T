@@ -9483,7 +9483,7 @@ const SUB=(()=>{
   /* ===== CÁ MẬP MECHA SIÊU CẤP: thân thép hai tông, mõm nhọn có sừng, hàm răng, mắt đỏ phát sáng, mang có đường sáng, vây lưng/ngực, đuôi liềm + chân vịt ===== */
   const K={steel:LB(0x46556a),armor:LB(0x8fa3b8),navy:LB(0x1a2330),belly:LB(0xe6edf4),red:LB(0xe33b2a),dred:LB(0x9c2418),tooth:LB(0xf7f5e8),
    glass:LB(0x7fd8ff,{transparent:true,opacity:.45}),eye:BS(0xff2a14,{fog:false}),cyan:BS(0x39e6ff,{fog:false}),amb:BS(0xff7a22,{fog:false}),lamp:BS(0xfff3b0,{fog:false})};
-  const cn10=new THREE.ConeGeometry(1,1,10);
+  const cn10=new THREE.ConeGeometry(1,1,10,1,true); /* rỗng đáy: nhìn từ buồng lái không bị nắp đáy che màn hình */
   const cone=(r,h,m,x,y,z,rz,p)=>{const q=mk(cn10,m,x,y,z,p);q.scale.set(r,h,r);q.rotation.z=rz||0;return q};
   const fin=(pts,th,m,x,y,z,p)=>{const sh=new THREE.Shape();pts.forEach((q,i)=>i?sh.lineTo(q[0],q[1]):sh.moveTo(q[0],q[1]));sh.closePath();const geo=new THREE.ExtrudeGeometry(sh,{depth:th,bevelEnabled:false});geo.translate(0,0,-th/2);return mk(geo,m,x,y,z,p)};
   const ez=(x,y)=>15*Math.sqrt(Math.max(0,1-Math.pow((x+2)/54,2)-Math.pow(y/17,2))),ty=x=>17*Math.sqrt(Math.max(0,1-Math.pow((x+2)/54,2)));
@@ -9662,12 +9662,13 @@ body.insub #hint{bottom:14px!important}
    /* thủy quái lớn lại gần thì gầm: có hướng (trái/phải), xa thì nhỏ và đục; mỗi con có thời gian chờ riêng */
    if(big&&d<340){const now=performance.now();if(!o.rT)o.rT=now+1200+Math.random()*3500;else if(now>o.rT&&now>(st.rg||0)){o.rT=now+7000+Math.random()*9000;st.rg=now+3500;try{SND.roar(rk(s.id),1-d/380,rz/Math.max(d,1))}catch(e){}}}
    if(d<170&&!st.seen[s.id]){st.seen[s.id]=1;try{say('🔎 Phát hiện '+s.e+' '+s.n+'! Cách tàu khoảng '+Math.round(d/10)+' m.',3200)}catch(e){}}}
-  try{for(const r of MP._R.values()){if(!r.sb)continue;const dx=(r.ux!=null?r.ux:r.x)-st.x,dy=(r.uy!=null?r.uy:r.y)-st.y;if(Math.hypot(dx,dy)<R)blips.push([dx*Math.cos(st.h)+dy*Math.sin(st.h),-dx*Math.sin(st.h)+dy*Math.cos(st.h),3])}}catch(e){}
+  try{for(const r of MP._R.values()){if(!r.sb)continue;const dx=(r.ux!=null?r.ux:r.x)-st.x,dy=(r.uy!=null?r.uy:r.y)-st.y;if(Math.hypot(dx,dy)<R)blips.push([dx*Math.cos(st.h)+dy*Math.sin(st.h),-dx*Math.sin(st.h)+dy*Math.cos(st.h),3,String(r.n||'Bạn').slice(0,8)])}}catch(e){}
   for(const s of SITES){if(s.f)continue;const dx=s.x-st.x,dy=s.y-st.y;if(Math.hypot(dx,dy)<R)blips.push([dx*Math.cos(st.h)+dy*Math.sin(st.h),-dx*Math.sin(st.h)+dy*Math.cos(st.h),2])}
   const c=document.getElementById('sbrad');if(!c)return;const g=c.getContext('2d'),W=c.width,cx=W/2,sc=(W/2-6)/R;g.clearRect(0,0,W,W);
   g.strokeStyle='rgba(60,220,160,.35)';g.lineWidth=1;for(const r of[.33,.66,1]){g.beginPath();g.arc(cx,cx,r*(W/2-6),0,6.3);g.stroke()}g.beginPath();g.moveTo(cx,6);g.lineTo(cx,W-6);g.moveTo(6,cx);g.lineTo(W-6,cx);g.stroke();
   const sw=(performance.now()/1000%2.5)/2.5*Math.PI*2;g.strokeStyle='rgba(90,255,190,.5)';g.lineWidth=2;g.beginPath();g.moveTo(cx,cx);g.lineTo(cx+Math.cos(sw)*(W/2-6),cx+Math.sin(sw)*(W/2-6));g.stroke();
-  for(const b of blips){g.fillStyle=b[2]==3?'#5ab8ff':b[2]==2?'#ffd23f':b[2]?'#ff5a4a':'#6ff0c0';g.beginPath();g.arc(cx+b[1]*sc,cx-b[0]*sc,b[2]==3?4.5:b[2]==2?5:b[2]?4.5:2.6,0,6.3);g.fill()}
+  for(const b of blips){g.fillStyle=b[2]==3?'#5ab8ff':b[2]==2?'#ffd23f':b[2]?'#ff5a4a':'#6ff0c0';g.beginPath();g.arc(cx+b[1]*sc,cx-b[0]*sc,b[2]==3?6:b[2]==2?5:b[2]?4.5:2.6,0,6.3);g.fill();
+   if(b[2]==3){const bx=cx+b[1]*sc,by=cx-b[0]*sc;g.strokeStyle='#fff';g.lineWidth=2;g.stroke();g.beginPath();g.arc(bx,by,10,0,6.3);g.strokeStyle='rgba(90,184,255,.7)';g.lineWidth=1.5;g.stroke();g.font='bold 11px system-ui,sans-serif';g.textAlign=bx>cx?'right':'left';g.lineWidth=3;g.strokeStyle='rgba(0,20,40,.9)';g.strokeText(b[3],bx+(bx>cx?-12:12),by-9);g.fillStyle='#bfe6ff';g.fillText(b[3],bx+(bx>cx?-12:12),by-9)}}
   g.fillStyle='#fff';g.beginPath();g.moveTo(cx,cx-8);g.lineTo(cx-5,cx+6);g.lineTo(cx+5,cx+6);g.closePath();g.fill();
   /* hướng về bến */
   const dxp=PX-st.x,dyp=PY-st.y,dd=Math.hypot(dxp,dyp);if(dd>40){const fx=dxp*Math.cos(st.h)+dyp*Math.sin(st.h),rz=-dxp*Math.sin(st.h)+dyp*Math.cos(st.h),k=Math.min(1,dd/R*1.0),L=Math.hypot(fx,rz)||1;g.fillStyle='#ffd23f';g.beginPath();g.arc(cx+rz/L*Math.min(dd*sc,W/2-8),cx-fx/L*Math.min(dd*sc,W/2-8),4,0,6.3);g.fill()}};
