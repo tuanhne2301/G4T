@@ -561,7 +561,7 @@ body.full #sbx{top:calc(var(--mm) + 20px)!important}
    Nếu thiếu file hoặc tải lỗi, game tự dùng lại mô hình cũ (không bị lỗi). */
 window.GLBX=(()=>{
  const CFG={
-  megalodon:{url:'megalodon.glb',len:34,ctr:.3,clip:null},
+  megalodon:{url:'megalodon.glb',len:34,ctr:null,clip:null},
   pliosaurus:{url:'pliosaurus.glb',len:12,ctr:null,clip:'Swim_Slow'}
  };
  const T={},PEND=[];
@@ -572,8 +572,7 @@ window.GLBX=(()=>{
  const loadJS=(list,ok,bad)=>{let i=0;const next=()=>{if(i>=list.length){bad&&bad();return}const s=document.createElement('script');s.src=list[i++];s.onload=ok;s.onerror=()=>{s.remove();next()};document.head.appendChild(s)};next()};
  /* hướng mô hình gốc -> hướng của game (đầu về +X, lưng hướng +Y) */
  const orient=id=>{const q=new THREE.Quaternion();
-  if(id=='megalodon'){q.setFromRotationMatrix(new THREE.Matrix4().set(0,-1,0,0, 0,0,1,0, -1,0,0,0, 0,0,0,1))} /* đầu -Y, lưng +Z */
-  else q.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2); /* đầu +Z, lưng +Y */
+  q.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2); /* cả hai mô hình: đầu +Z, lưng +Y (đã tính xoay node trong GLB) -> đầu về +X */
   return q};
  const prep=(id,gltf)=>{const cfg=CFG[id],mats=new Map();
   gltf.scene.traverse(o=>{if(!o.isMesh)return;
@@ -592,7 +591,7 @@ window.GLBX=(()=>{
   const N=new THREE.Group();N.add(root);
   T[id]={N,clips:gltf.animations||[]}};
  /* Megalodon không có hoạt ảnh sẵn: tự uốn đuôi như cá mập đang bơi */
- const rigShark=cl=>{const root=cl.children[0],scn=root.children[0],up=new THREE.Vector3(0,0,1);
+ const rigShark=cl=>{const root=cl.children[0],scn=root.children[0],up=new THREE.Vector3(0,1,0);
   const names=['spine_lower_6','pelvis_15','tail_1_14','tail_2_13','tail_3_10','tail_4_9','tail_5_8','tail_6_7'],
    amp=[.05,.08,.14,.19,.25,.31,.38,.45],ph=[0,.5,.9,1.3,1.7,2.1,2.5,2.9],B=[];
   cl.updateMatrixWorld(true);
@@ -3089,7 +3088,7 @@ VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a'
  {id:'mosa',n:'Mosasaurus',e:'🐊',r:'prehis',b:'mosa',m:'swim',c:3,v:.5,rm:130,k:2.6,nl:210,z:'pl',dive:1,dino:0,p:{s:1.2,c1:'#2a6fb8',c2:'#cfeaf8',c3:'#f0b43a',leg:2,H:2},t:'Mosasaurus là thằn lằn biển khổng lồ dài tới 12–15 m, thống trị đại dương cuối kỷ Phấn trắng. Nó không phải khủng long mà là họ hàng của thằn lằn và rắn ngày nay, và phải trồi lên mặt nước để thở bằng phổi.',h:'Biển và hồ lớn thời Phấn trắng'}, VR('yen','archae','Archaeopteryx (thủy tổ chim)','🐦','prehis',4,{c1:'#3a4a5a',c2:'#d9b86a',ch:'#3a4a5a',cb:'#d0a050',cw:'#2a3a4a',cw2:'#c09040',s:1.5,belly:0},'Archaeopteryx có lông vũ như chim nhưng vẫn còn răng, vuốt trên cánh và chiếc đuôi dài có xương. Nó là "mắt xích" nối giữa khủng long và chim, sống cách đây khoảng 150 triệu năm.','Rừng thưa thời Jura',{alt:[30,70],rm:300}),
  VR('buom','megan','Chuồn chuồn khổng lồ Meganeura','🪰','prehis',6,{s:3.2,c1:'#1fb8a4',c2:'#d6f7ef',c3:'#ff8a3d'},'Meganeura là loài côn trùng bay khổng lồ giống chuồn chuồn, sải cánh tới khoảng 70 cm. Nó sống cách đây khoảng 300 triệu năm, trước cả thời khủng long, khi không khí có nhiều ôxi hơn bây giờ.','Rừng đầm lầy cổ đại',{k:3.4,nl:170,alt:[6,40]}),
  VR('ret','arthro','Rết khổng lồ Arthropleura','🐛','prehis',4,{s:2.6,c1:'#8a4ad0',c2:'#e9d8ff',c3:'#ffd23f'},'Arthropleura là loài chân đốt (họ hàng xa của rết và cuốn chiếu) dài tới khoảng 2 m, sống cách đây gần 300 triệu năm. Nó ăn thực vật mục trong rừng và sống trước cả thời khủng long.','Rừng ẩm cổ đại',{k:3.6,nl:170}),
- VR('camapvoi','megalodon','Megalodon','🦈','prehis',1,{s:6.2,wide:0,dots:0,c1:'#56687a',c2:'#e8eef2',c3:'#34414d',cd:'#34414d'},'Megalodon là loài cá mập khổng lồ đã tuyệt chủng, dài tới khoảng 15–18 m, to hơn cá mập trắng nhiều lần. Nó săn cá voi nhỏ và các sinh vật biển lớn. Răng của nó to bằng bàn tay người và vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:430,alt:[25,60],k:3.4,nl:430,v:.3,fx:1.8,tl:260}),
+ VR('camapvoi','megalodon','Megalodon','🦈','prehis',1,{s:6.2,wide:0,dots:0,c1:'#56687a',c2:'#e8eef2',c3:'#34414d',cd:'#34414d'},'Megalodon là loài cá mập khổng lồ đã tuyệt chủng, dài tới khoảng 15–18 m, to hơn cá mập trắng nhiều lần. Nó săn cá voi nhỏ và các sinh vật biển lớn. Răng của nó to bằng bàn tay người và vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:430,alt:[25,60],k:3.4,nl:430,v:.9,fx:1.8,tl:260}),
  /* Archaeopteryx: thủy tổ chim, làm tổ trên ngọn cây cao */
  {id:'archaeo',n:'Archaeopteryx (thủy tổ chim)',e:'🪶',r:'prehis',b:'bird',m:'fly',c:6,v:1,rm:380,k:3,nl:230,alt:[30,95],dino:0,p:{s:1.6,fly:1,c1:'#e0457a',c2:'#fff0d8',c3:'#ffd23f',ch:'#fff0d8',cw:'#e0457a',cw2:'#ffd23f',cb:'#2a1a18',tail:1.8,tw:.5,ws:1.6},t:'Archaeopteryx sống cách đây khoảng 150 triệu năm, cỡ một con quạ. Nó vừa có lông vũ và đôi cánh như chim, vừa có răng, đuôi dài đầy xương và móng vuốt ở cánh như khủng long, nên được gọi là "thủy tổ của loài chim". Chúng làm tổ trên cây cao, đẻ trứng và ấp trứng như chim ngày nay.',h:'Rừng thông cổ, tổ trên ngọn cây cao'}
 
