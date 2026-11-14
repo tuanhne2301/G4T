@@ -936,6 +936,27 @@ const SND=(()=>{let ac=null,mg=null,on=1,eo=null,eg=null,ef=null,mus=1,MU=null,m
   wind(){noise(.035,.7,0,380)},
   stairs(){for(let i=0;i<7;i++){noise(.06,.2,i*.11,600+i*40);tone(180+i*12,.05,'square',.04,i*.11)}}
  };
+ /* ===== TIẾNG GẦM THỦY QUÁI (tổng hợp bằng WebAudio, không cần file âm thanh) =====
+    kind: mosa | shark | plio | ela | leeds ; vol 0..1 (xa -> nhỏ và đục hơn, như nghe dưới nước) ; pan -1..1 (trái..phải)
+    Cấu tạo: vài dao động răng cưa/vuông ở dải trầm, đường cao độ lên rồi tụt xuống, méo tiếng (waveshaper),
+    rung giọng ~20 Hz (gầm gừ), lọc thông thấp mở ra ở giữa tiếng gầm, thêm tiếng thở rít (nhiễu). */
+ const ROAR={mosa:{f:64,d:1.9,rise:1.55,g:1,rough:1,lp:950},shark:{f:50,d:1.5,rise:1.3,g:1,rough:.9,lp:750},plio:{f:82,d:1.7,rise:1.75,g:1,rough:1,lp:1150},ela:{f:150,d:2.1,rise:1.9,g:.8,rough:.45,lp:1600},leeds:{f:44,d:2.5,rise:1.4,g:.9,rough:.15,lp:520}};
+ const roar=(kind,vol,pan)=>{if(!on||!ac)return;vol=Math.max(0,Math.min(1,vol==null?1:vol));if(vol<.04)return;
+  try{if(ac.state=='suspended')ac.resume();
+   const R=ROAR[kind]||ROAR.mosa,t=ac.currentTime,D=R.d*(.9+Math.random()*.25),f0=R.f*(.92+Math.random()*.16);
+   const out=ac.createGain(),pk=.42*vol*R.g;out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(pk,t+.14);out.gain.setValueAtTime(pk*.92,t+D*.55);out.gain.exponentialRampToValueAtTime(.0001,t+D);
+   const lp=ac.createBiquadFilter();lp.type='lowpass';lp.Q.value=2.5;const fc=R.lp*(.45+.55*vol);lp.frequency.setValueAtTime(fc*.5,t);lp.frequency.linearRampToValueAtTime(fc*1.6,t+D*.3);lp.frequency.exponentialRampToValueAtTime(fc*.5,t+D);
+   const ws=ac.createWaveShaper(),cv=new Float32Array(256),k=20+R.rough*60;for(let i=0;i<256;i++){const x=i/128-1;cv[i]=(1+k)*x/(1+k*Math.abs(x))}ws.curve=cv;
+   const gr=ac.createGain();gr.gain.value=1-.45*R.rough;const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=16+Math.random()*10;lg.gain.value=.45*R.rough;lfo.connect(lg);lg.connect(gr.gain);lfo.start(t);lfo.stop(t+D+.1);
+   [[1,'sawtooth',.5],[1.007,'sawtooth',.45],[.5,'square',.4],[2.01,'sawtooth',.18]].forEach(c=>{const o=ac.createOscillator(),g=ac.createGain();o.type=c[1];g.gain.value=c[2];
+    o.frequency.setValueAtTime(f0*c[0]*.7,t);o.frequency.linearRampToValueAtTime(f0*c[0]*R.rise,t+D*.3);o.frequency.exponentialRampToValueAtTime(f0*c[0]*.6,t+D);
+    o.connect(g);g.connect(ws);o.start(t);o.stop(t+D+.1)});
+   ws.connect(gr);gr.connect(lp);
+   if(R.rough>.3){const n=Math.floor(ac.sampleRate*D),b=ac.createBuffer(1,n,ac.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1;const sr=ac.createBufferSource();sr.buffer=b;const bp=ac.createBiquadFilter();bp.type='bandpass';bp.Q.value=.8;bp.frequency.setValueAtTime(500,t);bp.frequency.linearRampToValueAtTime(1100,t+D*.35);bp.frequency.exponentialRampToValueAtTime(400,t+D);const ng=ac.createGain();ng.gain.value=.5*R.rough;sr.connect(bp);bp.connect(ng);ng.connect(lp);sr.start(t)}
+   lp.connect(out);let dst=out;if(ac.createStereoPanner){const sp=ac.createStereoPanner();sp.pan.value=Math.max(-1,Math.min(1,pan||0));out.connect(sp);dst=sp}
+   dst.connect(mg)}catch(e){}};
+ /* tiếng "bíp" sonar: f càng cao càng khẩn cấp */
+ const ping=f=>{if(!on||!ac)return;tone(f,.28,'sine',.15,0,f*.96);tone(f*2,.12,'sine',.04,.015)};
  const p=n=>{try{if(n=='ok'||n=='level'||n=='fin')ply.emo=70;else if(n=='bad')ply.emo=-45}catch(e){}if(!on||!S[n])return;if(!ac)init();if(ac&&ac.state=='suspended')try{ac.resume()}catch(e){}try{S[n]()}catch(e){}};
  const engine=(v)=>{if(!ac||!on){return}try{if(!eo){eo=ac.createOscillator();eo.type='sawtooth';ef=ac.createBiquadFilter();ef.type='lowpass';ef.frequency.value=420;eg=ac.createGain();eg.gain.value=0;eo.connect(ef);ef.connect(eg);eg.connect(mg);eo.start()}
   const t=ac.currentTime;if(v<0){eg.gain.setTargetAtTime(0,t,.1)}else{const a=Math.min(1,v/9);eo.frequency.setTargetAtTime(48+a*95,t,.08);ef.frequency.setTargetAtTime(300+a*700,t,.1);eg.gain.setTargetAtTime(.05+a*.07,t,.1)}}catch(e){}};
@@ -949,7 +970,7 @@ const SND=(()=>{let ac=null,mg=null,on=1,eo=null,eg=null,ef=null,mus=1,MU=null,m
   names=()=>trk<0?'🔀 Tự động đổi bài':(MU?MU.names[trk]:['🌧 Chiều mưa lo-fi','☕ Cà phê sáng (jazz)','🌙 Đêm yên tĩnh','🌞 Sân trường nắng','🌊 Biển chiều','📖 Giờ học tập trung'][trk]);
  addEventListener('keydown',e=>{if(e.target&&e.target.tagName=='INPUT')return;if(e.key=='n'||e.key=='N')musSet(!mus);if(e.key=='.')setT(trk<0?0:trk+1)});
  addEventListener('visibilitychange',()=>{if(!ac)return;try{if(document.hidden)ac.suspend();else if(on)ac.resume()}catch(e){}});
- return{p,init,region:n=>{try{if(MU)MU.region(n)}catch(e){}},cur:()=>MU?MU.cur:-1,mode:n=>{try{if(MU&&MU.on)MU.mode(n)}catch(e){}},engine,on:()=>on,set,toggle:()=>set(!on),mus:()=>mus,musSet,setM,setS,mvol:()=>mvol,svol:()=>svol,setT,trk:()=>trk,names,list:()=>['🌧 Chiều mưa lo-fi','☕ Cà phê sáng (jazz)','🌙 Đêm yên tĩnh','🌞 Sân trường nắng','🌊 Biển chiều','📖 Giờ học tập trung'],playing:()=>!!(MU&&MU.on&&ac&&ac.state=='running')}})();
+ return{p,roar,ping,init,region:n=>{try{if(MU)MU.region(n)}catch(e){}},cur:()=>MU?MU.cur:-1,mode:n=>{try{if(MU&&MU.on)MU.mode(n)}catch(e){}},engine,on:()=>on,set,toggle:()=>set(!on),mus:()=>mus,musSet,setM,setS,mvol:()=>mvol,svol:()=>svol,setT,trk:()=>trk,names,list:()=>['🌧 Chiều mưa lo-fi','☕ Cà phê sáng (jazz)','🌙 Đêm yên tĩnh','🌞 Sân trường nắng','🌊 Biển chiều','📖 Giờ học tập trung'],playing:()=>!!(MU&&MU.on&&ac&&ac.state=='running')}})();
 const K={},PR={};let pressE=0;
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName=='INPUT')return;const k=e.key.toLowerCase();K[k]=1;if(!e.repeat)PR[k]=1;if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault()});
 addEventListener('keyup',e=>K[e.key.toLowerCase()]=0);
@@ -4623,6 +4644,7 @@ MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl
    if(INT.cur){g.visible=false;o.on=0;continue}
    o.on=1;g.visible=true;const near=Math.hypot(dx,dy)<(s.nl?s.nl*.6:80);let yy=gy(o.x,o.y);const ud=g.userData;
    const m=s.m;
+   if(SUB.on){let hh=false;try{hh=SUB.hunt(o,g,s,m)}catch(e){}if(hh)continue} /* thủy quái săn đuổi tàu ngầm */
    if(o.perch){if(o.lift==null){const wp=g.children[0];o.lift=1.8*(wp?wp.scale.x:1)*g.scale.x}g.position.set(o.x,gy(o.x,o.y)+o.lift,o.y);g.rotation.y=-o.a;g.rotation.z=0;const w=ud.wings;if(w&&w.length>1){const f=1.3+Math.sin(t*.04+o.ph)*.05;w[0].rotation.x=f;w[1].rotation.x=-f}continue}
    if(s.b=='bat'&&m=='fly'){if(o.hg==null)o.hg=Math.sin(o.ph*7)>-.15?1:0;let dy=true;try{const tm=V5.tm;dy=!(tm<330||tm>=1110)}catch(e){}
     if(o.hg&&dy){if(o.hpx==null){let bx=o.x,by=o.y,bd=1e9;for(let k=0;k<8;k++){const f=k*.785+o.ph;for(let d=6;d<220;d+=8){const x=o.x+Math.cos(f)*d,y=o.y+Math.sin(f)*d;if(NAT.solid(x,y,0)){if(d<bd){bd=d;bx=o.x+Math.cos(f)*(d-8);by=o.y+Math.sin(f)*(d-8)}break}}}o.hpx=bx;o.hpy=by}
@@ -4643,11 +4665,18 @@ MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl
     if(fl>-8&&!s.jmp){o.dir=-dir}else{o.ang=na;o.x=nx;o.y=ny}
     const fl2=Math.max(NAT.gh(o.x,o.y),-100);
     o.a=o.ang+(o.dir>0?Math.PI/2:-Math.PI/2);
-    if(fl2>-4&&!s.jmp){g.visible=false;continue}
+    if(fl2>-4&&!s.jmp){g.visible=false;o.yy=null;continue}
     g.visible=true;let y2;
     if(m=='crawl'){y2=fl2;g.rotation.z=0}
     else if(s.jmp){const ph=(t*.03+o.ph)%(Math.PI*2),jp=ph<Math.PI?Math.sin(ph):0;y2=-3.2+jp*14;g.rotation.z=jp>0?Math.cos(ph)*.7:0}
-    else{y2=Math.min(-4,fl2+o.alt+Math.sin(t*(m=='drift'?.012:.02)+o.ph)*(m=='drift'?8:2.5)-(s.yo||0));g.rotation.z=Math.sin(t*.05+o.ph)*.06}
+    else{/* độ cao đổi mượt + mũi chúi xuống khi bơi xuống / ngóc lên khi bơi lên (trước đây tụt thẳng theo địa hình, thân vẫn nằm ngang) */
+     const ty=Math.min(-4,fl2+o.alt+Math.sin(t*(m=='drift'?.012:.02)+o.ph)*(m=='drift'?8:2.5)-(s.yo||0));
+     if(o.yy==null){o.yy=ty;o.pt=0;o.lx=o.x;o.ly=o.y}
+     const y0=o.yy;o.yy+=(ty-o.yy)*.1;
+     const dh=Math.max(.5,Math.hypot(o.x-o.lx,o.y-o.ly));o.lx=o.x;o.ly=o.y;
+     const want=m=='drift'?0:Math.max(-.5,Math.min(.5,Math.atan2(o.yy-y0,dh)*1.4));
+     o.pt+=(want-o.pt)*.06;
+     y2=Math.max(o.yy,fl2+1);g.rotation.z=o.pt+Math.sin(t*.05+o.ph)*.025}
     if(m=='school')g.rotation.y=-(o.a)+Math.sin(t*.3+o.ph)*.12;else g.rotation.y=-o.a;
     if(m=='drift'){const bl=g.children[0];if(bl){const k=Math.sin(t*.07+o.ph);bl.scale.set(1-k*.1,1+k*.18,1-k*.1)}g.rotation.y=o.ph}
     if(ud.wings){const f=Math.sin(t*.09+o.ph)*.35;ud.wings[0].rotation.x=f;ud.wings[1].rotation.x=-f}
@@ -5713,6 +5742,7 @@ const WX=(()=>{const R=300;let tex=null;try{const c=document.createElement('canv
  return{upd,get fk(){return fk}}})();
 function update(){
  if(SUB.on){SUB.tick();return}if(PR.e){PR.e=0;if(SUB.near())SUB.board()}
+ if(PR.u){PR.u=0;if(SUB.near())SUB.shop()}
  t++;hitCD--;rcd--;hurt--;shake*=.9;V5.tick();
  SND.engine(ply.car?Math.abs(ply.car.v||0):-1);
  apTick();
@@ -9217,7 +9247,26 @@ try{if(!sessionStorage.getItem('ttt3d_rot')){$('rot').classList.add('on');sessio
    Khi đang lái tàu, vòng cập nhật nhân vật/NPC tạm dừng (update bỏ qua) còn địa hình + sinh vật biển vẫn chạy theo vị trí tàu. */
 const SUB=(()=>{
  const DX=-22909,DY=703,AG=4.51,CA_=Math.cos(AG),SA_=Math.sin(AG),PX=DX+CA_*245-SA_*48,PY=DY+SA_*245+CA_*48,H0=AG;
- const st={on:0,x:PX,y:PY,d:7,h:H0,v:0,w:0,vy:0,view:0,ox:100,hit:0,seen:{},al:'',alT:0,btn:{u:0,d:0},prop:0,ready:0,t:0};
+ const st={on:0,x:PX,y:PY,d:7,h:H0,v:0,w:0,vy:0,view:0,ox:100,hit:0,seen:{},al:'',alT:0,btn:{u:0,d:0},prop:0,ready:0,t:0,hp:100,dc:0,mc:0,shake:0,kx:0,ky:0,lt:1,thr:1e9,shop:0};
+ /* ===== NÂNG CẤP TÀU (mua bằng xu ở xưởng tại bến, lưu localStorage) =====
+    arm: giáp (giảm sát thương) · oxy: bình oxy (tiêu hao chậm hơn) · lamp: đèn pha · sonar: tầm quét · eng: động cơ (tốc độ tối đa) */
+ const UPD=[
+  {k:'arm',ic:'🛡️',n:'Giáp thân tàu',d:['Giảm sát thương 20%','Giảm sát thương 35%','Giảm sát thương 48%','Giảm sát thương 58%'],v:[1,.8,.65,.52,.42]},
+  {k:'oxy',ic:'🫧',n:'Bình oxy',d:['Oxy dùng được lâu hơn 25%','Lâu hơn 61%','Lâu hơn 108%','Lâu hơn 178%'],v:[1,.8,.62,.48,.36]},
+  {k:'lamp',ic:'💡',n:'Đèn pha',d:['Sáng hơn, chiếu xa hơn','Sáng hơn nữa','Rất sáng','Đèn pha cực mạnh'],v:[1,1.35,1.7,2.05,2.4]},
+  {k:'sonar',ic:'📡',n:'Sonar',d:['Tầm quét 850','Tầm quét 1020','Tầm quét 1220','Tầm quét 1450'],v:[700,850,1020,1220,1450]},
+  {k:'eng',ic:'⚙️',n:'Động cơ',d:['Tốc độ tối đa +10%','+20%','+30%','+42%'],v:[1,1.1,1.2,1.3,1.42]}];
+ const UCOST=[120,260,480,800];
+ const UP={arm:0,oxy:0,lamp:0,sonar:0,eng:0};
+ try{const sv=JSON.parse(localStorage.getItem('sub_up')||'{}');for(const k in UP){const n=parseInt(sv[k]);if(n>=0&&n<=4)UP[k]=n}}catch(e){}
+ const uv=k=>UPD.find(u=>u.k==k).v[UP[k]];
+ /* ===== THỦY QUÁI SĂN ĐUỔI =====
+    Loài săn mồi phát hiện tàu theo "độ ồn": chạy nhanh + bật đèn thì bị phát hiện từ xa; tắt đèn (L) và đứng yên thì gần như vô hình.
+    v: tốc độ lao tới (đơn vị/khung hình; tàu tối đa 2.3), r: tầm phát hiện cơ bản. HUNT.k: độ khó (0.7 dễ · 1 vừa · 1.3 khó); HUNT.on=false để tắt hẳn. */
+ const HUNT={on:true,k:1};
+ const PRED={megalodon:{v:1.9,r:420},mosa:{v:1.5,r:340},mosasea:{v:1.5,r:340},pliosaurus:{v:1.7,r:360},dunkle:{v:1.4,r:300}};
+ /* ĐỘ BỀN TÀU: va đá/san hô/trụ đá/đáy biển hoặc bị thủy quái đâm sẽ giảm độ bền; về bến thì được sửa chữa */
+ const OB=[],SOB=[]; /* OB: vật cản quanh tàu (dựng lại theo ô), SOB: công trình/điểm khám phá cố định. dạng: {t:'c'|'e'|'b',k:0 đá|1 san hô,...} */
  let dock=null,subG=null,prop=null,beams=[],hlight=null,hud=null,snow=null,radT=0,blips=[],bigNear=null,col=null;
  const LB=(c,o)=>new THREE.MeshLambertMaterial(Object.assign({color:c},o||{})),BS=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c},o||{}));
  const bxg=new THREE.BoxGeometry(1,1,1),cyg=new THREE.CylinderGeometry(1,1,1,16),spg=new THREE.SphereGeometry(1,16,12),cng=new THREE.ConeGeometry(1,1,4);
@@ -9321,14 +9370,15 @@ body.insub #dock,body.insub #hud,body.insub #mis,body.insub #mm,body.insub #tp,b
 body.insub #hint{bottom:14px!important}
 `;document.head.appendChild(css3);
   hud=document.createElement('div');hud.id='sbhud';
-  hud.innerHTML='<div id="sbwin"></div><div id="sbtop"><span>🚢 TÀU NGẦM THÁM HIỂM</span><span id="sbzn">TẦNG 1</span><span id="sbdc"></span><span id="sbal"></span></div>'+
+  hud.innerHTML='<div id="sbwin"></div><div id="sbfl"></div><div id="sbtop"><span>🚢 TÀU NGẦM THÁM HIỂM</span><span id="sbzn">TẦNG 1</span><span id="sbdc"></span><span id="sbal"></span></div>'+
    '<div id="sbdash"><div class="g"><small>ĐỘ SÂU</small><b id="sbdp">0 m</b></div><div class="g"><small>TỐC ĐỘ</small><b id="sbsp">0 km/h</b></div>'+
-   '<div class="g"><small>OXY</small><div class="bar"><i id="sbox"></i></div><b id="sbop">100%</b></div><div class="g"><small>SONAR</small><b id="sbso" style="font-size:clamp(10px,2.4vw,15px)">ĐANG HOẠT ĐỘNG</b><small id="sbdk" style="margin-top:.6vh"></small></div><canvas id="sbrad" width="130" height="130"></canvas>'+
-   '<div id="sbhelp">W/S tiến-lùi · A/D rẽ · Space lặn · Shift nổi · V đổi góc nhìn · F/E rời tàu (khi về bến)</div></div>'+
-   '<div id="sbbt"><button data-k="u">⬆</button><button data-k="d">⬇</button><button data-k="v">👁</button><button data-k="x">🚪</button></div>';
+   '<div class="g"><small>OXY</small><div class="bar"><i id="sbox"></i></div><b id="sbop">100%</b></div><div class="g"><small>ĐỘ BỀN TÀU</small><div class="bar"><i id="sbhp"></i></div><b id="sbhv">100%</b></div><div class="g"><small>SONAR</small><b id="sbso" style="font-size:clamp(10px,2.4vw,15px)">ĐANG HOẠT ĐỘNG</b><small id="sbdk" style="margin-top:.6vh"></small></div><canvas id="sbrad" width="130" height="130"></canvas>'+
+   '<div id="sbhelp">W/S tiến-lùi · A/D rẽ · Space lặn · Shift nổi · V đổi góc nhìn · L đèn · U nâng cấp (ở bến) · F/E rời tàu (khi về bến)</div></div>'+
+   '<div id="sbbt"><button data-k="u">⬆</button><button data-k="d">⬇</button><button data-k="v">👁</button><button data-k="l">💡</button><button data-k="s">🛠</button><button data-k="x">🚪</button></div>';
+  {const cs3=document.createElement('style');cs3.textContent='#sbfl{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,rgba(255,40,30,0) 38%,rgba(255,40,30,.6) 100%)}#sbhp{transition:width .25s,background .25s}';document.head.appendChild(cs3)}
   document.body.appendChild(hud);try{new MutationObserver(()=>document.body.classList.toggle('insub',hud.classList.contains('on'))).observe(hud,{attributes:true,attributeFilter:['class']})}catch(e){}
   hud.querySelectorAll('#sbbt button').forEach(b=>{const k=b.dataset.k;
-   const dn=e=>{e.preventDefault();if(k=='u'||k=='d'){st.btn[k]=1;b.classList.add('h')}else if(k=='v')SUB.toggleView();else if(k=='x')SUB.exit()},up=e=>{if(k=='u'||k=='d'){st.btn[k]=0;b.classList.remove('h')}};
+   const dn=e=>{e.preventDefault();if(k=='u'||k=='d'){st.btn[k]=1;b.classList.add('h')}else if(k=='v')SUB.toggleView();else if(k=='l')SUB.toggleLight();else if(k=='s')SUB.shop();else if(k=='x')SUB.exit()},up=e=>{if(k=='u'||k=='d'){st.btn[k]=0;b.classList.remove('h')}};
    b.addEventListener('pointerdown',dn);b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);b.addEventListener('pointercancel',up)});
   col=new THREE.Color();
   /* hạt phù du / bụi nước */
@@ -9339,6 +9389,8 @@ body.insub #hint{bottom:14px!important}
  const fogFar=d=>d<7?720-d*8:d<25?664-(d-7)*10:d<50?484-(d-25)*8:Math.max(150,284-(d-50)*3);
  const fogAt=d=>{let i=1;while(i<FOGS.length-1&&d>FOGS[i][0])i++;const a=FOGS[i-1],b=FOGS[i],t=Math.max(0,Math.min(1,(d-a[0])/(b[0]-a[0])));return new THREE.Color(a[1]).lerp(new THREE.Color(b[1]),t)};
  const bigSp=s=>/^(mosa|megalodon|pliosaurus|camapvoi|mosasea|leeds|elasmo)$/.test(s.id)||((s.p&&s.p.s||1)*(s.k||1)>=5);
+ /* loài -> kiểu tiếng gầm (xem SND.roar) */
+ const rk=id=>({megalodon:'shark',dunkle:'shark',mosa:'mosa',mosasea:'mosa',mosasaurus:'mosa',pliosaurus:'plio',elasmo:'ela',leeds:'leeds'})[id]||'mosa';
  /* ===== 4 TẦNG THÁM HIỂM quanh đảo nguyên thủy ===== */
  const TN=['TẦNG 1 – VÙNG NƯỚC NÔNG (0–100 m)','TẦNG 2 – VÙNG BIỂN SÂU (100–500 m)','TẦNG 3 – VỰC THẲM ĐẠI DƯƠNG (500–1500 m)','TẦNG 4 – VÙNG BIỂN BÍ ẨN (trên 1500 m)'];
  const TH=['Ánh sáng tự nhiên, nhiều san hô và rong biển.','Ánh sáng yếu dần, có đá ngầm, hang động và Mosasaurus.','Tối dần, hãy dựa vào đèn tàu. Coi chừng Megalodon!','Vùng tối sâu bí ẩn: hãy tìm tàn tích và hóa thạch cổ đại.'];
@@ -9362,26 +9414,37 @@ body.insub #hint{bottom:14px!important}
    else if(kd[2]==2){for(let i=0;i<6;i++){const a=i/6*6.28,q=mk(cng,dark,Math.cos(a)*30,24,Math.sin(a)*30,g);q.scale.set(7,48+i%3*10,7)}S(3,3,3,gl,0,6,0,g)}
    else if(ki==5){B(80,2.4,2.4,bone,0,2,0,g);for(let i=0;i<7;i++){const t=new THREE.Mesh(G.rib,bone);t.scale.set(15,15,15);t.position.set((i-3)*9,2,0);t.rotation.y=Math.PI/2;g.add(t)}S(12,8,9,bone,-50,5,0,g)}
    else{for(let i=0;i<6;i++)C(3.2,30-(i%3)*7,stone,(i%3-1)*24,15,(i<3?-14:14),g);B(76,3,44,stone,0,1,0,g);S(3,3,3,gl,0,8,0,g)}
+   /* vật cản của công trình điểm khám phá (khớp với hình dựng ở trên; z thế giới = y) */
+   if(ki==0){for(let i=0;i<7;i++){const H=10+(i%3)*5;SOB.push({t:'c',k:1,x:x+(i-3)*7,z:y+(i%2?5:-5),r:2.4,y0:h+6-H/2,y1:h+6+H/2})}}
+   else if(kd[2]==1){SOB.push({t:'e',k:0,x:x-28,y:h+10,z:y,rx:22,ry:26,rz:20},{t:'e',k:0,x:x+28,y:h+12,z:y,rx:22,ry:30,rz:20},{t:'b',k:0,x0:x-39,x1:x+39,y0:h+28,y1:h+40,z0:y-13,z1:y+13})}
+   else if(kd[2]==2){for(let i=0;i<6;i++){const a=i/6*6.28,H=48+i%3*10;SOB.push({t:'c',k:0,cone:1,x:x+Math.cos(a)*30,z:y+Math.sin(a)*30,r:7,y0:h+24-H/2,y1:h+24+H/2})}}
+   else if(ki==5){SOB.push({t:'e',k:0,x:x-50,y:h+5,z:y,rx:12,ry:8,rz:9})}
+   else{for(let i=0;i<6;i++){const H=30-(i%3)*7;SOB.push({t:'c',k:0,x:x+(i%3-1)*24,z:y+(i<3?-14:14),r:3.2,y0:h+15-H/2,y1:h+15+H/2})}SOB.push({t:'b',k:0,x0:x-38,x1:x+38,y0:h-.5,y1:h+2.5,z0:y-22,z1:y+22})}
    SITES.push({x,y,h,n:kd[1],e:kd[0],f:saved.indexOf(SITES.length)>=0?1:0,g});break}})};
- const scen=()=>{if(!IM.coral)return;const cx=Math.floor(st.x/CS),cy=Math.floor(st.y/CS);if(st.sc&&st.sc[0]==cx&&st.sc[1]==cy)return;st.sc=[cx,cy];for(const k in IM)IM[k].i=0;
+ const scen=()=>{if(!IM.coral)return;const cx=Math.floor(st.x/CS),cy=Math.floor(st.y/CS);if(st.sc&&st.sc[0]==cx&&st.sc[1]==cy)return;st.sc=[cx,cy];OB.length=0;for(const k in IM)IM[k].i=0;
   for(let a=cx-RAD;a<=cx+RAD;a++)for(let b=cy-RAD;b<=cy+RAD;b++)for(let k=0;k<7;k++){const x=(a+hs(a*31+k,b*17+3))*CS,y=(b+hs(a*13+5,b*29+k))*CS,h=fl(x,y);if(h==null)continue;
    const F=-h,t=tierF(F),r=hs(a*7+k,b*11+9),s=.7+hs(a+k*5,b+k*3)*.9;let key,sx,sy,sz,col,yo=0;
    if(t==0){if(F<4)continue;if(r<.45){key='coral';sx=sz=4+6*s;sy=5+9*s;col=CORAL[(k+a)&3]}else if(r<.8){key='kelp';sx=sz=2;sy=14+18*s;col=0x2f9a52}else{key='rock';sx=sz=5+5*s;sy=3+3*s;col=0x7a8a8a}}
    else if(t==1){if(r<.5){key='rock';sx=sz=10+12*s;sy=8+14*s;col=0x4f6a78}else if(r<.8){key='coral';sx=sz=7+6*s;sy=10+12*s;col=CORAL[(k+b)&3]&0xb0b0b0}else{key='pillar';sx=sz=5+4*s;sy=28+34*s;col=0x46606e}}
    else if(t==2){if(r<.6){key='spire';sx=sz=6+6*s;sy=30+40*s;col=0x2a3a4a}else{key='rock';sx=sz=12+12*s;sy=10+12*s;col=0x26343f}}
    else{if(r<.4){key='pillar';sx=sz=3.5+2*s;sy=18+14*s;col=0x5d6f78}else if(r<.7){key='slab';sx=14+8*s;sy=3;sz=10+6*s;col=0x586870}else{key='rib';sx=sy=sz=9+7*s;col=0xe6dcc2;yo=-sy*.1}}
-   const o=IM[key];if(o.i>=o.n)continue;dm.position.set(x,h+(key=='rib'?yo:key=='rock'?sy*.3:sy/2),y);dm.rotation.set(0,r*6.28,0);dm.scale.set(sx,sy,sz);dm.updateMatrix();o.im.setMatrixAt(o.i,dm.matrix);o.im.setColorAt(o.i,cc.setHex(col));o.i++}
+   const o=IM[key];if(o.i>=o.n)continue;
+   if(key!='kelp'&&key!='rib')OB.push(key=='rock'?{t:'e',k:0,x:x,y:h+sy*.3,z:y,rx:sx*.9,ry:sy*.9,rz:sz*.9}:key=='coral'?{t:'c',k:1,cone:1,x:x,z:y,r:.5*sx,y0:h,y1:h+sy}:key=='spire'?{t:'c',k:0,cone:1,x:x,z:y,r:.5*sx,y0:h,y1:h+sy}:key=='slab'?{t:'c',k:0,x:x,z:y,r:(sx+sz)/4,y0:h,y1:h+sy}:{t:'c',k:0,x:x,z:y,r:.9*sx,y0:h,y1:h+sy});
+   dm.position.set(x,h+(key=='rib'?yo:key=='rock'?sy*.3:sy/2),y);dm.rotation.set(0,r*6.28,0);dm.scale.set(sx,sy,sz);dm.updateMatrix();o.im.setMatrixAt(o.i,dm.matrix);o.im.setColorAt(o.i,cc.setHex(col));o.i++}
   for(const k in IM){const o=IM[k];o.im.count=o.i;o.im.instanceMatrix.needsUpdate=true;if(o.im.instanceColor)o.im.instanceColor.needsUpdate=true}};
  const disc=()=>{st.sa='';let bd=1e9,bs=null;for(const s of SITES){if(s.f)continue;const d=Math.hypot(s.x-st.x,s.y-st.y);if(d<bd){bd=d;bs=s}}if(!bs)return;
-  if(Math.hypot(bd,-st.d-bs.h)<170){bs.f=1;try{localStorage.setItem('sub_sites',JSON.stringify(SITES.map((s,i)=>s.f?i:-1).filter(i=>i>=0)))}catch(e){}try{say('🔱 Khám phá '+bs.e+' '+bs.n+'! ('+SITES.filter(s=>s.f).length+'/'+SITES.length+' điểm khám phá)',5200)}catch(e){}}
+  if(Math.hypot(bd,-st.d-bs.h)<170){bs.f=1;cash+=30;try{localStorage.setItem('sub_sites',JSON.stringify(SITES.map((s,i)=>s.f?i:-1).filter(i=>i>=0)))}catch(e){}try{say('🔱 Khám phá '+bs.e+' '+bs.n+'! ('+SITES.filter(s=>s.f).length+'/'+SITES.length+' điểm khám phá) +30 🪙',5200)}catch(e){}}
   else if(bd<500)st.sa='📡 Tín hiệu lạ: '+bs.e+' '+bs.n+' · '+Math.round(bd/10)+' m'};
  const aq=s=>s.m=='swim'||s.m=='glide'||s.m=='school'||s.m=='drift'||s.z=='psea';
  const ready=()=>{if(!st.ready){st.ready=1;for(const f of[buildDock,buildSub,buildHud,buildScen]){try{f()}catch(e){st.err=(st.err||'')+' '+f.name+': '+(e&&e.message);try{ERR(e);console.error('SUB',e)}catch(_){}}}try{if(subG)moor()}catch(e){}}};
  /* quét sonar: cập nhật chấm xanh/đỏ và cảnh báo */
- const sonar=()=>{blips.length=0;bigNear=null;let bd=1e9;const R=700;
+ const sonar=()=>{blips.length=0;bigNear=null;let bd=1e9;const R=uv('sonar');st.thr=1e9;
   for(const o of ANIM.ALL){const s=o.s;if(!s||!aq(s))continue;const dx=o.x-st.x,dy=o.y-st.y,d=Math.hypot(dx,dy);if(d>R)continue;const big=bigSp(s);
    const fx=dx*Math.cos(st.h)+dy*Math.sin(st.h),rz=-dx*Math.sin(st.h)+dy*Math.cos(st.h);blips.push([fx,rz,big]);
    if(big&&d<bd){bd=d;bigNear=[s,d]}
+   if(PRED[s.id]&&d<st.thr)st.thr=d; /* khoảng cách tới loài săn mồi gần nhất (để sonar bíp nhanh dần) */
+   /* thủy quái lớn lại gần thì gầm: có hướng (trái/phải), xa thì nhỏ và đục; mỗi con có thời gian chờ riêng */
+   if(big&&d<340){const now=performance.now();if(!o.rT)o.rT=now+1200+Math.random()*3500;else if(now>o.rT&&now>(st.rg||0)){o.rT=now+7000+Math.random()*9000;st.rg=now+3500;try{SND.roar(rk(s.id),1-d/380,rz/Math.max(d,1))}catch(e){}}}
    if(d<170&&!st.seen[s.id]){st.seen[s.id]=1;try{say('🔎 Phát hiện '+s.e+' '+s.n+'! Cách tàu khoảng '+Math.round(d/10)+' m.',3200)}catch(e){}}}
   for(const s of SITES){if(s.f)continue;const dx=s.x-st.x,dy=s.y-st.y;if(Math.hypot(dx,dy)<R)blips.push([dx*Math.cos(st.h)+dy*Math.sin(st.h),-dx*Math.sin(st.h)+dy*Math.cos(st.h),2])}
   const c=document.getElementById('sbrad');if(!c)return;const g=c.getContext('2d'),W=c.width,cx=W/2,sc=(W/2-6)/R;g.clearRect(0,0,W,W);
@@ -9391,19 +9454,106 @@ body.insub #hint{bottom:14px!important}
   g.fillStyle='#fff';g.beginPath();g.moveTo(cx,cx-8);g.lineTo(cx-5,cx+6);g.lineTo(cx+5,cx+6);g.closePath();g.fill();
   /* hướng về bến */
   const dxp=PX-st.x,dyp=PY-st.y,dd=Math.hypot(dxp,dyp);if(dd>40){const fx=dxp*Math.cos(st.h)+dyp*Math.sin(st.h),rz=-dxp*Math.sin(st.h)+dyp*Math.cos(st.h),k=Math.min(1,dd/R*1.0),L=Math.hypot(fx,rz)||1;g.fillStyle='#ffd23f';g.beginPath();g.arc(cx+rz/L*Math.min(dd*sc,W/2-8),cx-fx/L*Math.min(dd*sc,W/2-8),4,0,6.3);g.fill()}};
+ /* ===== VA CHẠM & ĐỘ BỀN =====
+    Thân tàu ≈ 3 vòng tròn dọc theo hướng tàu (bán kính SR) + nửa chiều cao SV. Vật cản: đá, san hô, trụ đá, hang/tàn tích (OB, SOB) và thủy quái lớn. */
+ const SR=16,SV=14;
+ const hitO=(o,px,pz,wy)=>{
+  if(o.t=='c'){const lo=wy-SV;if(lo>o.y1||wy+SV<o.y0)return false;let r=o.r;if(o.cone){const f=Math.max(0,Math.min(1,(Math.max(lo,o.y0)-o.y0)/((o.y1-o.y0)||1)));r=o.r*(1-f)}const dx=px-o.x,dz=pz-o.z;return dx*dx+dz*dz<(r+SR)*(r+SR)}
+  if(o.t=='e'){const a=(px-o.x)/(o.rx+SR),b=(wy-o.y)/(o.ry+SV),c=(pz-o.z)/(o.rz+SR);return a*a+b*b+c*c<1}
+  return px>o.x0-SR&&px<o.x1+SR&&pz>o.z0-SR&&pz<o.z1+SR&&wy+SV>o.y0&&wy-SV<o.y1};
+ const sHit=(x,z,d)=>{const wy=-d,cs=Math.cos(st.h),sn=Math.sin(st.h);
+  for(const j of[0,30,-30]){const px=x+cs*j,pz=z+sn*j;
+   for(const o of OB)if(hitO(o,px,pz,wy))return o;
+   for(const o of SOB)if(hitO(o,px,pz,wy))return o}
+  return null};
+ const hurt=(n,msg)=>{if(st.hp<=0)return;n=Math.max(1,Math.min(25,Math.round(n*uv('arm'))));st.hp=Math.max(0,st.hp-n);st.shake=Math.min(7,2+n*.4);
+  try{const f=document.getElementById('sbfl');if(f){f.style.transition='none';f.style.opacity=1;setTimeout(()=>{f.style.transition='opacity .6s';f.style.opacity=0},40)}}catch(e){}
+  try{SND.p('crash')}catch(e){}
+  try{say(msg+' (−'+n+'%) Độ bền tàu còn '+Math.round(st.hp)+'%.'+(st.hp<=0?' 🛟 Tàu hư nặng, hệ thống khẩn cấp đang đưa tàu nổi lên!':''),2800)}catch(e){}};
+ /* kind: 0 đá/trụ đá/công trình, 1 san hô, 2 đáy biển/bờ. Chạm nhẹ (tốc độ thấp) không bị trừ; có thời gian chờ để không trừ liên tục */
+ const bump=(kind,spd)=>{if(spd<.12||st.dc>0)return;st.dc=45;
+  hurt(kind==1?2+spd*4:kind==2?1.5+spd*4:3+spd*7,kind==1?'🪸 Tàu va vào san hô!':kind==2?'⛰ Tàu cạ vào đáy biển/bờ!':'🪨 Tàu va vào đá!')};
+ /* thủy quái lớn đâm vào tàu: trừ nhiều độ bền hơn và hất tàu ra */
+ const monsters=(nx,ny,nd,spd)=>{if(st.mc>0)return;const wy=-nd,cs=Math.cos(st.h),sn=Math.sin(st.h);
+  for(const o of ANIM.ALL){const s=o.s,g=o.g;if(!s||!g||!g.visible||!aq(s)||!bigSp(s))continue;
+   const dx=o.x-nx,dz=o.y-ny;if(dx*dx+dz*dz>40000)continue;
+   if(!o.sbr||st.t-o.sbT>900){try{g.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(g),L=Math.max(b.max.x-b.min.x,b.max.z-b.min.z);o.sbr=Math.max(6,Math.min(70,L*.3));o.sbh=Math.max(5,Math.min(30,(b.max.y-b.min.y)*.4))}catch(e){o.sbr=12;o.sbh=8}o.sbT=st.t}
+   if(Math.abs(g.position.y-wy)>o.sbh+SV)continue;
+   let hit=false;for(const j of[0,30,-30]){const px=nx+cs*j-o.x,pz=ny+sn*j-o.y;if(px*px+pz*pz<(o.sbr+SR)*(o.sbr+SR)){hit=true;break}}
+   if(!hit)continue;
+   const d=Math.hypot(dx,dz)||1;st.kx=-dx/d*4;st.ky=-dz/d*4;st.v*=-.3;st.mc=90;st.dc=Math.max(st.dc,45);
+   if(PRED[s.id]){o.hs=2;o.ht=260;o.hn=0} /* cắn xong thì rút ra */
+   hurt(10+spd*4,'🦖 '+(s.e||'')+' '+s.n+' đâm vào tàu!');
+   st.rg=performance.now()+3000;try{SND.roar(rk(s.id),1,0)}catch(e){} /* gầm lớn khi tấn công */
+   return}};
+ /* trả quái về quỹ đạo tuần tra mà không bị "dịch chuyển": dời tâm quỹ đạo sao cho vị trí + hướng hiện tại khớp với quỹ đạo */
+ const rehome=(o,s,m)=>{const sw=m=='swim',rr=sw?s.rm:(o.rr||s.rm||100),dir=sw?1:(o.dir||(o.dir=1));
+  o.ang=o.a+(dir>0?-Math.PI/2:Math.PI/2);
+  o.hx=o.x-Math.cos(o.ang)*rr-(sw?0:(o.ox||0));o.hy=o.y-Math.sin(o.ang)*rr-(sw?0:(o.oy||0));
+  o.yy=o.cy;o.lx=o.x;o.ly=o.y;o.hs=0;o.hv=0};
+ const steer=(o,tx,ty,spd,turn)=>{let da=Math.atan2(ty-o.y,tx-o.x)-o.a;da=Math.atan2(Math.sin(da),Math.cos(da));o.a+=Math.max(-turn,Math.min(turn,da));
+  o.hv+=(spd-o.hv)*.04;const nx=o.x+Math.cos(o.a)*o.hv,ny=o.y+Math.sin(o.a)*o.hv;
+  if(Math.max(NAT.gh(nx,ny),-100)>-8){o.hv*=.5;o.a+=turn*2}else{o.x=nx;o.y=ny}}; /* gần bờ thì quay đầu */
+ /* gọi mỗi khung hình cho từng sinh vật khi đang lái tàu; trả true nếu quái đang săn/rút lui (thay cho đường bơi tuần tra) */
+ const hunt=(o,g,s,m)=>{const P=PRED[s.id];if(!P||!HUNT.on||!st.on)return false;
+  if(o.cy==null)o.cy=g.position.y;
+  const dx=st.x-o.x,dy=st.y-o.y,dd=Math.hypot(dx,dy),dz=-st.d-o.cy,d3=Math.hypot(dd,dz);
+  const det=P.r*(.3+.5*Math.min(1,Math.abs(st.v)/1.6)+(st.lt?.35:0))*HUNT.k; /* tầm phát hiện: càng ồn/sáng càng xa */
+  if(!o.hs){
+   if(o.hcd>0){o.hcd--;return false}
+   if(d3>=det)return false;
+   o.hs=1;o.hn=0;o.hl=0;o.hv=o.hv||0;o.cy=g.position.y;
+   if(st.t-(st.aT==null?-999:st.aT)>180){st.aT=st.t;
+    try{say(st.warned?('🚨 '+s.e+' '+s.n+' lao tới!'):('🚨 '+s.e+' '+s.n+' đã phát hiện tàu và lao tới! Tắt đèn (L), dừng máy hoặc tăng tốc để thoát!'),4200);st.warned=1}catch(e){}
+    try{SND.roar(rk(s.id),1-Math.min(1,dd/(P.r*1.3)),(-dx*Math.sin(st.h)+dy*Math.cos(st.h))/Math.max(dd,1))}catch(e){}}}
+  const f2=Math.max(NAT.gh(o.x,o.y),-100);let tyv;
+  if(o.hs==1){
+   o.hn++;st.ch={n:s.n,e:s.e,t:st.t};
+   if(d3>det*1.7+120)o.hl++;else o.hl=Math.max(0,o.hl-2);
+   if(o.hl>180||o.hn>1800){ /* mất dấu (tàu trốn thoát) hoặc bỏ cuộc sau ~30 giây */
+    const lost=o.hl>180;o.hcd=lost?700:1000;rehome(o,s,m);
+    if(lost&&st.t-(st.eT==null?-9999:st.eT)>1200){st.eT=st.t;try{cash+=12;say('😮‍💨 Em đã thoát khỏi '+s.n+'! +12 🪙',3200)}catch(e){}}
+    return false}
+   steer(o,st.x,st.y,P.v,.045);tyv=Math.min(-5,Math.max(f2+8,-st.d))}
+  else{ /* hs==2: vừa cắn xong, bơi tránh ra rồi quay lại tuần tra */
+   if(--o.ht<=0){o.hcd=600;rehome(o,s,m);return false}
+   steer(o,o.x-dx,o.y-dy,P.v,.09);tyv=o.cy}
+  const y0=o.cy;o.cy+=Math.max(-.8,Math.min(.8,(tyv-o.cy)*.08));
+  const want=Math.max(-.5,Math.min(.5,Math.atan2(o.cy-y0,Math.max(.5,o.hv))*1.6));o.pt=(o.pt||0)+(want-(o.pt||0))*.1;
+  g.visible=true;g.position.set(o.x,o.cy,o.y);g.rotation.y=-o.a;g.rotation.z=o.pt;return true};
+ /* ===== XƯỞNG NÂNG CẤP (phím U khi tàu ở bến, hoặc nút 🛠) ===== */
+ let shopEl=null;
+ const closeShop=()=>{st.shop=0;if(shopEl)shopEl.style.display='none'};
+ const buy=k=>{const L=UP[k];if(L>=4)return;const c=UCOST[L];
+  if(cash<c){try{say('Chưa đủ xu để nâng cấp. Hãy khám phá điểm lạ hoặc thoát khỏi thủy quái để kiếm thêm xu nhé!',2600)}catch(e){}return}
+  cash-=c;UP[k]=L+1;try{localStorage.setItem('sub_up',JSON.stringify(UP))}catch(e){}
+  try{SND.p('buy')}catch(e){}try{say('✅ Đã nâng cấp '+UPD.find(u=>u.k==k).n+' lên cấp '+UP[k]+'!',2600)}catch(e){}renderShop()};
+ const renderShop=()=>{if(!shopEl)return;
+  const rows=UPD.map(u=>{const L=UP[u.k],max=L>=4,c=max?0:UCOST[L],can=!max&&cash>=c;
+   return '<div class="r"><b>'+u.ic+'</b><div class="t"><strong>'+u.n+' · cấp '+L+'/4</strong><small>'+(max?'Đã đạt cấp tối đa':'Cấp tiếp theo: '+u.d[L])+'</small><i>'+'●'.repeat(L)+'<u>'+'●'.repeat(4-L)+'</u></i></div><button data-k="'+u.k+'"'+(can||max?'':' class="no"')+(max?' disabled':'')+'>'+(max?'TỐI ĐA':'🪙 '+c)+'</button></div>'}).join('');
+  shopEl.innerHTML='<div class="p"><h3>🛠 Xưởng nâng cấp tàu ngầm</h3><div class="c">🪙 '+cash+' xu</div>'+rows+'<div class="f"><small>Kiếm xu: khám phá điểm lạ (+30), thoát khỏi thủy quái (+12).</small><button data-k="x">Đóng (Esc)</button></div></div>';
+  shopEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k=='x')closeShop();else buy(k)})};
+ const openShop=()=>{if(!shopEl){shopEl=document.createElement('div');shopEl.id='sbshop';document.body.appendChild(shopEl);
+   const sc=document.createElement('style');sc.textContent='#sbshop{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(4,10,16,.72);font-family:system-ui,sans-serif;color:#cfeeff}#sbshop .p{width:min(440px,94vw);max-height:92vh;overflow:auto;background:#0b1b29;border:2px solid #29506d;border-radius:16px;padding:14px 16px;box-shadow:0 10px 40px rgba(0,0,0,.6)}#sbshop h3{margin:0 0 6px;font-size:18px;color:#6ff0c0}#sbshop .c{font-weight:800;color:#ffd23f;margin-bottom:8px}#sbshop .r{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #1d3a50}#sbshop .r>b{font-size:26px;width:34px;text-align:center}#sbshop .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}#sbshop .t strong{font-size:14px}#sbshop .t small{font-size:12px;color:#7fb6d9}#sbshop .t i{font-style:normal;color:#38e08a;letter-spacing:2px;font-size:12px}#sbshop .t u{text-decoration:none;color:#2a4a60}#sbshop button{border:0;border-radius:10px;padding:8px 12px;font-weight:800;font-size:13px;background:#ffd23f;color:#3a2a00;cursor:pointer;white-space:nowrap}#sbshop button.no{background:#3a4a58;color:#9fb4c4}#sbshop button:disabled{background:#1f5a44;color:#9ff0c8;cursor:default}#sbshop .f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;border-top:1px solid #1d3a50;padding-top:10px}#sbshop .f small{font-size:11px;color:#7fb6d9}#sbshop .f button{background:#29506d;color:#fff}';document.head.appendChild(sc);
+   addEventListener('keydown',e=>{if(st.shop&&e.key=='Escape')closeShop()})}
+  st.shop=1;shopEl.style.display='flex';renderShop()};
  const api={
   get on(){return st.on},
+  hunt,HUNT,
+  toggleLight(){st.lt=st.lt?0:1;try{say(st.lt?'💡 Đã bật đèn pha.':'🌑 Đã tắt đèn pha — quái khó phát hiện tàu hơn, nhưng em cũng khó nhìn hơn!',2600)}catch(e){}},
+  shop(){ready();if(st.shop){closeShop();return}if(st.on?!api.canExit():!api.near()){try{say('🛠 Hãy đưa tàu về bến (nổi lên sát bến tàu) để dùng xưởng nâng cấp.',3200)}catch(e){}return}openShop()},
   st,
   init(){ready()},
-  hint(){ready();try{if(dock&&dock.parent!==scene)scene.add(dock);if(subG&&subG.parent!==scene)scene.add(subG);if(snow&&snow.parent!==scene)scene.add(snow)}catch(e){}if(st.on){return api.canExit()?'F / E: rời tàu ngầm (đã về bến)':null}return api.near()?'F / E: vào TÀU NGẦM — Trạm thám hiểm đại dương':null},
+  hint(){ready();try{if(dock&&dock.parent!==scene)scene.add(dock);if(subG&&subG.parent!==scene)scene.add(subG);if(snow&&snow.parent!==scene)scene.add(snow)}catch(e){}if(st.on){return api.canExit()?'F / E: rời tàu ngầm (đã về bến) · U: xưởng nâng cấp':null}return api.near()?'F / E: vào TÀU NGẦM — Trạm thám hiểm đại dương · U: nâng cấp tàu':null},
   near(){if(st.on||INT.cur||ply.car||ply.boat||ply.mt||state!='play')return false;return Math.hypot(ply.x-PX,ply.y-PY)<170},
   canExit(){return Math.hypot(st.x-PX,st.y-PY)<120&&st.d<22},
   board(force){ready();if(st.on)return;if(!force&&!api.near())return;if(!hud||!subG||!prop){try{say('⚠ Tàu ngầm chưa dựng được'+(st.err?' ('+st.err.slice(0,90)+')':'')+'. Em chụp màn hình báo cô/thầy nhé.',6000)}catch(e){}return}
    try{if(ply.mt)V5.dismount(true)}catch(e){}try{if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}}catch(e){}INT.cur=null;
    try{apStop&&AP.on&&apStop('')}catch(e){}
-   st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;
+   PR.l=PR.u=0;st.lt=1;st.shop=0;st.thr=1e9;st.ch=null;st.warned=0;st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;
    try{SND.p('splash')}catch(e){}try{say('🚢 Em đã vào tàu ngầm! W/S: tiến-lùi, A/D: rẽ, Space: lặn, Shift: nổi, V: đổi góc nhìn. Về bến rồi bấm F/E để ra.',6000)}catch(e){}},
   exit(){if(!st.on)return;if(!api.canExit()){const dx=PX-st.x,dy=PY-st.y;try{say('⚓ Hãy đưa tàu về bến (cách khoảng '+Math.round(Math.hypot(dx,dy)/10)+' m, chấm vàng trên sonar) và nổi lên mặt nước rồi mới ra được.',3800)}catch(e){}return}
+   if(st.hp<100){st.hp=100;try{say('🔧 Trạm thám hiểm đã sửa chữa tàu ngầm. Độ bền: 100%.',3000)}catch(e){}}st.kx=st.ky=0;st.shake=0;
    st.on=0;st.lb=null;if(hlight)hlight.intensity=0;moor();hud.classList.remove('on');snow.visible=false;
    ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}
    try{SND.p('splash')}catch(e){}try{say('Em đã rời tàu ngầm về trạm thám hiểm.',2400)}catch(e){}},
@@ -9413,31 +9563,46 @@ body.insub #hint{bottom:14px!important}
   _tick(){
    st.t++;
    if(PR.v){PR.v=0;api.toggleView()}
+   if(PR.l){PR.l=0;api.toggleLight()}
+   if(PR.u){PR.u=0;api.shop()}
    if(PR.f||PR.e){PR.f=PR.e=0;api.exit();if(!st.on)return}
-   const kb=K,up=!!(kb.shift||st.btn.u),dn=!!(kb[' ']||st.btn.d);
+   const kb=K,up=!!(kb.shift||st.btn.u)&&!st.shop,dn=!!(kb[' ']||st.btn.d)&&!st.shop;
    let f=(kb.w||kb.arrowup?1:0)-(kb.s||kb.arrowdown?.6:0),tr=(kb.d||kb.arrowright?1:0)-(kb.a||kb.arrowleft?1:0);
    try{if(JR&&JOY.m>.18){f+=-JOY.y*Math.min(1,JOY.m*1.3);tr+=JOY.x*Math.min(1,JOY.m*1.3)}}catch(e){}
-   f=Math.max(-.6,Math.min(1,f));tr=Math.max(-1,Math.min(1,tr));
-   if(st.oxy<=0){f=Math.min(f,.3);st.btn.d=0}
-   st.v+=(f*2.3-st.v)*.022;st.w+=(tr*.024-st.w)*.07;
+   f=Math.max(-.6,Math.min(1,f));tr=Math.max(-1,Math.min(1,tr));if(st.shop){f=0;tr=0}
+   const wreck=st.oxy<=0||st.hp<=0; /* hết oxy hoặc hỏng hết độ bền: tàu chậm lại và tự nổi lên */
+   if(wreck){f=Math.min(f,.3);st.btn.d=0}
+   st.v+=(f*2.3*uv('eng')-st.v)*.022;st.w+=(tr*.024-st.w)*.07;
    const turnK=.35+.65*Math.min(1,Math.abs(st.v)/1.1);st.h+=st.w*turnK*(st.v<0?-1:1)*(Math.abs(st.v)<.05?0:1)+(Math.abs(st.v)<.05?st.w*.5:0);
-   const dv=(dn&&!up?1:0)-(up&&!dn?1:0)+(st.oxy<=0?-1.5:0);st.vy+=(dv*.9-st.vy)*.05;
-   const cs=Math.cos(st.h),sn=Math.sin(st.h);let nx=st.x+cs*st.v,ny=st.y+sn*st.v,nd=Math.max(1,Math.min(95,st.d+st.vy)),hit=0;
+   const dv=(dn&&!up?1:0)-(up&&!dn?1:0)+(wreck?-1.5:0);st.vy+=(dv*.9-st.vy)*.05;
+   const cs=Math.cos(st.h),sn=Math.sin(st.h);st.kx*=.88;st.ky*=.88;const spd0=Math.max(Math.abs(st.v),Math.abs(st.vy)*1.2);
+   let nx=st.x+cs*st.v+st.kx,ny=st.y+sn*st.v+st.ky,nd=Math.max(1,Math.min(95,st.d+st.vy)),hit=0;
    const R=18,pf=fl(nx,ny),pn=fl(nx+cs*R,ny+sn*R),pb=fl(nx-cs*R,ny-sn*R);
-   if(pf==null||pn==null||pb==null){nx=st.x;ny=st.y;st.v*=-.35;hit=1}
-   else{const fmin=Math.max(pf,pn,pb);if(-fmin-17<1.5){nx=st.x;ny=st.y;st.v*=-.3;hit=1}else if(nd>-fmin-17){nd=Math.max(1,Math.min(nd,-fmin-17));if(st.vy>0)st.vy=0;if(-fmin-17<st.d-.5){hit=1}}}
+   if(pf==null||pn==null||pb==null){nx=st.x;ny=st.y;st.v*=-.35;hit=1;bump(2,spd0)}
+   else{const fmin=Math.max(pf,pn,pb);if(-fmin-17<1.5){nx=st.x;ny=st.y;st.v*=-.3;hit=1;bump(2,spd0)}else if(nd>-fmin-17){nd=Math.max(1,Math.min(nd,-fmin-17));if(st.vy>0)st.vy=0;if(-fmin-17<st.d-.5){hit=1;bump(2,spd0)}}}
+   /* đá, san hô, trụ đá, hang, tàn tích: chặn tàu lại và trừ độ bền */
+   {const ob=sHit(nx,ny,nd);
+    if(ob&&!sHit(st.x,st.y,st.d)){if(!sHit(nx,ny,st.d)){nd=st.d;st.vy*=-.25}else{nx=st.x;ny=st.y;st.v*=-.3;if(sHit(nx,ny,nd))nd=st.d}hit=1;bump(ob.k,spd0)}}
+   monsters(nx,ny,nd,spd0);
+   if(st.dc>0)st.dc--;if(st.mc>0)st.mc--;st.shake*=.9;
+   /* sonar bíp: quái săn mồi càng gần (trong ~40 m) bíp càng dồn dập, cao hơn khi đang bị truy đuổi; gần quá thì viền đỏ nháy */
+   {const now=performance.now(),th=st.thr;if(th<400&&now>(st.pg||0)){const k=Math.max(0,Math.min(1,th/400)),chs=st.t-(st.ch?st.ch.t:-99)<20;st.pg=now+(220+k*k*1900)*(chs?.75:1);
+     try{SND.ping(chs?1500:820+(1-k)*500)}catch(e){}
+     if(th<160){try{const f=document.getElementById('sbfl');if(f){f.style.transition='none';f.style.opacity=.3;setTimeout(()=>{f.style.transition='opacity .3s';f.style.opacity=0},30)}}catch(e){}}}}
+   if(st.hp<100&&api.canExit())st.hp=Math.min(100,st.hp+.12); /* về bến thì được sửa chữa dần */
    st.x=nx;st.y=ny;st.d=nd;ply.x=nx;ply.y=ny;ply.a=st.h;st.hit=hit?Math.min(30,st.hit+4):Math.max(0,st.hit-1);
    /* oxy: giảm khi ở sâu, hồi nhanh khi nổi lên mặt nước/ở bến */
-   if(st.d<4||api.canExit())st.oxy=Math.min(100,st.oxy+.35);else st.oxy=Math.max(0,st.oxy-.0065*(1+st.d/60));
+   if(st.d<4||api.canExit())st.oxy=Math.min(100,st.oxy+.35);else st.oxy=Math.max(0,st.oxy-.0065*(1+st.d/60)*uv('oxy'));
    if(st.oxy<=0&&st.t%240==0){try{say('⚠ Hết oxy! Tàu tự động nổi lên mặt nước.',2200)}catch(e){}}
    place();prop.rotation.x+=.15+Math.abs(st.v)*.4;
-   const dp=meters(st.d),showB=st.d>4;for(const b of beams)b.visible=showB;
+   const dp=meters(st.d),showB=st.d>4&&!!st.lt;for(const b of beams)b.visible=showB;
    /* giao diện */
    if(st.t%4==0){const q=id=>document.getElementById(id);
     q('sbdp').textContent=Math.round(dp)+' m';q('sbsp').textContent=Math.round(Math.abs(st.v)*21.6)+' km/h';q('sbop').textContent=Math.round(st.oxy)+'%';q('sbox').style.width=Math.max(0,st.oxy)+'%';
+    {const hp=Math.round(st.hp),hb=q('sbhp'),hv=q('sbhv');if(hb&&hv){hv.textContent=hp+'%';hb.style.width=hp+'%';hb.style.background=hp>60?'#38e08a':hp>30?'#ffd23f':'#ff5a4a';hv.style.color=hp>60?'':hp>30?'#ffd23f':'#ff5a4a'}}
     const zi=tierD(st.d);q('sbzn').textContent=TN[zi];q('sbdc').textContent='🧭 '+SITES.filter(s=>s.f).length+'/'+SITES.length;if(zi!=st.zi){const first=st.zi==null;st.zi=zi;if(!first)try{say('🌊 Em đã xuống '+TN[zi]+'. '+TH[zi],4200)}catch(e){}}
     const dd=Math.hypot(PX-st.x,PY-st.y);q('sbdk').textContent='⚓ Bến: '+Math.round(dd/10)+' m'+(api.canExit()?' · F/E để ra':'');
-    let al='';if(st.oxy<25)al='⚠ OXY THẤP';else if(bigNear&&bigNear[1]<260)al='⚠ SINH VẬT LỚN: '+bigNear[0].n+' cách '+Math.round(bigNear[1]/10)+' m';else if(st.hit>6)al='⚠ VA CHẠM ĐÁY/BỜ';else if(st.sa)al=st.sa;
+    let al='';if(st.hp<=0)al='🛟 TÀU HỎNG – ĐANG NỔI LÊN';else if(st.t-(st.ch?st.ch.t:-99)<20)al='🚨 '+st.ch.n+' ĐANG TRUY ĐUỔI!'+(st.lt?' Tắt đèn (L)':'');else if(st.hp<30)al='⚠ ĐỘ BỀN THẤP: '+Math.round(st.hp)+'%';else if(st.oxy<25)al='⚠ OXY THẤP';else if(bigNear&&bigNear[1]<260)al='⚠ SINH VẬT LỚN: '+bigNear[0].n+' cách '+Math.round(bigNear[1]/10)+' m';else if(st.hit>6)al='⚠ VA CHẠM ĐÁY/BỜ';else if(st.sa)al=st.sa;
     q('sbal').textContent=al}
    if(st.t%8==0){sonar();scen();disc()}
   },
@@ -9448,12 +9613,13 @@ body.insub #hint{bottom:14px!important}
    try{ply.m.visible=false}catch(e){}
    if(!st.view){camera.position.set(st.x+cs*30,y+3.5,st.y+sn*30);camera.lookAt(st.x+cs*160*cp,y+3.5+sp*160+0,st.y+sn*160*cp);subG.visible=true}
    else{camera.position.set(st.x-cs*100,y+30,st.y-sn*100);camera.lookAt(st.x+cs*30,y+2,st.y+sn*30)}
+   if(st.shake>.05){camera.position.x+=(Math.random()-.5)*st.shake;camera.position.y+=(Math.random()-.5)*st.shake;camera.position.z+=(Math.random()-.5)*st.shake} /* rung khi va chạm */
    const c=fogAt(st.d);scene.background.copy(c);scene.fog.color.copy(c);scene.fog.near=3;scene.fog.far=fogFar(st.d);
    /* càng sâu càng tối: giảm ánh sáng ban ngày, bù bằng đèn pha của tàu */
    try{const D=st.d,lk=D<7?1:D<25?1-(D-7)/18*.4:D<50?.6-(D-25)/25*.3:D<70?.3-(D-50)/20*.17:Math.max(.07,.13-(D-70)/25*.06);
     if(!st.lb&&V5.hemi&&V5.sun)st.lb=[V5.hemi.intensity,V5.sun.intensity];
     if(st.lb){V5.hemi.intensity=st.lb[0]*lk;V5.sun.intensity=st.lb[1]*lk}
-    if(hlight)hlight.intensity=D>4?.25+(1-lk)*1.5:0}catch(e){}
+    if(hlight){hlight.intensity=(D>4&&st.lt)?(.25+(1-lk)*1.5)*uv('lamp'):0;hlight.distance=320+60*UP.lamp}}catch(e){}
    if(snow){snow.visible=true;{const zi=tierD(st.d);snow.material.color.setHex([0xcff3ff,0xbfe6ff,0x7fe8ff,0xc79aff][zi]);snow.material.size=[1.4,1.5,2.4,3][zi];snow.material.opacity=[.55,.55,.75,.85][zi]}const a=snow.geometry.attributes.position,A=a.array,cx=camera.position.x,cy=camera.position.y,cz=camera.position.z;
     for(let i=0;i<A.length;i+=3){A[i+1]+=.06;let dx=A[i]-cx,dy=A[i+1]-cy,dz=A[i+2]-cz;A[i]=cx+(((dx+150)%300)+300)%300-150;A[i+1]=cy+(((dy+150)%300)+300)%300-150;A[i+2]=cz+(((dz+150)%300)+300)%300-150}
     a.needsUpdate=true}}
