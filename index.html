@@ -615,7 +615,7 @@ window.GLBX=(()=>{
  const init=()=>{const L=new THREE.GLTFLoader();
   Object.keys(CFG).forEach(id=>L.load(CFG[id].url,gl=>{try{prep(id,gl);loaded(id)}catch(e){console.warn('GLBX',id,e)}},undefined,e=>console.warn('GLBX: không tải được '+CFG[id].url,e)))};
  loadJS(SRC.gltf,()=>loadJS(SRC.skel,init,()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
- return{make:id=>CFG[id]&&T[id]?make(id):null,want:id=>!!CFG[id]&&!T[id],pend:(g,id)=>{PEND.push([g,id])}}
+ return{ok:id=>!!T[id],make:id=>CFG[id]&&T[id]?make(id):null,want:id=>!!CFG[id]&&!T[id],pend:(g,id)=>{PEND.push([g,id])}}
 })();
 </script>
 <script>
@@ -2046,7 +2046,7 @@ const NAT=(()=>{
    const c=Math.hypot(u-3700,v-2000)/230;h=Math.max(h,c<1?3+3*(1-c):3-(c-1)*230*.09);if(r>1.1)for(const q of[[700,900,75],[1050,720,60],[3300,3350,70],[900,3500,55]]){const d=Math.hypot(u-q[0],v-q[1])/q[2];if(d<1.2)h=Math.max(h,34*(1-sm(.4,1.1,d)))}return h}
   case'swamp':{const h=2.2+3.2*fb(u,v,16),k=SWK(u,v);return lp(h,-14-3*fb(u,v,18),k)}
   case'plateau':{const r=Math.hypot(u-2000,v-2000);return 16+34*fb(u,v,31)+12*Math.sin(u/520)*Math.cos(v/430)+10*Math.exp(-Math.pow(r/380,2))}
-  case'prehis':{let h=2.6+6*fb(u,v,22)+3*fb(u*2.3,v*2.3,23);const d=PLD(u,v);h=lp(h,-50-8*fb(u,v,24),1-sm(-60,40,d));const r=Math.hypot(u-PVO[0],v-PVO[1]);h+=255*(1-sm(60,PVO[2],r));if(r<95)h-=70*(1-sm(40,95,r));{const dx=u-PCL[0],dy=v-PCL[1],rc=Math.hypot(dx,dy);if(rc<PCL[2]+40){const p=1-sm(95,PCL[2],rc);let da=Math.atan2(dy,dx)-Math.PI;da=Math.abs(Math.atan2(Math.sin(da),Math.cos(da)));const w=1-sm(.32,.6,da),t=p*5,fl=Math.floor(t),pt=(fl+sm(.45,1,t-fl))/5;h+=170*(w*p+(1-w)*pt)}}{const d=PHD(u,v),sk=sm(20,240,d);if(sk>0)h=lp(h,-45-d*.02,sk)}return h}
+  case'prehis':{let h=2.6+6*fb(u,v,22)+3*fb(u*2.3,v*2.3,23);const d=PLD(u,v);h=lp(h,-50-8*fb(u,v,24),1-sm(-60,40,d));const r=Math.hypot(u-PVO[0],v-PVO[1]);h+=255*(1-sm(60,PVO[2],r));if(r<95)h-=70*(1-sm(40,95,r));{const dx=u-PCL[0],dy=v-PCL[1],rc=Math.hypot(dx,dy);if(rc<PCL[2]+40){const p=1-sm(95,PCL[2],rc);let da=Math.atan2(dy,dx)-Math.PI;da=Math.abs(Math.atan2(Math.sin(da),Math.cos(da)));const w=1-sm(.32,.6,da),t=p*5,fl=Math.floor(t),pt=(fl+sm(.45,1,t-fl))/5;h+=170*(w*p+(1-w)*pt)}}{const d=PHD(u,v),sk=sm(20,240,d);if(sk>0)h=lp(h,-Math.min(100,50+d*.13),sk)}return h}
   case'volcano':{const dx=u-2000,dy=v-2000,r=Math.hypot(dx,dy),a=Math.atan2(dy,dx),rim=1+.22*Math.sin(3*a+1)+.12*Math.sin(5*a);let h=4+190*Math.exp(-Math.pow((r-860)/360,2))*rim;h+=18*fb(u,v,19)*sm(0,400,r)+6*fb(u*3,v*3,20);const ld=ldist(u,v);if(ld<26)h-=6*(1-sm(-34,26,ld));h=lp(h,-14,1-sm(520,660,r));if(r<190)h=lp(h,12,1-sm(70,190,r));{const rad=1750*(1+.07*Math.sin(3*a+2)+.05*Math.sin(5*a)),sk=sm(rad-60,rad+260,r);if(sk>0)h=lp(h,-50,sk)}return h}
   case'cave':{if(u>=MASS[0]&&u<=MASS[2]&&v>=MASS[1]&&v<=MASS[3])return 0;return 18*fb(u,v,10)*sm(0,500,Math.min(u,v,RS-u,RS-v))}
   case'reef':{const dx=u-2000,dy=v-2000,r=Math.hypot(dx,dy);let h=-100+90*sm(1950,1560,r);
@@ -3089,12 +3089,12 @@ VR('bachtuoc','belemnite','Mực tên cổ','🦑','prehis',3,{s:.9,c1:'#1f8f8a'
  {id:'mosa',n:'Mosasaurus',e:'🐊',r:'prehis',b:'mosa',m:'swim',c:3,v:.5,rm:130,k:2.6,nl:210,z:'pl',dive:1,dino:0,p:{s:1.2,c1:'#2a6fb8',c2:'#cfeaf8',c3:'#f0b43a',leg:2,H:2},t:'Mosasaurus là thằn lằn biển khổng lồ dài tới 12–15 m, thống trị đại dương cuối kỷ Phấn trắng. Nó không phải khủng long mà là họ hàng của thằn lằn và rắn ngày nay, và phải trồi lên mặt nước để thở bằng phổi.',h:'Biển và hồ lớn thời Phấn trắng'}, VR('yen','archae','Archaeopteryx (thủy tổ chim)','🐦','prehis',4,{c1:'#3a4a5a',c2:'#d9b86a',ch:'#3a4a5a',cb:'#d0a050',cw:'#2a3a4a',cw2:'#c09040',s:1.5,belly:0},'Archaeopteryx có lông vũ như chim nhưng vẫn còn răng, vuốt trên cánh và chiếc đuôi dài có xương. Nó là "mắt xích" nối giữa khủng long và chim, sống cách đây khoảng 150 triệu năm.','Rừng thưa thời Jura',{alt:[30,70],rm:300}),
  VR('buom','megan','Chuồn chuồn khổng lồ Meganeura','🪰','prehis',6,{s:3.2,c1:'#1fb8a4',c2:'#d6f7ef',c3:'#ff8a3d'},'Meganeura là loài côn trùng bay khổng lồ giống chuồn chuồn, sải cánh tới khoảng 70 cm. Nó sống cách đây khoảng 300 triệu năm, trước cả thời khủng long, khi không khí có nhiều ôxi hơn bây giờ.','Rừng đầm lầy cổ đại',{k:3.4,nl:170,alt:[6,40]}),
  VR('ret','arthro','Rết khổng lồ Arthropleura','🐛','prehis',4,{s:2.6,c1:'#8a4ad0',c2:'#e9d8ff',c3:'#ffd23f'},'Arthropleura là loài chân đốt (họ hàng xa của rết và cuốn chiếu) dài tới khoảng 2 m, sống cách đây gần 300 triệu năm. Nó ăn thực vật mục trong rừng và sống trước cả thời khủng long.','Rừng ẩm cổ đại',{k:3.6,nl:170}),
- VR('camapvoi','megalodon','Megalodon','🦈','prehis',1,{s:6.2,wide:0,dots:0,c1:'#56687a',c2:'#e8eef2',c3:'#34414d',cd:'#34414d'},'Megalodon là loài cá mập khổng lồ đã tuyệt chủng, dài tới khoảng 15–18 m, to hơn cá mập trắng nhiều lần. Nó săn cá voi nhỏ và các sinh vật biển lớn. Răng của nó to bằng bàn tay người và vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:430,alt:[25,60],k:3.4,nl:430,v:.3}),
+ VR('camapvoi','megalodon','Megalodon','🦈','prehis',1,{s:6.2,wide:0,dots:0,c1:'#56687a',c2:'#e8eef2',c3:'#34414d',cd:'#34414d'},'Megalodon là loài cá mập khổng lồ đã tuyệt chủng, dài tới khoảng 15–18 m, to hơn cá mập trắng nhiều lần. Nó săn cá voi nhỏ và các sinh vật biển lớn. Răng của nó to bằng bàn tay người và vẫn được tìm thấy ở dạng hóa thạch.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:430,alt:[25,60],k:3.4,nl:430,v:.3,fx:1.8,tl:260}),
  /* Archaeopteryx: thủy tổ chim, làm tổ trên ngọn cây cao */
  {id:'archaeo',n:'Archaeopteryx (thủy tổ chim)',e:'🪶',r:'prehis',b:'bird',m:'fly',c:6,v:1,rm:380,k:3,nl:230,alt:[30,95],dino:0,p:{s:1.6,fly:1,c1:'#e0457a',c2:'#fff0d8',c3:'#ffd23f',ch:'#fff0d8',cw:'#e0457a',cw2:'#ffd23f',cb:'#2a1a18',tail:1.8,tw:.5,ws:1.6},t:'Archaeopteryx sống cách đây khoảng 150 triệu năm, cỡ một con quạ. Nó vừa có lông vũ và đôi cánh như chim, vừa có răng, đuôi dài đầy xương và móng vuốt ở cánh như khủng long, nên được gọi là "thủy tổ của loài chim". Chúng làm tổ trên cây cao, đẻ trứng và ấp trứng như chim ngày nay.',h:'Rừng thông cổ, tổ trên ngọn cây cao'}
 
  );
- SPS.push(VR('mosa','pliosaurus','Pliosaurus','🐊','prehis',2,{s:1.05,c1:'#4f7a5a',c2:'#e9ecd8',c3:'#d9902f',leg:2,H:2},'Pliosaurus là thằn lằn biển săn mồi dài khoảng 10–12 m, đầu rất lớn, cổ ngắn và bốn chân dạng mái chèo. Nó bơi nhanh, săn cá và mực. Nó không phải khủng long mà là bò sát biển, thở bằng phổi nên phải nổi lên mặt nước.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:260,alt:[8,40],k:2.7,nl:300}));
+ SPS.push(VR('mosa','pliosaurus','Pliosaurus','🐊','prehis',2,{s:1.05,c1:'#4f7a5a',c2:'#e9ecd8',c3:'#d9902f',leg:2,H:2},'Pliosaurus là thằn lằn biển săn mồi dài khoảng 10–12 m, đầu rất lớn, cổ ngắn và bốn chân dạng mái chèo. Nó bơi nhanh, săn cá và mực. Nó không phải khủng long mà là bò sát biển, thở bằng phổi nên phải nổi lên mặt nước.','Biển cổ đại quanh đảo nguyên thủy',{z:'psea',rm:260,alt:[8,40],k:2.7,nl:300,fx:6.42,tl:260}));
  SPS.push(
  /* ===== CAO NGUYÊN THÔNG XANH ===== */
  VR('bo','bosua','Bò sữa','🐄','plateau',8,{c1:'#f7f3ea',c3:'#2b2b30'},'Bò sữa được nuôi nhiều ở vùng cao nguyên mát mẻ. Mỗi ngày bò ăn nhiều cỏ rồi nhai lại, và cho ta sữa tươi giàu canxi giúp xương chắc khỏe.','Cao nguyên, trang trại'),
@@ -4200,6 +4200,7 @@ MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),9
 MECH.reg('megan',(T,s)=>MKB(T,s,'megan').dragonM({bl:3,bh:.55,bw:.5,hs:3.4,cw:1.2,tn:9,tl:.55,tr0:.2,tr1:.08}),13,0);
 MECH.reg('arthro',(T,s)=>MKB(T,s,'arthro').centiM({n:12,sl:.9,r:.55}),18,1);
 MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl:1.5,hh:.62,hw:.55,tn:8,tl:.8,tr0:.26,tr1:.08,hs:3.6,cw:1.5}),14,0);
+ const FX=s=>{if(!s.fx)return 1;if(window.GLBX&&GLBX.ok(s.id))return s.fx;if(s.fb==null&&s.tp&&s.tl){s.fb=1;try{s.tp.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s.tp),L=Math.max(b.max.x-b.min.x,b.max.z-b.min.z);if(L>1)s.fb=Math.max(.3,Math.min(8,s.tl/(L*(s.k||1)*1.25)))}catch(e){}}return s.fb||1};
  const inst=s=>{{const X=window.GLBX&&GLBX.make(s.id);if(X)return X}if(!s.tp){const bf=MECH.get(s.id);if(bf){try{s.tp=bf()}catch(e){s.tp=null;try{ERR(e)}catch(_){}}}if(!s.tp)s.tp=BU[s.b](s.p)}const mp=new Map(),g=dup(s.tp,mp),u=s.tp.userData,d=g.userData;
   for(const k of['legs','wings','seg'])if(u[k])d[k]=u[k].map(x=>mp.get(x)||x);if(u.sp)d.sp=u.sp;if(u.rig){try{u.rig(mp)}catch(e){}}if(window.GLBX&&GLBX.want(s.id))GLBX.pend(g,s.id);return g};
  const HERD={walk:1,dash:1,hop:1,slide:1,side:1,school:1};
@@ -4230,7 +4231,7 @@ MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl
   const nt=isNight();for(const o of ALL){const dx=o.x-px,dy=o.y-py;o.want=0;if(Math.abs(dx)>Rr||Math.abs(dy)>Rr)continue;if(!awake(o.s,nt))continue;o.d=dx*dx+dy*dy;c.push(o)}
   c.sort((a,b)=>a.d-b.d);const mx=MAXV();for(let i=0;i<c.length&&i<mx;i++)c[i].want=1;
   let made=0;for(const o of ALL){
-   if(o.want&&!o.g){if(made>=40)continue;made++;const s=o.s,g=inst(s);g.scale.setScalar((s.k||1)*1.25);g.visible=true;scene.add(g);o.g=g;o.on=1}
+   if(o.want&&!o.g){if(made>=40)continue;made++;const s=o.s,g=inst(s);g.scale.setScalar((s.k||1)*1.25*FX(s));g.visible=true;scene.add(g);o.g=g;o.on=1}
    else if(!o.want&&o.g){scene.remove(o.g);o.g=null;o.on=0}}};
  const gy=(x,y)=>Math.max(GHy(x,y),-2);
  const step=(o,sp)=>{const nx=o.x+Math.cos(o.a)*sp,ny=o.y+Math.sin(o.a)*sp;
@@ -4419,7 +4420,7 @@ MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl
     case'rest':{sy=1+Math.sin(t*.03+o.ph)*.02;if(o.bt<=0)nx=true;break}
     default:o.b='idle';o.bt=30}
    if(nx){const k=HK(o)||pick(o,P);if(k=='idle'){o.b='idle';o.bt=40}else enter(o,k,P)}
-   const sc=(s.k||1)*1.25;g.scale.set(sc*sx,sc*sy,sc);
+   const sc=(s.k||1)*1.25*FX(s);g.scale.set(sc*sx,sc*sy,sc);
    g.position.set(o.x,gy(o.x,o.y)+hop,o.y);g.rotation.set(roll,-(o.a+side),pit);return true};
   const run=(o,g,s,ud,t,px,py)=>{const P=PF[s.id];if(!P||o.perch)return false;
    if(!ud.bi){ud.bi=1;o.wf=0;if(!o.b){o.b='idle';o.bt=10+Math.random()*80}o.hp=0;o.lie=o.lie||0}
@@ -9183,6 +9184,19 @@ const SUB=(()=>{
 #sbbt button{width:42px;height:42px;font-size:19px;border-width:2px}
 body.insub #hint{bottom:calc(19vh + 34px)!important;max-width:44vw;font-size:12px!important;padding:5px 12px!important}
 }`;document.head.appendChild(css2);
+  /* Trong tàu ngầm: ẩn nút chức năng/bản đồ/bảng thông tin của game, đưa bảng đồng hồ + radar lên phía trên */
+  const css3=document.createElement('style');css3.textContent=`
+body.insub #dock,body.insub #hud,body.insub #mis,body.insub #mm,body.insub #tp,body.insub #arr,body.insub #help,body.insub #mpb{display:none!important}
+#sbhud{--sbh:clamp(76px,20vh,150px)}
+#sbhud.ext{--sbh:clamp(66px,16vh,130px)}
+#sbhud #sbdash,#sbhud.ext #sbdash{top:0!important;bottom:auto!important;left:0!important;right:0!important;height:var(--sbh)!important;min-height:0!important;border-top:0!important;border-bottom:3px solid #4a6a82;border-radius:0 0 14px 14px!important}
+#sbhud #sbwin{top:calc(var(--sbh) + 4px)!important;bottom:6vh!important}
+#sbhud #sbtop,#sbhud.ext #sbtop{top:calc(var(--sbh) + 10px)!important;bottom:auto!important;left:0!important;right:0!important;justify-content:center!important;gap:8px}
+#sbhud #sbtop span:first-child{display:none!important}
+#sbhud #sbbt,#sbhud.ext #sbbt{top:calc(var(--sbh) + 46px)!important;right:1.2vw!important}
+#sbhud #sbhelp{position:fixed;left:0;right:0;bottom:.5vh}
+body.insub #hint{bottom:14px!important}
+`;document.head.appendChild(css3);
   hud=document.createElement('div');hud.id='sbhud';
   hud.innerHTML='<div id="sbwin"></div><div id="sbtop"><span>🚢 TÀU NGẦM THÁM HIỂM</span><span id="sbzn">VÙNG NƯỚC NÔNG</span><span id="sbal"></span></div>'+
    '<div id="sbdash"><div class="g"><small>ĐỘ SÂU</small><b id="sbdp">0 m</b></div><div class="g"><small>TỐC ĐỘ</small><b id="sbsp">0 km/h</b></div>'+
