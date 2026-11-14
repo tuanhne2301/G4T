@@ -602,7 +602,8 @@ window.GLBX=(()=>{
    const BM=sk.bones.map((b,i)=>new THREE.Matrix4().multiplyMatrices(b.matrixWorld,sk.boneInverses[i]));
    const st=Math.max(1,Math.floor(P.count/8000));
    for(let i=0;i<P.count;i+=st){a.set(0,0,0);
-    for(let k=0;k<4;k++){const w=SW.getComponent(i,k);if(!w)continue;v.fromBufferAttribute(P,i).applyMatrix4(BM[SI.getComponent(i,k)]);a.addScaledVector(v,w)}
+    for(let k=0;k<4;k++){const g=k===0?'getX':k===1?'getY':k===2?'getZ':'getW'; /* three r128 không có getComponent */
+     const w=SW[g](i);if(!w)continue;v.fromBufferAttribute(P,i).applyMatrix4(BM[SI[g](i)]);a.addScaledVector(v,w)}
     bb.expandByPoint(a)}});
   return bb};
  const prep=(key,gltf)=>{const cfg=CFG[key],mats=new Map(),scn=gltf.scene;
