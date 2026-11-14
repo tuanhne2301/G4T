@@ -566,20 +566,24 @@ window.GLBX=(()=>{
   megalodon:{url:'megalodon.glb',len:34,ctr:null,clip:null},
   pliosaurus:{url:'pliosaurus.glb',len:12,ctr:null,clip:'Swim_Slow'},
   /* Leedsichthys: có xương, không có hoạt ảnh -> tự uốn thân/đuôi/vây */
-  leeds:{url:'leedsichthys.glb',len:34,ctr:0,fix:1,rig:'leeds'},
+  leeds:{url:'leedsichthys.glb',len:34,ctr:0,fix:1,rig:'leeds',max:8},
   /* Elasmosaurus: có xương, không có hoạt ảnh -> tự uốn cổ/đuôi, 4 mái chèo bơi */
-  elasmo:{url:'elasmosaurus.glb',len:32,ctr:.5,fix:1,rig:'elasmo'},
+  elasmo:{url:'elasmosaurus.glb',len:32,ctr:.5,fix:1,rig:'elasmo',max:2},
   /* Mosasaurus: dùng đúng hoạt ảnh có sẵn trong file (Take 001) */
-  mosasaurus:{url:'mosasaurus.glb',len:31,ctr:null,fix:1,clip:'*'},
+  mosasaurus:{url:'mosasaurus.glb',len:31,ctr:null,fix:1,clip:'*',max:5},
   /* Ichthyosaurus: mô hình tĩnh, không xương -> uốn thân bằng shader như cá heo */
-  ichthyo:{url:'ichthyosaurus.glb',len:12.5,ctr:null,bake:1,rig:'bend'},
+  ichthyo:{url:'ichthyosaurus.glb',len:12.5,ctr:null,bake:1,rig:'bend',max:2},
   /* Dunkleosteus: mô hình tĩnh -> uốn phần thân sau/đuôi bằng shader, đầu giáp giữ cứng */
-  dunkle:{url:'dunkleosteus.glb',len:15,ctr:null,bake:1,rig:'bend'}
+  dunkle:{url:'dunkleosteus.glb',len:15,ctr:null,bake:1,rig:'bend',max:6}
  };
  /* id loài trong game -> khóa mô hình (Mosasaurus xuất hiện ở 2 vùng: id 'mosa' và 'mosasea') */
  const ALIAS={mosa:'mosasaurus',mosasea:'mosasaurus'};
  const KEY=id=>ALIAS[id]||id;
- const T={},PEND=[];
+ const T={},PEND=[],LIVE={};
+ /* giới hạn số con đang hiện cùng lúc của các mô hình nặng (max): con ở xa/ngoài giới hạn dùng lại mô hình cũ cho nhẹ máy */
+ const live=key=>{const a=LIVE[key]||(LIVE[key]=[]);for(let i=a.length-1;i>=0;i--)if(!a[i].parent)a.splice(i,1);return a};
+ /* báo lỗi tải ra màn hình (tự tắt sau 25 giây) để biết file nào thiếu/lỗi */
+ const note=msg=>{try{console.warn('GLBX',msg);let d=document.getElementById('glbx-note');if(!d){d=document.createElement('div');d.id='glbx-note';d.style.cssText='position:fixed;left:8px;bottom:8px;z-index:99999;max-width:70vw;font:11px/1.35 monospace;color:#fff;background:rgba(160,30,30,.85);padding:5px 8px;border-radius:6px;pointer-events:none';document.body.appendChild(d);setTimeout(()=>{d.remove()},25000)}d.textContent+=(d.textContent?'\n':'')+msg;d.style.whiteSpace='pre-wrap'}catch(e){}};
  const SRC={
   gltf:['https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js','https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js'],
   skel:['https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js','https://unpkg.com/three@0.128.0/examples/js/utils/SkeletonUtils.js']
@@ -686,19 +690,21 @@ window.GLBX=(()=>{
  const rigBend=(cl,d)=>{const U={ph:{value:0}};
   cl.traverse(o=>{if(!o.isMesh||Array.isArray(o.material))return;const m=o.material.clone();bendMat(m,U,d.bend);o.material=m});
   const ph0=Math.random()*6.28;return t=>{U.ph.value=t*5.2+ph0}};
- const make=id=>{const key=KEY(id),d=T[key];if(!d||!THREE.SkeletonUtils)return null;
-  try{const cfg=CFG[key],cl=THREE.SkeletonUtils.clone(d.N),g=new THREE.Group();g.add(cl);
+ const make=(id,tg)=>{const key=KEY(id),d=T[key];if(!d||!THREE.SkeletonUtils)return null;
+  try{const cfg=CFG[key];if(cfg.max){const a=live(key);if(a.length>=cfg.max&&!(tg&&a.indexOf(tg)>=0))return null}
+   const cl=THREE.SkeletonUtils.clone(d.N),g=new THREE.Group();g.add(cl);
    let hook=null;cl.traverse(o=>{if(o.isMesh&&!hook)hook=o});
    if(hook){
     if(cfg.clip){const clip=(cfg.clip=='*'?null:d.clips.find(c=>c.name==cfg.clip))||d.clips[0];
      if(clip){const mx=new THREE.AnimationMixer(cl.children[0].children[0]),ac=mx.clipAction(clip);mx.timeScale=1.6;ac.play();ac.time=Math.random()*clip.duration;
       let last=performance.now()/1000;hook.onBeforeRender=()=>{const n=performance.now()/1000,dt=n-last;if(dt>.001){last=n;mx.update(Math.min(dt,.1))}}}}
     else{const f=cfg.rig=='bend'?rigBend(cl,d):RIGS[cfg.rig]?rig(cl,RIGS[cfg.rig]):rigShark(cl);hook.onBeforeRender=()=>f(performance.now()/1000)}}
-   return g}catch(e){try{console.warn('GLBX',id,e)}catch(_){}return null}};
- const swap=(g,id)=>{const G=make(id);if(!G)return;while(g.children.length)g.remove(g.children[0]);while(G.children.length)g.add(G.children[0])};
+   if(cfg.max&&!tg)live(key).push(g);
+   return g}catch(e){note('lỗi dựng '+id+': '+(e&&e.message));return null}};
+ const swap=(g,id)=>{const G=make(id,g);if(!G)return;while(g.children.length)g.remove(g.children[0]);while(G.children.length)g.add(G.children[0]);const k=KEY(id);if(CFG[k].max){const a=live(k);if(a.indexOf(g)<0)a.push(g)}};
  const loaded=key=>{for(let i=PEND.length-1;i>=0;i--)if(KEY(PEND[i][1])==key){swap(PEND[i][0],PEND[i][1]);PEND.splice(i,1)}};
  const init=()=>{const L=new THREE.GLTFLoader();
-  Object.keys(CFG).forEach(key=>L.load(CFG[key].url,gl=>{try{prep(key,gl);loaded(key)}catch(e){console.warn('GLBX',key,e)}},undefined,e=>console.warn('GLBX: không tải được '+CFG[key].url,e)))};
+  Object.keys(CFG).forEach(key=>L.load(CFG[key].url,gl=>{try{prep(key,gl);loaded(key)}catch(e){note('lỗi xử lý '+CFG[key].url+': '+(e&&e.message))}},undefined,e=>note('không tải được '+CFG[key].url)))};
  loadJS(SRC.gltf,()=>loadJS(SRC.skel,init,()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
  return{ok:id=>!!T[KEY(id)],make:id=>CFG[KEY(id)]&&T[KEY(id)]?make(id):null,want:id=>!!CFG[KEY(id)]&&!T[KEY(id)],pend:(g,id)=>{PEND.push([g,id])}}
 })();
@@ -9211,7 +9217,7 @@ try{if(!sessionStorage.getItem('ttt3d_rot')){$('rot').classList.add('on');sessio
 const SUB=(()=>{
  const DX=-22909,DY=703,AG=4.51,CA_=Math.cos(AG),SA_=Math.sin(AG),PX=DX+CA_*245-SA_*48,PY=DY+SA_*245+CA_*48,H0=AG;
  const st={on:0,x:PX,y:PY,d:7,h:H0,v:0,w:0,vy:0,view:0,ox:100,hit:0,seen:{},al:'',alT:0,btn:{u:0,d:0},prop:0,ready:0,t:0};
- let dock=null,subG=null,prop=null,beams=[],hud=null,snow=null,radT=0,blips=[],bigNear=null,col=null;
+ let dock=null,subG=null,prop=null,beams=[],hlight=null,hud=null,snow=null,radT=0,blips=[],bigNear=null,col=null;
  const LB=(c,o)=>new THREE.MeshLambertMaterial(Object.assign({color:c},o||{})),BS=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c},o||{}));
  const bxg=new THREE.BoxGeometry(1,1,1),cyg=new THREE.CylinderGeometry(1,1,1,16),spg=new THREE.SphereGeometry(1,16,12),cng=new THREE.ConeGeometry(1,1,4);
  const mk=(g,m,x,y,z,p)=>{const q=new THREE.Mesh(g,m);q.position.set(x||0,y||0,z||0);if(p)p.add(q);return q};
@@ -9252,6 +9258,7 @@ const SUB=(()=>{
   B(12,1,28,M.yel,-42,0,0,subG);B(12,24,1,M.yel,-42,0,0,subG);for(const z of[-1,1])B(10,2,6,M.met,8,-12,z*8,subG);
   for(const z of[-1,1])for(const x of[-16,0,16])S(2.4,2.4,1,M.win,x,3,z*14.6,subG);
   for(const z of[-1,1]){S(2.6,2.6,2.6,M.lamp,45,-3,z*7,subG);const bm=mk(cng,new THREE.MeshBasicMaterial({color:0xfff1b0,transparent:true,opacity:.13,blending:THREE.AdditiveBlending,depthWrite:false}),105,-3,z*7,subG);bm.scale.set(16,120,16);bm.rotation.z=Math.PI/2;beams.push(bm)}
+  hlight=new THREE.PointLight(0xfff1c0,0,320,1.3);hlight.position.set(85,0,0);subG.add(hlight);
   prop=new THREE.Group();prop.position.set(-52,0,0);subG.add(prop);S(3,3,3,M.met,0,0,0,prop);for(let i=0;i<3;i++){const b=B(1,12,3,M.met,0,0,0,prop);b.position.y=6;const pv=new THREE.Group();pv.rotation.x=i*Math.PI*2/3;prop.add(pv);pv.add(b)}
   const sh=new THREE.Mesh(new THREE.TorusGeometry(10,1,8,20),M.drk);sh.rotation.y=Math.PI/2;sh.position.set(-52,0,0);subG.add(sh)};
  const place=()=>{subG.position.set(st.x,-st.d,st.y);subG.rotation.y=-st.h;subG.rotation.z=-st.vy*.18;subG.rotation.x=-st.w*3};
@@ -9393,10 +9400,10 @@ body.insub #hint{bottom:14px!important}
   board(force){ready();if(st.on)return;if(!force&&!api.near())return;if(!hud||!subG||!prop){try{say('⚠ Tàu ngầm chưa dựng được'+(st.err?' ('+st.err.slice(0,90)+')':'')+'. Em chụp màn hình báo cô/thầy nhé.',6000)}catch(e){}return}
    try{if(ply.mt)V5.dismount(true)}catch(e){}try{if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}}catch(e){}INT.cur=null;
    try{apStop&&AP.on&&apStop('')}catch(e){}
-   st.on=1;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;
+   st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;
    try{SND.p('splash')}catch(e){}try{say('🚢 Em đã vào tàu ngầm! W/S: tiến-lùi, A/D: rẽ, Space: lặn, Shift: nổi, V: đổi góc nhìn. Về bến rồi bấm F/E để ra.',6000)}catch(e){}},
   exit(){if(!st.on)return;if(!api.canExit()){const dx=PX-st.x,dy=PY-st.y;try{say('⚓ Hãy đưa tàu về bến (cách khoảng '+Math.round(Math.hypot(dx,dy)/10)+' m, chấm vàng trên sonar) và nổi lên mặt nước rồi mới ra được.',3800)}catch(e){}return}
-   st.on=0;moor();hud.classList.remove('on');snow.visible=false;
+   st.on=0;st.lb=null;if(hlight)hlight.intensity=0;moor();hud.classList.remove('on');snow.visible=false;
    ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}
    try{SND.p('splash')}catch(e){}try{say('Em đã rời tàu ngầm về trạm thám hiểm.',2400)}catch(e){}},
   warp(){ready();try{NATV.pre(PX,PY);SCN.pre(PX,PY)}catch(e){}ply.x=PX;ply.y=PY+60;ply.a=H0;api.board(true)},
@@ -9441,6 +9448,11 @@ body.insub #hint{bottom:14px!important}
    if(!st.view){camera.position.set(st.x+cs*30,y+3.5,st.y+sn*30);camera.lookAt(st.x+cs*160*cp,y+3.5+sp*160+0,st.y+sn*160*cp);subG.visible=true}
    else{camera.position.set(st.x-cs*100,y+30,st.y-sn*100);camera.lookAt(st.x+cs*30,y+2,st.y+sn*30)}
    const c=fogAt(st.d);scene.background.copy(c);scene.fog.color.copy(c);scene.fog.near=3;scene.fog.far=fogFar(st.d);
+   /* càng sâu càng tối: giảm ánh sáng ban ngày, bù bằng đèn pha của tàu */
+   try{const D=st.d,lk=D<7?1:D<25?1-(D-7)/18*.4:D<50?.6-(D-25)/25*.3:D<70?.3-(D-50)/20*.17:Math.max(.07,.13-(D-70)/25*.06);
+    if(!st.lb&&V5.hemi&&V5.sun)st.lb=[V5.hemi.intensity,V5.sun.intensity];
+    if(st.lb){V5.hemi.intensity=st.lb[0]*lk;V5.sun.intensity=st.lb[1]*lk}
+    if(hlight)hlight.intensity=D>4?.25+(1-lk)*1.5:0}catch(e){}
    if(snow){snow.visible=true;{const zi=tierD(st.d);snow.material.color.setHex([0xcff3ff,0xbfe6ff,0x7fe8ff,0xc79aff][zi]);snow.material.size=[1.4,1.5,2.4,3][zi];snow.material.opacity=[.55,.55,.75,.85][zi]}const a=snow.geometry.attributes.position,A=a.array,cx=camera.position.x,cy=camera.position.y,cz=camera.position.z;
     for(let i=0;i<A.length;i+=3){A[i+1]+=.06;let dx=A[i]-cx,dy=A[i+1]-cy,dz=A[i+2]-cz;A[i]=cx+(((dx+150)%300)+300)%300-150;A[i+1]=cy+(((dy+150)%300)+300)%300-150;A[i+2]=cz+(((dz+150)%300)+300)%300-150}
     a.needsUpdate=true}}
