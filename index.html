@@ -556,14 +556,29 @@ body.full #sbx{top:calc(var(--mm) + 20px)!important}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* Chỉnh độ lớn: sửa số len (chiều dài mô hình) trong CFG bên dưới */
-/* ===== GLBX: thay ngoại hình Megalodon và Pliosaurus bằng mô hình GLB =====
-   Cần 2 file đặt cùng thư mục với index.html: megalodon.glb và pliosaurus.glb.
-   Nếu thiếu file hoặc tải lỗi, game tự dùng lại mô hình cũ (không bị lỗi). */
+/* ===== GLBX: thay ngoại hình bằng mô hình GLB =====
+   Các file đặt cùng thư mục với index.html:
+     megalodon.glb, pliosaurus.glb, dunkleosteus.glb, leedsichthys.glb, elasmosaurus.glb, mosasaurus.glb, ichthyosaurus.glb
+   Nếu thiếu file hoặc tải lỗi, game tự dùng lại mô hình cũ (không bị lỗi).
+   Độ lớn thực tế = len * k * 1.25 * fx (k, fx lấy từ khai báo loài trong game). */
 window.GLBX=(()=>{
  const CFG={
   megalodon:{url:'megalodon.glb',len:34,ctr:null,clip:null},
-  pliosaurus:{url:'pliosaurus.glb',len:12,ctr:null,clip:'Swim_Slow'}
+  pliosaurus:{url:'pliosaurus.glb',len:12,ctr:null,clip:'Swim_Slow'},
+  /* Leedsichthys: có xương, không có hoạt ảnh -> tự uốn thân/đuôi/vây */
+  leeds:{url:'leedsichthys.glb',len:34,ctr:0,fix:1,rig:'leeds'},
+  /* Elasmosaurus: có xương, không có hoạt ảnh -> tự uốn cổ/đuôi, 4 mái chèo bơi */
+  elasmo:{url:'elasmosaurus.glb',len:32,ctr:.5,fix:1,rig:'elasmo'},
+  /* Mosasaurus: dùng đúng hoạt ảnh có sẵn trong file (Take 001) */
+  mosasaurus:{url:'mosasaurus.glb',len:31,ctr:null,fix:1,clip:'*'},
+  /* Ichthyosaurus: mô hình tĩnh, không xương -> uốn thân bằng shader như cá heo */
+  ichthyo:{url:'ichthyosaurus.glb',len:12.5,ctr:null,bake:1,rig:'bend'},
+  /* Dunkleosteus: mô hình tĩnh -> uốn phần thân sau/đuôi bằng shader, đầu giáp giữ cứng */
+  dunkle:{url:'dunkleosteus.glb',len:15,ctr:null,bake:1,rig:'bend'}
  };
+ /* id loài trong game -> khóa mô hình (Mosasaurus xuất hiện ở 2 vùng: id 'mosa' và 'mosasea') */
+ const ALIAS={mosa:'mosasaurus',mosasea:'mosasaurus'};
+ const KEY=id=>ALIAS[id]||id;
  const T={},PEND=[];
  const SRC={
   gltf:['https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js','https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js'],
@@ -572,10 +587,31 @@ window.GLBX=(()=>{
  const loadJS=(list,ok,bad)=>{let i=0;const next=()=>{if(i>=list.length){bad&&bad();return}const s=document.createElement('script');s.src=list[i++];s.onload=ok;s.onerror=()=>{s.remove();next()};document.head.appendChild(s)};next()};
  /* hướng mô hình gốc -> hướng của game (đầu về +X, lưng hướng +Y) */
  const orient=id=>{const q=new THREE.Quaternion();
-  q.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2); /* cả hai mô hình: đầu +Z, lưng +Y (đã tính xoay node trong GLB) -> đầu về +X */
+  q.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2); /* các mô hình: đầu +Z, lưng +Y -> đầu về +X */
   return q};
- const prep=(id,gltf)=>{const cfg=CFG[id],mats=new Map();
-  gltf.scene.traverse(o=>{if(!o.isMesh)return;
+ /* hộp bao của mô hình có xương ở tư thế gốc, tính đúng như bộ đổ bóng skinning của three.js (bind = đơn vị) */
+ const posedBox=root=>{root.updateMatrixWorld(true);
+  const bb=new THREE.Box3(),v=new THREE.Vector3(),a=new THREE.Vector3(),tb=new THREE.Box3();
+  root.traverse(o=>{if(!o.isMesh)return;
+   if(!o.isSkinnedMesh){tb.setFromObject(o);bb.union(tb);return}
+   const sk=o.skeleton,G=o.geometry,P=G.attributes.position,SI=G.attributes.skinIndex,SW=G.attributes.skinWeight;
+   const BM=sk.bones.map((b,i)=>new THREE.Matrix4().multiplyMatrices(b.matrixWorld,sk.boneInverses[i]));
+   const st=Math.max(1,Math.floor(P.count/8000));
+   for(let i=0;i<P.count;i+=st){a.set(0,0,0);
+    for(let k=0;k<4;k++){const w=SW.getComponent(i,k);if(!w)continue;v.fromBufferAttribute(P,i).applyMatrix4(BM[SI.getComponent(i,k)]);a.addScaledVector(v,w)}
+    bb.expandByPoint(a)}});
+  return bb};
+ const prep=(key,gltf)=>{const cfg=CFG[key],mats=new Map(),scn=gltf.scene;
+  scn.updateMatrixWorld(true);
+  if(cfg.fix){ /* mesh có xương: bỏ phép biến đổi của node mesh (đúng chuẩn glTF) để mô hình không bị xoay/co sai */
+   const sk=[];scn.traverse(o=>{if(o.isSkinnedMesh)sk.push(o)});
+   sk.forEach(m=>{scn.add(m);m.position.set(0,0,0);m.quaternion.set(0,0,0,1);m.scale.set(1,1,1);m.frustumCulled=false;m.updateMatrix();m.updateMatrixWorld(true);m.bind(m.skeleton,new THREE.Matrix4())})}
+  if(cfg.bake){ /* mô hình tĩnh: ghi phép biến đổi các node vào hình học để trục thân = trục Z, lưng = +Y */
+   const ms=[];scn.traverse(o=>{if(o.isMesh)ms.push(o)});
+   ms.forEach(m=>{m.geometry=m.geometry.clone();m.geometry.applyMatrix4(m.matrixWorld);m.position.set(0,0,0);m.quaternion.set(0,0,0,1);m.scale.set(1,1,1);m.updateMatrix();scn.add(m)})}
+  scn.updateMatrixWorld(true);
+  const b0=new THREE.Box3().setFromObject(scn),bend={z0:b0.max.z,L:Math.max(1e-6,b0.max.z-b0.min.z)};
+  scn.traverse(o=>{if(!o.isMesh)return;
    const f=m=>{if(mats.has(m))return mats.get(m);
     const n=new THREE.MeshLambertMaterial({map:m.map||null,side:THREE.DoubleSide,skinning:!!o.isSkinnedMesh});
     n.color.copy(m.color);if(n.color.convertLinearToSRGB)n.color.convertLinearToSRGB();
@@ -584,12 +620,12 @@ window.GLBX=(()=>{
     if(m.transparent){n.transparent=true;n.opacity=m.opacity}
     mats.set(m,n);return n};
    o.material=Array.isArray(o.material)?o.material.map(f):f(o.material)});
-  const root=new THREE.Group();root.quaternion.copy(orient(id));root.add(gltf.scene);root.updateMatrixWorld(true);
-  const bb=new THREE.Box3().setFromObject(root),k=cfg.len/(bb.max.x-bb.min.x);
+  const root=new THREE.Group();root.quaternion.copy(orient(key));root.add(scn);root.updateMatrixWorld(true);
+  const bb=cfg.fix?posedBox(root):new THREE.Box3().setFromObject(root),k=cfg.len/(bb.max.x-bb.min.x);
   const cy=cfg.ctr==null?(bb.min.y+bb.max.y)/2:cfg.ctr;
   root.scale.setScalar(k);root.position.set(-(bb.min.x+bb.max.x)/2*k,-cy*k,-(bb.min.z+bb.max.z)/2*k);
   const N=new THREE.Group();N.add(root);
-  T[id]={N,clips:gltf.animations||[]}};
+  T[key]={N,clips:gltf.animations||[],bend}};
  /* Megalodon không có hoạt ảnh sẵn: tự uốn đuôi như cá mập đang bơi */
  const rigShark=cl=>{const root=cl.children[0],scn=root.children[0],up=new THREE.Vector3(0,1,0);
   const names=['spine_lower_6','pelvis_15','tail_1_14','tail_2_13','tail_3_10','tail_4_9','tail_5_8','tail_6_7'],
@@ -600,21 +636,71 @@ window.GLBX=(()=>{
    B.push({b,rest:b.quaternion.clone(),ax:up.clone().applyQuaternion(Q.invert()),a:amp[i],p:ph[i]})});
   const ph0=Math.random()*6.28,dq=new THREE.Quaternion();
   return t=>{for(const x of B){dq.setFromAxisAngle(x.ax,x.a*Math.sin(t*2.8+ph0-x.p));x.b.quaternion.copy(dq).multiply(x.rest)}}};
- const make=id=>{const d=T[id];if(!d||!THREE.SkeletonUtils)return null;
-  try{const cl=THREE.SkeletonUtils.clone(d.N),g=new THREE.Group();g.add(cl);
+ /* ----- hoạt ảnh xương tự dựng cho mô hình có xương nhưng không có clip -----
+    ax: trục quay trong hệ của game (đầu +X, lưng +Y, ngang +Z): up = lắc ngang thân, fwd = vỗ mái chèo, lat = gật đầu/há hàm
+    a: biên độ (rad), p: lệch pha, f: tốc độ (rad/s), side: đảo dấu theo bên trái/phải để hai bên vỗ cùng chiều */
+ const GAX={up:new THREE.Vector3(0,1,0),fwd:new THREE.Vector3(1,0,0),lat:new THREE.Vector3(0,0,1)};
+ const findBone=(scn,pre)=>{let r=null;scn.traverse(o=>{if(!r&&o.isBone&&o.name.indexOf(pre)==0)r=o});return r};
+ const rig=(cl,spec)=>{const scn=cl.children[0].children[0],B=[],M=new Map(),wp=new THREE.Vector3(),inv=new THREE.Matrix4(),ax=new THREE.Vector3();
+  cl.updateMatrixWorld(true);
+  spec.forEach(s=>{const b=findBone(scn,s.n);if(!b||!b.parent)return;
+   inv.copy(b.parent.matrixWorld).invert();
+   let sg=b.parent.matrixWorld.determinant()<0?-1:1;
+   ax.copy(GAX[s.ax||'up']).transformDirection(inv);
+   if(s.side){b.getWorldPosition(wp);sg*=wp.z>=0?1:-1}
+   let e=M.get(b);if(!e){e={b,rest:b.quaternion.clone(),it:[]};M.set(b,e);B.push(e)}
+   e.it.push({ax:ax.clone(),a:s.a*sg,p:s.p||0,f:s.f||2.4})});
+  const ph0=Math.random()*6.28,dq=new THREE.Quaternion();
+  return t=>{for(const e of B){e.b.quaternion.copy(e.rest);for(const x of e.it){dq.setFromAxisAngle(x.ax,x.a*Math.sin(t*x.f+ph0-x.p));e.b.quaternion.premultiply(dq)}}}};
+ const RIGS={
+  /* cá xương khổng lồ: thân uốn lượn, đuôi hai thùy quẫy, vây ngực/bụng vẫy nhẹ, hàm khẽ há */
+  leeds:[
+   {n:'c_back2',a:.03,p:0,f:2.2},{n:'c_back3',a:.05,p:.5,f:2.2},{n:'c_back4',a:.08,p:1,f:2.2},{n:'c_realTail_0',a:.11,p:1.5,f:2.2},
+   {n:'c_realTailC1',a:.10,p:2,f:2.2},{n:'c_realTailC2',a:.08,p:2.4,f:2.2},{n:'c_realTailC3',a:.06,p:2.8,f:2.2},
+   {n:'c_realTailA1',a:.10,p:2,f:2.2},{n:'c_realTailA2',a:.08,p:2.4,f:2.2},{n:'c_realTailA3',a:.06,p:2.8,f:2.2},
+   {n:'c_head',a:.03,p:-.4,f:2.2},{n:'c_jaw',ax:'lat',a:.09,p:0,f:.9},
+   {n:'l_sideFlipper1',ax:'fwd',a:.20,p:.8,f:1.6,side:1},{n:'r_sideFlipper1',ax:'fwd',a:.20,p:.8,f:1.6,side:1},
+   {n:'l_sideFlipper2',ax:'fwd',a:.16,p:1.3,f:1.6,side:1},{n:'r_sideFlipper2',ax:'fwd',a:.16,p:1.3,f:1.6,side:1},
+   {n:'l_sideFlipper3',ax:'fwd',a:.12,p:1.8,f:1.6,side:1},{n:'r_sideFlipper3',ax:'fwd',a:.12,p:1.8,f:1.6,side:1},
+   {n:'l_bellyFlipper1',ax:'fwd',a:.14,p:1.2,f:1.6,side:1},{n:'r_bellyFlipper1',ax:'fwd',a:.14,p:1.2,f:1.6,side:1},
+   {n:'c_BackFlipperA1',a:.05,p:1,f:2.2}
+  ],
+  /* Elasmosaurus: cổ dài uốn chữ S chậm, đuôi quẫy nhẹ, bốn mái chèo "bay dưới nước" (trước và sau lệch pha) */
+  elasmo:[].concat(
+   ['hip','abdomen','chest'].map((n,i)=>({n,a:.02,p:i*.3,f:2})),
+   Array.from({length:11},(_,i)=>({n:'neck'+(i<9?'0':'')+(i+1),a:.03,p:.4+i*.35,f:1.2})),
+   Array.from({length:11},(_,i)=>({n:'neck'+(i<9?'0':'')+(i+1),ax:'lat',a:.014,p:1.6+i*.3,f:1.2})),
+   [{n:'head',a:.04,p:4.4,f:1.2}],
+   Array.from({length:8},(_,i)=>({n:'tail0'+(i+1),a:.04+i*.012,p:.4+i*.4,f:2})),
+   [{n:'rShldr',ax:'fwd',a:.45,p:0,f:2,side:1},{n:'lShldr',ax:'fwd',a:.45,p:0,f:2,side:1},
+    {n:'rForearm',ax:'fwd',a:.25,p:.8,f:2,side:1},{n:'lForearm',ax:'fwd',a:.25,p:.8,f:2,side:1},
+    {n:'rThigh',ax:'fwd',a:.35,p:1.7,f:2,side:1},{n:'lThigh',ax:'fwd',a:.35,p:1.7,f:2,side:1},
+    {n:'rShin',ax:'fwd',a:.2,p:2.4,f:2,side:1},{n:'lShin',ax:'fwd',a:.2,p:2.4,f:2,side:1}])
+ };
+ /* mô hình tĩnh (Ichthyosaurus): đẩy đỉnh sang ngang theo sóng, mạnh dần về phía đuôi; mỗi con một vật liệu/pha riêng */
+ const bendMat=(m,U,B)=>{
+  m.onBeforeCompile=sh=>{sh.uniforms.uPh=U.ph;sh.uniforms.uA={value:B.L*.075};sh.uniforms.uZ0={value:B.z0};sh.uniforms.uL={value:B.L};
+   sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nuniform float uPh,uA,uZ0,uL;')
+    .replace('#include <begin_vertex>','#include <begin_vertex>\nfloat tb=clamp((uZ0-position.z)/uL,0.,1.);transformed.x+=uA*pow(tb,1.5)*sin(uPh-tb*4.5);')};
+  m.customProgramCacheKey=()=>'ichbend'};
+ const rigBend=(cl,d)=>{const U={ph:{value:0}};
+  cl.traverse(o=>{if(!o.isMesh||Array.isArray(o.material))return;const m=o.material.clone();bendMat(m,U,d.bend);o.material=m});
+  const ph0=Math.random()*6.28;return t=>{U.ph.value=t*5.2+ph0}};
+ const make=id=>{const key=KEY(id),d=T[key];if(!d||!THREE.SkeletonUtils)return null;
+  try{const cfg=CFG[key],cl=THREE.SkeletonUtils.clone(d.N),g=new THREE.Group();g.add(cl);
    let hook=null;cl.traverse(o=>{if(o.isMesh&&!hook)hook=o});
    if(hook){
-    if(CFG[id].clip){const clip=d.clips.find(c=>c.name==CFG[id].clip)||d.clips[0];
+    if(cfg.clip){const clip=(cfg.clip=='*'?null:d.clips.find(c=>c.name==cfg.clip))||d.clips[0];
      if(clip){const mx=new THREE.AnimationMixer(cl.children[0].children[0]),ac=mx.clipAction(clip);mx.timeScale=1.6;ac.play();ac.time=Math.random()*clip.duration;
       let last=performance.now()/1000;hook.onBeforeRender=()=>{const n=performance.now()/1000,dt=n-last;if(dt>.001){last=n;mx.update(Math.min(dt,.1))}}}}
-    else{const f=rigShark(cl);hook.onBeforeRender=()=>f(performance.now()/1000)}}
+    else{const f=cfg.rig=='bend'?rigBend(cl,d):RIGS[cfg.rig]?rig(cl,RIGS[cfg.rig]):rigShark(cl);hook.onBeforeRender=()=>f(performance.now()/1000)}}
    return g}catch(e){try{console.warn('GLBX',id,e)}catch(_){}return null}};
  const swap=(g,id)=>{const G=make(id);if(!G)return;while(g.children.length)g.remove(g.children[0]);while(G.children.length)g.add(G.children[0])};
- const loaded=id=>{for(let i=PEND.length-1;i>=0;i--)if(PEND[i][1]==id){swap(PEND[i][0],id);PEND.splice(i,1)}};
+ const loaded=key=>{for(let i=PEND.length-1;i>=0;i--)if(KEY(PEND[i][1])==key){swap(PEND[i][0],PEND[i][1]);PEND.splice(i,1)}};
  const init=()=>{const L=new THREE.GLTFLoader();
-  Object.keys(CFG).forEach(id=>L.load(CFG[id].url,gl=>{try{prep(id,gl);loaded(id)}catch(e){console.warn('GLBX',id,e)}},undefined,e=>console.warn('GLBX: không tải được '+CFG[id].url,e)))};
+  Object.keys(CFG).forEach(key=>L.load(CFG[key].url,gl=>{try{prep(key,gl);loaded(key)}catch(e){console.warn('GLBX',key,e)}},undefined,e=>console.warn('GLBX: không tải được '+CFG[key].url,e)))};
  loadJS(SRC.gltf,()=>loadJS(SRC.skel,init,()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
- return{ok:id=>!!T[id],make:id=>CFG[id]&&T[id]?make(id):null,want:id=>!!CFG[id]&&!T[id],pend:(g,id)=>{PEND.push([g,id])}}
+ return{ok:id=>!!T[KEY(id)],make:id=>CFG[KEY(id)]&&T[KEY(id)]?make(id):null,want:id=>!!CFG[KEY(id)]&&!T[KEY(id)],pend:(g,id)=>{PEND.push([g,id])}}
 })();
 </script>
 <script>
@@ -4229,7 +4315,7 @@ MECH.reg('belemnite',(T,s)=>MKB(T,s,'belemnite').cephM({bl:3.4,bh:1.2,bw:1.1}),9
 MECH.reg('megan',(T,s)=>MKB(T,s,'megan').dragonM({bl:3,bh:.55,bw:.5,hs:3.4,cw:1.2,tn:9,tl:.55,tr0:.2,tr1:.08}),13,0);
 MECH.reg('arthro',(T,s)=>MKB(T,s,'arthro').centiM({n:12,sl:.9,r:.55}),18,1);
 MECH.reg('archaeo',(T,s)=>MKB(T,s,'archaeo').archM({q:.8,bl:2.6,bh:1.1,bw:1.0,hl:1.5,hh:.62,hw:.55,tn:8,tl:.8,tr0:.26,tr1:.08,hs:3.6,cw:1.5}),14,0);
- const FX=s=>{if(!s.fx)return 1;if(window.GLBX&&GLBX.ok(s.id))return s.fx;if(s.fb==null&&s.tp&&s.tl){s.fb=1;try{s.tp.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s.tp),L=Math.max(b.max.x-b.min.x,b.max.z-b.min.z);if(L>1)s.fb=Math.max(.3,Math.min(8,s.tl/(L*(s.k||1)*1.25)))}catch(e){}}return s.fb||1};
+ const FX=s=>{if(!s.fx)return 1;if(window.GLBX&&GLBX.ok(s.id))return s.fx||1;if(s.fb==null&&s.tp&&s.tl){s.fb=1;try{s.tp.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s.tp),L=Math.max(b.max.x-b.min.x,b.max.z-b.min.z);if(L>1)s.fb=Math.max(.3,Math.min(8,s.tl/(L*(s.k||1)*1.25)))}catch(e){}}return s.fb||1};
  const inst=s=>{{const X=window.GLBX&&GLBX.make(s.id);if(X)return X}if(!s.tp){const bf=MECH.get(s.id);if(bf){try{s.tp=bf()}catch(e){s.tp=null;try{ERR(e)}catch(_){}}}if(!s.tp)s.tp=BU[s.b](s.p)}const mp=new Map(),g=dup(s.tp,mp),u=s.tp.userData,d=g.userData;
   for(const k of['legs','wings','seg'])if(u[k])d[k]=u[k].map(x=>mp.get(x)||x);if(u.sp)d.sp=u.sp;if(u.rig){try{u.rig(mp)}catch(e){}}if(window.GLBX&&GLBX.want(s.id))GLBX.pend(g,s.id);return g};
  const HERD={walk:1,dash:1,hop:1,slide:1,side:1,school:1};
