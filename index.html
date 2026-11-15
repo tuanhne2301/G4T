@@ -716,7 +716,9 @@ window.GLBX=(()=>{
  const swap=(g,id)=>{const G=make(id,g);if(!G)return;while(g.children.length)g.remove(g.children[0]);while(G.children.length)g.add(G.children[0]);const k=KEY(id);if(CFG[k].max&&!G.userData.still){const a=live(k);if(a.indexOf(g)<0)a.push(g)}};
  const loaded=key=>{for(let i=PEND.length-1;i>=0;i--)if(KEY(PEND[i][1])==key){swap(PEND[i][0],PEND[i][1]);PEND.splice(i,1)}};
  const init=()=>{const L=new THREE.GLTFLoader();
-  Object.keys(CFG).forEach(key=>L.load(CFG[key].url,gl=>{try{prep(key,gl);loaded(key)}catch(e){note('lỗi xử lý '+CFG[key].url+': '+(e&&e.message))}},undefined,e=>note('không tải được '+CFG[key].url)))};
+  Object.keys(CFG).forEach(key=>{const u=CFG[key].url,ok=gl=>{try{prep(key,gl);loaded(key)}catch(e){note('lỗi xử lý '+u+': '+(e&&e.message))}};
+   /* file nằm trong thư mục models/; nếu không có thì thử ở thư mục gốc */
+   L.load('models/'+u,ok,undefined,()=>L.load(u,ok,undefined,()=>note('không tải được '+u)))})};
  loadJS(SRC.gltf,()=>loadJS(SRC.skel,init,()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
  return{ok:id=>!!T[KEY(id)],make:id=>CFG[KEY(id)]&&T[KEY(id)]?make(id):null,want:id=>!!CFG[KEY(id)]&&!T[KEY(id)],pend:(g,id)=>{PEND.push([g,id])}}
 })();
@@ -5973,7 +5975,8 @@ const WX=(()=>{const R=300;let tex=null;try{const c=document.createElement('canv
   else if(tinted){tinted=0;try{V5.light(true)}catch(e){}}};
  return{upd,get fk(){return fk}}})();
 function update(){
- if(SUB.on){SUB.tick();return}if(PR.e){PR.e=0;if(SUB.near())SUB.board()}
+ if(SUB.on){try{MP.tick()}catch(e){console.error(e)}try{PARTY.tick()}catch(e){console.error(e)}SUB.tick();return} /* đang lái tàu ngầm vẫn phải gửi vị trí/nhịp sống lên Firebase để bạn bè thấy tàu */
+ if(PR.e){PR.e=0;if(SUB.near())SUB.board()}
  if(PR.u){PR.u=0;if(SUB.near())SUB.shop()}
  t++;hitCD--;rcd--;hurt--;shake*=.9;V5.tick();
  SND.engine(ply.car?Math.abs(ply.car.v||0):-1);
@@ -10243,7 +10246,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    addEventListener('click',e=>{if(!OBS.in||OBS.jo||st.shop||performance.now()-(OBS.dgT||0)<300)return;const t=e.target;if(t&&t.closest&&t.closest('button,input,a,#obsjr,#sbshop,#sbbt,#obscard'))return;try{obsPickAt(e.clientX,e.clientY)}catch(x){}});obsUiJ()}
   /* 10) hoạt hình mỗi khung hình (gọi từ atmo) */
   OBS.up=t=>{const cp=camera.position,dist=Math.hypot(cp.x-OBS.x,cp.z-OBS.y);
-   rg2.visible=dist<1300;if(rg2.visible)for(const r of OBS.res){r.fn(r,t);if(r.g.visible)r.g.position.x+=OBS.rx}
+   rg2.visible=dist<1300;const TS=(()=>{try{return MP.now()/1000}catch(e){return t}})();if(rg2.visible)for(const r of OBS.res){r.fn(r,TS);if(r.g.visible)r.g.position.x+=OBS.rx}
    if(OBS.bc)OBS.bc.scale.setScalar(1+.3*Math.sin(t*3));if(OBS.bm)OBS.bm.material.opacity=.14+.08*Math.sin(t*1.2);
    for(let i=0;i<OBS.ls.length;i++)OBS.ls[i].material.opacity=.25+.75*Math.max(0,Math.sin(t*3-i*.52));
    if(OBS.holo){OBS.holo.rotation.y=t*.5;OBS.holo.rotation.x=t*.2;OBS.holoR.forEach((q,i)=>{q.rotation.z=t*(.6+i*.25)*(i%2?-1:1)})}
