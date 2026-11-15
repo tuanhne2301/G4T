@@ -5602,7 +5602,7 @@ const MP=(()=>{
   if(v.n!=null&&cleanName(v.n)!==r.n){r.n=cleanName(v.n);if(r.g){r.g.remove(r.tg);r.tg=spr(nameT(r.n,r.sub),24,6);r.tg.position.y=25;r.g.add(r.tg)}}
   if(typeof v.l=='string'&&v.l!==r.l){r.l=v.l;if(r.g){scene.remove(r.g);r.g=null}try{const o=JSON.parse(v.l);r.sub=((/^[0-9A-Za-zÀ-ỹ .\-]{1,8}$/.test(String(o.cs||''))&&o.cs?'Lớp '+o.cs:'')+(o.tt&&/^[a-z0-9]{1,10}$/.test(String(o.tt))?' '+(V5.badOf(o.tt)||''):'')).trim();r.gmk=/^[0-9a-z]{3}$/.test(String(o.gm))?String(o.gm):'';r.gpk=/^[0-9a-z]{3}$/.test(String(o.gp))?String(o.gp):''}catch(e){r.gmk=r.gpk='';r.sub=''}}
   if('x'in v)r.x=num(v.x,-30000,30000,r.x);if('y'in v)r.y=num(v.y,-30000,30000,r.y);if('a'in v)r.a=num(v.a,-10,10,r.a);
-  if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);r.sb=v.sb?1:0;r.sd=num(v.sd,0,300,5);r.sh=num(v.sh,-10,10,0);r.sv=num(v.sv,0,5,0);r.sl=v.sl?1:0;r.fb=0;
+  if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);r.cw=typeof v.cw=='string'?v.cw.slice(0,24):'';r.cd=+v.cd||0;r.co=+v.co||0;r.sb=v.sb?1:0;r.sd=num(v.sd,0,300,5);r.sh=num(v.sh,-10,10,0);r.sv=num(v.sv,0,5,0);r.sl=v.sl?1:0;r.fb=0;
    if(!v.sb&&v.i&&v.s){r.sb=1;r.fb=1;r.sd=num(v.d,0,100,5);r.sh=num(v.a,-10,10,0);r.sl=v.c?1:0} /* tàu ngầm mã hóa trong trường cơ bản */
   {const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);r.mt=(typeof v.m=='string'&&V5.mountOk(v.m))?v.m:'';r.pt=(typeof v.p=='string'&&V5.petOk(v.p))?v.p:'';
    const km=typeof v.k=='string'?v.k:'';r.ck=(/^[a-z0-9_]{1,12}$/.test(km)&&km!='cop'&&(has(CARS.SPEC,km)||has(CARS.BIKES,km)))?km:'';r.cc=(typeof v.kc=='string'&&/^#[0-9a-fA-F]{6}$/.test(v.kc))?v.kc:'#d0d0d8'}
@@ -5614,7 +5614,7 @@ const MP=(()=>{
  const lookJ=()=>JSON.stringify(Object.assign({},LOOK,(()=>{try{return V5.gearCode()}catch(e){return{}}})(),(()=>{try{return{cs:String(EDU.cls||'').slice(0,8),tt:V5.myTt()}}catch(e){return{}}})()));
  const payload=()=>{const c=ply.car,u=(()=>{try{return SUB.net()}catch(e){return null}})(),wr=a=>Math.atan2(Math.sin(a),Math.cos(a)),
   /* đang lái tàu ngầm: mã hóa bằng các trường sẵn có (không cần sửa Rules): i=1 & s=1 là cờ tàu ngầm, d = độ sâu, a = hướng tàu, c = đèn pha */
-  o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((u?wr(u.h):(c?c.a:ply.a))*100)/100,s:u?1:(ply.sw2?1:0),d:u?Math.max(0,Math.min(100,Math.round(u.d))):((ply.mt&&ply.mt.env=='f')?Math.round(Math.min(95,(ply.z||0)/4)):Math.round(ply.dd||0)),i:u?1:(INT.cur?1:0),c:u?(u.l?1:0):(c?1:0),v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
+  o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((u?wr(u.h):(c?c.a:ply.a))*100)/100,s:u?1:(ply.sw2?1:0),d:u?Math.max(0,Math.min(100,Math.round(u.d))):((ply.mt&&ply.mt.env=='f')?Math.round(Math.min(95,(ply.z||0)/4)):Math.round(ply.dd||0)),i:u?1:((()=>{try{return SUB.pass}catch(e){return 0}})()?1:(INT.cur?1:0)),c:u?(u.l?1:0):(c?1:0),v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
  const payX=()=>{const c=ply.car,t=ply.mt;let m='',p='',k='',kc='';if(t&&t.id&&!c)m=String(t.id).slice(0,24);try{if(!c)p=String(V5.petKey()||'').slice(0,30)}catch(e){}if(c&&c.model){k=String(c.model).slice(0,12);kc=/^#[0-9a-fA-F]{6}$/.test(String(c.col))?String(c.col):''}return{m,p,k,kc}};
  const getDb=async()=>{if(db)return db;await loadFB();if(!(firebase.apps&&firebase.apps.length))firebase.initializeApp(MP_CFG);db=firebase.database();return db};
  const getAuth=async()=>{await getDb();return firebase.auth()};
@@ -5629,7 +5629,7 @@ const MP=(()=>{
   try{const l=lookJ();if(l!==lookS){lookS=l;d.l=l;ch=1}}catch(e){}
   {const x=payX(),dx={};let cx=0;for(const k in x)if(x[k]!==sentX[k]){dx[k]=x[k]===''?null:x[k];cx=1}
    if(cx){Object.assign(sentX,x);try{const r=me.update(dx);if(r&&r.catch)r.catch(e=>{if(!send._w){send._w=1;console.warn('Chưa đồng bộ được thú/xe: hãy dán Rules mới vào Firebase',e)}})}catch(e){}}}
-  {const u=(()=>{try{return SUB.net()}catch(e){return null}})(),sx=u?{sb:1,sd:u.d,sh:u.h,sv:u.v,sl:u.l}:{sb:'',sd:'',sh:'',sv:'',sl:''},ds={};let cs=0;
+  {const u=(()=>{try{return SUB.net()}catch(e){return null}})(),sx=Object.assign(u?{sb:1,sd:u.d,sh:u.h,sv:u.v,sl:u.l}:{sb:'',sd:'',sh:'',sv:'',sl:''},(()=>{try{const c=SUB.crewNet();return c?{cw:c.cw,cd:c.cd,co:c.co}:{cw:'',cd:'',co:''}}catch(e){return{cw:'',cd:'',co:''}}})()),ds={};let cs=0;
    for(const k in sx)if(sx[k]!==sentS[k]){ds[k]=sx[k]===''?null:sx[k];cs=1}
    if(cs){Object.assign(sentS,sx);try{const r=me.update(ds);if(r&&r.catch)r.catch(e=>{if(!send._s){send._s=1;console.warn('Chưa đồng bộ được tàu ngầm: hãy thêm sb, sd, sh, sv, sl vào Rules của players',e)}})}catch(e){}}}
   if(!ch){if(now-lastBeat<6000&&!force)return;d.h=p.h}
@@ -5651,7 +5651,7 @@ const MP=(()=>{
   btn.addEventListener('click',e=>{e.stopPropagation();pan.style.display=pan.style.display=='none'?'block':'none';ui()});sideBox().appendChild(btn);{const mv=()=>{const d=document.getElementById('dk1');if(d&&btn.parentNode!==d)d.insertBefore(btn,d.firstChild)};mv();const t=setInterval(()=>{mv();if(btn.parentNode&&btn.parentNode.id=='dk1')clearInterval(t)},400)}
   pan=document.createElement('div');pan.className='mpp';pan.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:8;display:none;background:rgba(12,12,18,.95);color:#fff;border-radius:12px;padding:10px 12px;min-width:200px;font:13px system-ui,sans-serif;box-shadow:0 4px 18px #0008';
   qi=document.createElement('input');qi.type='search';qi.placeholder='🔎 Tìm bạn theo tên…';qi.className='mpq';qi.style.display='none';qi.addEventListener('input',()=>{pan._q=qi.value;lastSig='';ui()});qi.addEventListener('keydown',e=>e.stopPropagation());qi.addEventListener('keyup',e=>e.stopPropagation());pan.appendChild(qi);lst=document.createElement('div');pan.appendChild(lst);pan.addEventListener('click',e=>e.stopPropagation());pan.addEventListener('pointerdown',e=>e.stopPropagation());document.body.appendChild(pan);document.addEventListener('click',()=>{pan.style.display='none'})}catch(e){console.error(e)}};
- const tick=()=>{if(!MP_URL)return;if(!btn)mkUI();if(state!='play'||!EDU.name){ui();return}
+ const tick=()=>{if(!MP_URL)return;try{SUB.crewTick()}catch(e){console.error('crew',e)}if(!btn)mkUI();if(state!='play'||!EDU.name){ui();return}
   if(enabled()&&!booted){if(CL.ok&&CL.uid)boot();else booted=-1}if(booted>0&&conn&&enabled())send(false);
   if(bub&&performance.now()>bubT){ply.m.remove(bub);bub=null}
   const now=performance.now();for(const r of[...R.values()])if(now-r.seen>STALE)drop(r.k);ui()};
@@ -5863,6 +5863,7 @@ const PARTY=(()=>{const MAXM=6;let db=null,uid='',pid='',mem={},prev={},mref=nul
   box.querySelector('[data-y]').onclick=async()=>{rmInv(c.from);hideBox();await VOICE.ensure();if(!VOICE.on){say('Em cần cho phép micro để vào nhóm nói chuyện.',3500);showNext();return}const ok=await join(c.g);if(ok)say('👥 Em đã vào nhóm. Mic đang mở, bấm nút 👥 bên trái để tắt/bật.',4200);showNext()};
   document.body.appendChild(box);try{SND.p('click')}catch(e){}boxT=setTimeout(()=>{rmInv(c.from);hideBox();showNext()},60000)};
  const gotInv=(from,v)=>{if(!v||typeof v!='object'||from===uid)return;if(!(+v.t>Date.now()-600000)||!okId(v.g)){rmInv(from);return}
+  if(String(v.g).slice(0,2)==='S_'){try{SUB.crewInv(from,v)}catch(e){}return}
   if(v.g===pid){rmInv(from);return}if(qi.some(q=>q.from===from)||(cur&&cur.from===from))return;qi.push({from,n:clean(v.n),g:v.g});showNext()};
  const start=async()=>{starting=1;try{db=await MP.db();uid=MP.uid;invRef=db.ref('invites/'+uid);invRef.on('child_added',sn=>gotInv(sn.key,sn.val()),()=>{});invRef.on('child_changed',sn=>gotInv(sn.key,sn.val()),()=>{})}catch(e){starting=0;db=null}};
  const tick=()=>{if(!MP_URL)return;if(!db&&!starting&&state=='play'&&MP.ready&&MP.uid)start();if(pb)pb.style.display=pid&&state=='play'?'':'none'};
@@ -9648,11 +9649,11 @@ body.insub #hint{bottom:14px!important}
    '<div id="sbdash"><div class="g"><small>ĐỘ SÂU</small><b id="sbdp">0 m</b></div><div class="g"><small>TỐC ĐỘ</small><b id="sbsp">0 km/h</b></div>'+
    '<div class="g"><small>OXY</small><div class="bar"><i id="sbox"></i></div><b id="sbop">100%</b></div><div class="g"><small>ĐỘ BỀN TÀU</small><div class="bar"><i id="sbhp"></i></div><b id="sbhv">100%</b></div><div class="g"><small>SONAR</small><b id="sbso" style="font-size:clamp(10px,2.4vw,15px)">ĐANG HOẠT ĐỘNG</b><small id="sbdk" style="margin-top:.6vh"></small></div><canvas id="sbrad" width="130" height="130"></canvas>'+
    '<div id="sbhelp">W/S tiến-lùi · A/D rẽ · Space lặn · Shift nổi · V đổi góc nhìn · L đèn · U nâng cấp (ở bến) · F/E rời tàu (khi về bến)</div></div>'+
-   '<div id="sbbt"><button data-k="u">⬆</button><button data-k="d">⬇</button><button data-k="v">👁</button><button data-k="l">💡</button><button data-k="s">🛠</button><button data-k="x">🚪</button><button data-k="j">📖</button></div>';
+   '<div id="sbbt"><button data-k="u">⬆</button><button data-k="d">⬇</button><button data-k="v">👁</button><button data-k="l">💡</button><button data-k="s">🛠</button><button data-k="x">🚪</button><button data-k="j">📖</button><button data-k="c">👥</button></div>';
   {const cs3=document.createElement('style');cs3.textContent='#sbfl{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,rgba(255,40,30,0) 38%,rgba(255,40,30,.6) 100%)}#sbhp{transition:width .25s,background .25s}#sbred{position:absolute;inset:0;pointer-events:none;display:none;background:radial-gradient(ellipse at center,rgba(255,0,0,0) 30%,rgba(255,20,10,.75) 100%)}#sbhud.low #sbred{display:block;animation:sbrd .8s infinite}@keyframes sbrd{0%,100%{opacity:0}45%,55%{opacity:1}}#sbhud.low #sbwin{border-color:#ff3b30!important}#sbhud.low #sbdash{box-shadow:0 0 22px rgba(255,40,30,.55)}#sbcrk{position:absolute;left:3vw;right:3vw;top:calc(var(--sbh,20vh) + 4px);bottom:6vh;pointer-events:none;opacity:0;transition:opacity .5s;border-radius:28px;overflow:hidden}#sbcrk svg{width:100%;height:100%;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.9)) drop-shadow(0 0 3px rgba(160,220,255,.6))}#sbcrk path{fill:none;stroke:rgba(240,250,255,.92);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}#sbcrk .k2{opacity:0;transition:opacity .5s}#sbhud.low #sbcrk{opacity:.8}#sbhud.low.crk2 #sbcrk{opacity:1}#sbhud.low.crk2 #sbcrk .k2{opacity:1}#sbhud.ext #sbcrk{display:none}';document.head.appendChild(cs3)}
   document.body.appendChild(hud);try{new MutationObserver(()=>document.body.classList.toggle('insub',hud.classList.contains('on'))).observe(hud,{attributes:true,attributeFilter:['class']})}catch(e){}
   hud.querySelectorAll('#sbbt button').forEach(b=>{const k=b.dataset.k;
-   const dn=e=>{e.preventDefault();if(k=='u'||k=='d'){st.btn[k]=1;b.classList.add('h')}else if(k=='v')SUB.toggleView();else if(k=='l')SUB.toggleLight();else if(k=='s')SUB.shop();else if(k=='j')SUB.journal();else if(k=='x')SUB.exit()},up=e=>{if(k=='u'||k=='d'){st.btn[k]=0;b.classList.remove('h')}};
+   const dn=e=>{e.preventDefault();if(k=='u'||k=='d'){st.btn[k]=1;b.classList.add('h')}else if(k=='v')SUB.toggleView();else if(k=='l')SUB.toggleLight();else if(k=='s')SUB.shop();else if(k=='j')SUB.journal();else if(k=='x')SUB.exit();else if(k=='c')SUB.crewPanel()},up=e=>{if(k=='u'||k=='d'){st.btn[k]=0;b.classList.remove('h')}};
    b.addEventListener('pointerdown',dn);b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);b.addEventListener('pointercancel',up)});
   col=new THREE.Color();
   /* hạt phù du / bụi nước */
@@ -9853,7 +9854,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
  const obsNear=()=>{let b=null,bd=1e9;for(const a of OBS.act){const d=Math.hypot(OBS.px-a.x,OBS.pz-a.z);if(d<a.r&&d<bd){bd=d;b=a}}return b};
  const obsAct=()=>{const a=obsNear();
   if(!a){try{say('Đi tới tấm kính lớn để ngắm sinh vật. Hành lang bên phải sảnh dẫn ra cửa lên tàu ngầm.',3400)}catch(e){}return}
-  if(a.k=='hatch')obsLeave();else if(a.k=='npc')obsTalk();else if(a.k=='term')api.journal();else if(a.k=='shop')api.shop()};
+  if(a.k=='hatch'){obsLeave();try{SUB.crewClaim()}catch(e){}}else if(a.k=='npc')obsTalk();else if(a.k=='term')api.journal();else if(a.k=='shop')api.shop()};
  /* vào trạm: tàu tự cập cổng, em rời tàu và đi bộ */
  const obsEnter=()=>{if(!OBS.ok||OBS.in||!hud)return;
   OBS.in=1;OBS.vw=st.view;st.view=0;st.shop=0;
@@ -10312,7 +10313,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    for(const o of OB)if(hitO(o,px,pz,wy))return o;
    for(const o of SOB)if(hitO(o,px,pz,wy))return o}
   return null};
- const hurt=(n,msg)=>{if(st.hp<=0)return;n=Math.max(1,Math.min(25,Math.round(n*uv('arm'))));st.hp=Math.max(0,st.hp-n);st.shake=Math.min(7,2+n*.4);
+ const hurt=(n,msg)=>{if(st.hp<=0||st.pass)return;n=Math.max(1,Math.min(25,Math.round(n*uv('arm'))));st.hp=Math.max(0,st.hp-n);st.shake=Math.min(7,2+n*.4);
   try{const f=document.getElementById('sbfl');if(f){f.style.transition='none';f.style.opacity=1;setTimeout(()=>{f.style.transition='opacity .6s';f.style.opacity=0},40)}}catch(e){}
   try{SND.p('crash')}catch(e){}
   try{say(msg+' (−'+n+'%) Độ bền tàu còn '+Math.round(st.hp)+'%.'+(st.hp<=0?' 🛟 Tàu hư nặng, hệ thống khẩn cấp đang đưa tàu nổi lên!':''),2800)}catch(e){}};
@@ -10346,17 +10347,17 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    try{SND.roar(rk(s.id),1,pan)}catch(e){}try{say('😱 '+(s.e||'')+' '+s.n+' bất ngờ lao ra từ bóng tối!',3400)}catch(e){}};
   /* ===== CHƠI CHUNG: tàu của bạn bè + mục tiêu của thủy quái ===== */
   const RSM=new Map();
-  const net=()=>st.on?{d:Math.round(st.d*10)/10,h:Math.round(Math.atan2(Math.sin(st.h),Math.cos(st.h))*100)/100,v:Math.round(Math.abs(st.v)*10)/10,l:st.lt?1:0}:null;
-  const remotePts=()=>{const a=[];try{for(const r of MP._R.values())if(r.sb)a.push([r.x,r.y])}catch(e){}return a};
+  const net=()=>st.on&&!st.pass?{d:Math.round(st.d*10)/10,h:Math.round(Math.atan2(Math.sin(st.h),Math.cos(st.h))*100)/100,v:Math.round(Math.abs(st.v)*10)/10,l:st.lt?1:0}:null;
+  const remotePts=()=>{const a=[];try{for(const r of MP._R.values())if(r.sb&&!(st.pass&&r.k===st.drv))a.push([r.x,r.y])}catch(e){}return a};
   const tagTex=n=>{const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');x.fillStyle='rgba(10,50,90,.85)';x.beginPath();if(x.roundRect)x.roundRect(8,8,240,48,18);else x.rect(8,8,240,48);x.fill();x.fillStyle='#fff';x.font='bold 28px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🚢 '+String(n||'Bạn').slice(0,14),128,33);return new THREE.CanvasTexture(c)};
   const remMk=r=>{const g=subG.clone(true),dl=[],bm=[];g.traverse(o=>{if(o.isLight)dl.push(o);if(o.isMesh&&o.material&&o.material.transparent&&o.material.blending===THREE.AdditiveBlending)bm.push(o)});dl.forEach(o=>o.parent&&o.parent.remove(o));g.visible=true;g.rotation.order='YZX';
    const tag=new THREE.Sprite(new THREE.SpriteMaterial({map:tagTex(r.n),depthTest:false,transparent:true,fog:false}));tag.scale.set(96,24,1);tag.position.set(0,56,0);tag.renderOrder=7;g.add(tag);scene.add(g);return{g,tag,bm,n:r.n}};
   const remDrop=k=>{const e=RSM.get(k);if(!e)return;scene.remove(e.g);try{e.tag.material.map.dispose();e.tag.material.dispose()}catch(_){}RSM.delete(k)};
   /* mỗi khung hình: làm mượt vị trí tàu của bạn (dự đoán theo vận tốc) và dựng/bỏ mô hình tàu */
   const rem=()=>{if(!st.ready||!subG)return;let R;try{R=MP._R}catch(e){return}
-   for(const k of[...RSM.keys()]){const r=R.get(k);if(!r||!r.sb)remDrop(k)}
+   for(const k of[...RSM.keys()]){const r=R.get(k);if(!r||!r.sb||(st.pass&&k===st.drv))remDrop(k)}
    if(!R.size)return;const now=performance.now(),cam=camera.position;
-   for(const r of R.values()){if(!r.sb)continue;
+   for(const r of R.values()){if(!r.sb||(st.pass&&r.k===st.drv))continue;
     if(r.px!==r.x||r.py!==r.y){const dt=Math.max(.2,Math.min(2,(now-(r.pt||now))/1000));if(r.px!=null){r.vx=(r.x-r.px)/dt;r.vy=(r.y-r.py)/dt}else{r.vx=r.vy=0}r.px=r.x;r.py=r.y;r.pt=now}
     if(r.fb)r.sv=Math.min(5,Math.hypot(r.vx||0,r.vy||0)/60);
      const age=Math.min(.9,(now-(r.pt||now))/1000),tx=r.x+(r.vx||0)*age,ty=r.y+(r.vy||0)*age;
@@ -10370,7 +10371,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   let tgF=-1,tgA=[];
   const tgts=()=>{if(tgF===fc)return tgA;tgF=fc;const a=[];
    if(st.on&&!atStn()&&!atObs())a.push({k:'me',loc:1,x:st.x,y:st.y,d:st.d,v:Math.abs(st.v),l:st.lt});
-   try{for(const r of MP._R.values())if(r.sb){const rx=r.ux!=null?r.ux:r.x,ry=r.uy!=null?r.uy:r.y,rd=r.ud!=null?r.ud:r.sd;
+   try{for(const r of MP._R.values())if(r.sb&&!(st.pass&&r.k===st.drv)){const rx=r.ux!=null?r.ux:r.x,ry=r.uy!=null?r.uy:r.y,rd=r.ud!=null?r.ud:r.sd;
      if(OBS.ok&&Math.hypot(rx-OBS.x,ry-OBS.y)<340&&Math.abs(rd-OBS.dd)<34)continue;
      if(STN.ok&&Math.hypot(rx-STN.x,ry-STN.y)<140&&Math.abs(rd-(STN.d-22))<34)continue;
      a.push({k:r.k,loc:0,x:rx,y:ry,d:rd,v:r.sv||0,l:r.sl})}}catch(e){}
@@ -10447,10 +10448,104 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
     const hot=o.hs==1&&o.amb==2,bl=((st.t+((o.ph||0)*40|0))%210)<6,pl=1+.12*Math.sin(st.t*.09+(o.ph||0))+(hot?.45:0);
     e2.visible=true;
     for(const m of e2.children){m.position.set(g.position.x+fx*D.hx+sx*m.userData.sd*D.hz,g.position.y+D.hy,g.position.z+fz*D.hx+sz*m.userData.sd*D.hz);m.scale.set(D.r*pl,D.r*pl*(bl?.12:1),D.r*pl)}}};
+
+ /* ===== ĐOÀN TÀU NGẦM: nhiều người cùng đi một tàu =====
+    Trạng thái đoàn nằm trong bản ghi players/<uid> của từng người: cw = mã đoàn, cd = thời điểm giành quyền lái (lớn nhất = người lái), co = 1 đang ở trong trạm quan sát, 2 = đoàn giải tán khi cập bến.
+    Người lái chạy vật lý và phát vị trí tàu (sb...). Hành khách chỉ bám theo tàu của người lái nên thấy y hệt. */
+ const CR={id:'',cd:0,co:0,join:0,t0:0,closing:0};const MAXC=4,CRQ=new Map(),CRI=new Map();
+ const crewNet=()=>CR.id?{cw:CR.id,cd:CR.cd,co:CR.co}:null;
+ const cmem=()=>{const a=[];try{for(const r of MP._R.values())if(r.cw===CR.id)a.push(r)}catch(e){}return a};
+ const drvKey=()=>{let bk=MP.uid,bd=CR.cd;for(const r of cmem()){const d=+r.cd||0;if(d>bd||(d===bd&&String(r.k)<String(bk))){bk=r.k;bd=d}}return bk};
+ const myName=()=>String(EDU.name==null?'Bạn':EDU.name).replace(/[\u0000-\u001f<>&]/g,'').trim().slice(0,16)||'Bạn';
+ const leaveSub=()=>{if(!st.on)return;st.kx=st.ky=0;st.shake=0;st.on=0;st.lb=null;if(hlight)hlight.intensity=0;moor();hud.classList.remove('on');snow.visible=false;
+  ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}try{MP.sendNow()}catch(e){}
+  try{SND.p('splash')}catch(e){}try{say('Em đã rời tàu ngầm về trạm thám hiểm.',2400)}catch(e){}};
+ const crewClear=()=>{CR.id='';CR.cd=0;CR.co=0;CR.join=0;CR.closing=0;st.pass=0;st.drv=''};
+ const crewLeaveSelf=()=>{crewClear();try{MP.sendNow()}catch(e){}};
+ const crewForceExit=msg=>{if(OBS.in)try{obsLeave()}catch(e){}crewClear();leaveSub();try{say(msg,3600)}catch(e){}try{MP.sendNow()}catch(e){}};
+ const crewClaim=()=>{if(CR.id){CR.cd=Date.now();CR.co=0;try{MP.sendNow()}catch(e){}}};
+ const boardPass=D=>{ready();if(st.on||!hud||!subG||!prop)return;
+  try{if(ply.mt)V5.dismount(true)}catch(e){}try{if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}}catch(e){}INT.cur=null;try{apStop&&AP.on&&apStop('')}catch(e){}
+  const x=D.ux!=null?D.ux:D.x,y=D.uy!=null?D.uy:D.y,d=D.ud!=null?D.ud:D.sd,h=D.uh!=null?D.uh:D.sh;
+  try{NATV.pre(x,y);SCN.pre(x,y)}catch(e){}
+  PR.l=PR.u=0;st.pass=1;st.lt=D.sl?1:0;st.shop=0;st.low=0;try{hud.classList.remove('low','crk2')}catch(e){}st.thr=1e9;st.ch=null;st.warned=0;st.on=1;st.lb=null;
+  st.x=x;st.y=y;st.d=d;st.h=h;st.v=st.w=st.vy=0;ply.x=x;ply.y=y;ply.a=h;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;st.hp=100;
+  hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;place();try{MP.sendNow()}catch(e){}
+  try{SND.p('splash')}catch(e){}try{say('👥 Em đã lên tàu ngầm của '+D.n+'. Chỉ chủ tàu được lái. V: đổi góc nhìn.',5200)}catch(e){}};
+ /* hành khách: bám theo tàu của người lái (mỗi khung hình, sau phần vật lý) */
+ const passFollow=()=>{const D=MP._R.get(st.drv);if(!D||!D.sb)return;
+  const x=D.ux!=null?D.ux:D.x,y=D.uy!=null?D.uy:D.y,d=D.ud!=null?D.ud:D.sd,h=D.uh!=null?D.uh:D.sh,dh=((h-st.h+Math.PI*3)%(Math.PI*2))-Math.PI;
+  st.vy=Math.max(-1,Math.min(1,d-st.d));st.w=Math.max(-.05,Math.min(.05,dh));st.x=x;st.y=y;st.d=d;st.h=h;st.v=D.sv||0;st.lt=D.sl?1:0;st.oxy=100;st.hp=100;ply.x=x;ply.y=y;ply.a=h};
+ const crewTick=()=>{if(!CR.id)return;const now=Date.now();
+  if(CR.closing){if(now>CR.closing){crewClear();try{MP.sendNow()}catch(e){}}return}
+  const me=MP.uid;
+  if(CR.join){if(!cmem().length){if(now-CR.t0>9000){crewClear();try{say('Chuyến đi này đã kết thúc rồi.',3000);MP.sendNow()}catch(e){}}return}CR.join=0}
+  const dk=drvKey();
+  if(dk===me){
+   if(st.pass){st.pass=0;st.drv='';try{say('🚢 Em đang là người lái tàu!',2600)}catch(e){}}
+   if(!st.on){crewClear();try{MP.sendNow()}catch(e){}return}
+   if(CR.co!==2)CR.co=OBS.in?1:0;
+  }else{
+   const D=MP._R.get(dk);st.pass=1;st.drv=dk;if(!D)return;
+   if(D.co===2){crewForceExit('Chủ tàu đã cập bến, cả đoàn rời tàu.');return}
+   if(!st.on){if(D.sb||D.co)boardPass(D);return}
+   if(D.co===1&&!OBS.in&&OBS.ok)obsEnter();else if(D.co!==1&&OBS.in)obsLeave()}
+  /* nhãn đoàn + đóng bảng mời khi đã rời tàu */
+  if(!(st.t%20)){try{crewBadge()}catch(e){}}};
+ let bdg=null;
+ const crewBadge=()=>{const on=CR.id&&st.on&&!CR.closing;if(!on){if(bdg)bdg.style.display='none';return}
+  if(!bdg){bdg=document.createElement('div');bdg.style.cssText='position:fixed;left:8px;top:140px;z-index:46;pointer-events:none;background:rgba(10,40,70,.78);color:#dff6ff;border:1px solid #29506d;border-radius:10px;padding:5px 9px;font:600 12px/1.45 system-ui,sans-serif;max-width:46vw';document.body.appendChild(bdg)}
+  const dk=drvKey(),ms=cmem(),nm=k=>k===MP.uid?myName()+' (em)':String((MP._R.get(k)||{}).n||'Bạn').slice(0,16),keys=[MP.uid].concat(ms.map(r=>r.k));
+  bdg.innerHTML='👥 Đoàn tàu ngầm<br>'+keys.map(k=>(k===dk?'🚢 ':'• ')+nm(k).replace(/[<>&]/g,'')+(k===dk?' (lái)':'')).join('<br>');bdg.style.display='block'};
+ const rmInvite=async from=>{try{const db=await MP.db();const r=db.ref('invites/'+MP.uid+'/'+from).remove();if(r&&r.catch)r.catch(()=>{})}catch(e){}};
+ const crewAccept=(id,from)=>{
+  if(state!='play')return;
+  if(st.on){try{say('Em đang ở trên một tàu ngầm. Hãy rời tàu rồi nhận lời mời nhé.',3400)}catch(e){}return}
+  const D=MP._R.get(from);if(!D||D.cw!==id){try{say('Chuyến đi này đã kết thúc hoặc bạn ấy đã rời đi.',3200)}catch(e){}return}
+  {let n=0;try{for(const r of MP._R.values())if(r.cw===id)n++}catch(e){}if(n>=MAXC){try{say('Tàu đã đủ '+MAXC+' người rồi.',3000)}catch(e){}return}}
+  CR.id=id;CR.cd=0;CR.co=0;CR.join=1;CR.t0=Date.now();st.pass=1;st.drv=from;try{MP.sendNow()}catch(e){}};
+ const crewInv=(from,v)=>{if(!v||!(+v.t>Date.now()-120000)){rmInvite(from);return}
+  if(CR.id===v.g||CRQ.has(from))return;CRQ.set(from,1);
+  const nm=String(v.n==null?'Bạn':v.n).replace(/[\u0000-\u001f<>&]/g,'').slice(0,16)||'Bạn';
+  const box=document.createElement('div');box.style.cssText='position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:80;background:rgba(10,40,70,.96);color:#fff;border-radius:16px;padding:12px 16px;font:600 14px system-ui,sans-serif;box-shadow:0 6px 24px #0008;text-align:center;max-width:88vw';
+  box.innerHTML='🚢 <b>'+nm+'</b> mời em lên tàu ngầm cùng khám phá.<br><span style="font-weight:400;opacity:.85;font-size:12px">Em sẽ thấy giống hệt bạn ấy. Chỉ chủ tàu được lái.</span><div style="margin-top:8px;display:flex;gap:8px;justify-content:center"><button data-y style="border:0;border-radius:12px;padding:8px 16px;background:#2e9a4a;color:#fff;font:700 14px system-ui;cursor:pointer">✔ Đồng ý</button><button data-n style="border:0;border-radius:12px;padding:8px 16px;background:#8a3a4a;color:#fff;font:700 14px system-ui;cursor:pointer">✖ Từ chối</button></div>';
+  box.addEventListener('pointerdown',e=>e.stopPropagation());box.addEventListener('click',e=>e.stopPropagation());
+  const done=()=>{box.remove();CRQ.delete(from);rmInvite(from)};
+  box.querySelector('[data-n]').onclick=done;box.querySelector('[data-y]').onclick=()=>{done();crewAccept(v.g,from)};
+  document.body.appendChild(box);try{SND.p('click')}catch(e){}setTimeout(done,60000)};
+ const crewSend=async k=>{
+  if(!st.on||st.pass){try{say('Chỉ chủ tàu mới mời được bạn khác.',2600)}catch(e){}return}
+  const r=MP._R.get(k);if(!r||!MP.ready){try{say('Chưa kết nối chơi chung, em chờ một chút nhé.',2600)}catch(e){}return}
+  if(r.sb||(r.cw&&r.cw!==CR.id)){try{say(r.n+' đang ở trên một tàu ngầm khác.',2800)}catch(e){}return}
+  if(r.cw&&r.cw===CR.id){try{say(r.n+' đã ở trên tàu rồi.',2200)}catch(e){}return}
+  if(cmem().length+1>=MAXC){try{say('Tàu đã đủ '+MAXC+' người.',2600)}catch(e){}return}
+  const now=Date.now();if((CRI.get(k)||0)>now-8000){try{say('Em vừa mời bạn này rồi, chờ một chút nhé.',2200)}catch(e){}return}CRI.set(k,now);
+  if(!CR.id){CR.id='S_'+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-5);CR.cd=Date.now();CR.co=OBS.in?1:0;CR.join=0;try{MP.sendNow()}catch(e){}}
+  try{const db=await MP.db(),ref=db.ref('invites/'+k+'/'+MP.uid);await ref.set({n:myName(),g:CR.id,t:Date.now()});
+   try{say('📨 Đã gửi lời mời tới '+r.n+'. Chờ bạn ấy đồng ý nhé.',3200)}catch(e){}
+   setTimeout(()=>{try{const q=ref.remove();if(q&&q.catch)q.catch(()=>{})}catch(e){}},90000)}
+  catch(e){try{say('Chưa gửi được lời mời. Thầy/cô cần dán Rules mới vào Firebase.',4500)}catch(_){}}};
+ let pnl=null,pT=0;
+ const paintPanel=()=>{if(!pnl)return;if(!st.on){pnl.style.display='none';clearInterval(pT);return}
+  const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,''),dk=CR.id?drvKey():MP.uid,ms=cmem();
+  let h='<div style="font-weight:800;color:#6ff0c0;margin-bottom:8px;display:flex;align-items:center"><span style="flex:1">👥 Đoàn tàu ngầm</span><button data-x style="border:0;border-radius:8px;width:30px;height:30px;background:#3a4a58;color:#fff;cursor:pointer">✕</button></div>';
+  h+='<div style="margin-bottom:8px">'+(dk===MP.uid?'🚢 ':'• ')+'<b>'+esc(myName())+'</b> (em)'+(dk===MP.uid?' · đang lái':'')+'</div>';
+  for(const r of ms)h+='<div style="margin-bottom:8px">'+(r.k===dk?'🚢 ':'• ')+'<b>'+esc(r.n)+'</b>'+(r.k===dk?' · đang lái':'')+'</div>';
+  if(!st.pass){h+='<div style="border-top:1px solid #1d3a50;padding-top:8px;font-size:12px;color:#7fb6d9;margin-bottom:6px">Mời bạn đang online lên tàu ('+(ms.length+1)+'/'+MAXC+'):</div>';let n=0;
+   const L=[...MP._R.values()].sort((a,b)=>String(a.n).localeCompare(String(b.n),'vi'));
+   for(const r of L){if(r.cw===CR.id&&CR.id)continue;const busy=r.sb||r.cw;n++;h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="flex:1">'+esc(r.n)+(busy?' <small style="color:#ff9c8a">(đang ở tàu khác)</small>':'')+'</span>'+(busy?'':'<button data-iv="'+esc(r.k)+'" style="border:0;border-radius:10px;padding:6px 12px;background:#ffd23f;color:#3a2a00;font-weight:800;cursor:pointer">🚢 Mời</button>')+'</div>'}
+   if(!n)h+='<div style="color:#7fb6d9">Chưa có bạn nào khác đang online.</div>'}
+  else h+='<div style="border-top:1px solid #1d3a50;padding-top:8px;font-size:12px;color:#7fb6d9">Em là hành khách: chủ tàu lái. Khi tàu về bến em bấm 🚪 để rời tàu. Ở trong trạm, ai bấm cửa hầm thì người đó lái tiếp.</div>';
+  pnl.innerHTML=h};
+ const crewPanel=()=>{if(!st.on)return;if(pnl&&pnl.style.display!='none'){pnl.style.display='none';clearInterval(pT);return}
+  if(!pnl){pnl=document.createElement('div');pnl.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:72;pointer-events:auto;background:rgba(11,27,41,.97);border:2px solid #29506d;border-radius:16px;padding:12px 14px;min-width:260px;max-width:92vw;max-height:75vh;overflow:auto;color:#cfeeff;font:14px system-ui,sans-serif;box-shadow:0 10px 40px #000a';
+   pnl.addEventListener('pointerdown',e=>e.stopPropagation());pnl.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-x')){pnl.style.display='none';clearInterval(pT)}else if(b.dataset.iv)crewSend(b.dataset.iv)});document.body.appendChild(pnl)}
+  pnl.style.display='block';paintPanel();clearInterval(pT);pT=setInterval(paintPanel,1000)};
  const api={
   get on(){return st.on},
+  get pass(){return !!st.pass},crewNet,crewTick,crewInv,crewPanel,crewClaim,
   hunt,HUNT,net,rem,remotePts,
-  toggleLight(){if(OBS.in)return;st.lt=st.lt?0:1;try{say(st.lt?'💡 Đã bật đèn pha.':'🌑 Đã tắt đèn pha — quái khó phát hiện tàu hơn, nhưng em cũng khó nhìn hơn!',2600)}catch(e){}},
+  toggleLight(){if(OBS.in)return;if(st.pass){try{say('💡 Đèn pha do chủ tàu điều khiển.',2000)}catch(e){}return}st.lt=st.lt?0:1;try{say(st.lt?'💡 Đã bật đèn pha.':'🌑 Đã tắt đèn pha — quái khó phát hiện tàu hơn, nhưng em cũng khó nhìn hơn!',2600)}catch(e){}},
   shop(){ready();if(st.shop){closeShop();return}if(st.on?!(api.canExit()||atStn()||atObs()):!api.near()){try{say('🛠 Hãy đưa tàu về bến (nổi lên sát bến tàu) để dùng xưởng nâng cấp.',3200)}catch(e){}return}openShop()},
   st,
   init(){ready()},
@@ -10459,15 +10554,16 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    try{NATV.pre(OBS.x,OBS.y);SCN.pre(OBS.x,OBS.y)}catch(e){}
    ply.x=PX;ply.y=PY+60;ply.a=H0;api.board(true);if(st.on)obsEnter()},
   get inObs(){return OBS.in},
-  hint(){ready();try{if(dock&&dock.parent!==scene)scene.add(dock);if(subG&&subG.parent!==scene)scene.add(subG);if(snow&&snow.parent!==scene)scene.add(snow)}catch(e){}if(st.on){if(OBS.in)return obsHint();if(atObs())return 'F / E: vào TRẠM QUAN SÁT '+OBS.m+' m (đi bộ ngắm sinh vật) · U: xưởng nâng cấp';if(atStn())return 'F / E: trò chuyện với nhà khoa học · U: xưởng nâng cấp · Tàu đang được sửa và nạp oxy';return api.canExit()?'F / E: rời tàu ngầm (đã về bến) · U: xưởng nâng cấp':null}return api.near()?'F / E: vào TÀU NGẦM — Trạm thám hiểm đại dương · U: nâng cấp tàu':null},
+  hint(){ready();try{if(dock&&dock.parent!==scene)scene.add(dock);if(subG&&subG.parent!==scene)scene.add(subG);if(snow&&snow.parent!==scene)scene.add(snow)}catch(e){}if(st.on){if(OBS.in)return obsHint();if(st.pass)return api.canExit()?'F / E: rời tàu ngầm (đã về bến)':'👥 Em là hành khách · chủ tàu lái · V: đổi góc nhìn';if(atObs())return 'F / E: vào TRẠM QUAN SÁT '+OBS.m+' m (đi bộ ngắm sinh vật) · U: xưởng nâng cấp';if(atStn())return 'F / E: trò chuyện với nhà khoa học · U: xưởng nâng cấp · Tàu đang được sửa và nạp oxy';return api.canExit()?'F / E: rời tàu ngầm (đã về bến) · U: xưởng nâng cấp':null}return api.near()?'F / E: vào TÀU NGẦM — Trạm thám hiểm đại dương · U: nâng cấp tàu':null},
   near(){if(st.on||INT.cur||ply.car||ply.boat||ply.mt||state!='play')return false;return Math.hypot(ply.x-PX,ply.y-PY)<170},
   canExit(){return Math.hypot(st.x-PX,st.y-PY)<120&&st.d<22},
-  board(force){ready();if(st.on)return;if(!force&&!api.near())return;if(!hud||!subG||!prop){try{say('⚠ Tàu ngầm chưa dựng được'+(st.err?' ('+st.err.slice(0,90)+')':'')+'. Em chụp màn hình báo cô/thầy nhé.',6000)}catch(e){}return}
+  board(force){ready();if(st.on)return;if(CR.id&&CR.join)return;if(!force&&!api.near())return;if(!hud||!subG||!prop){try{say('⚠ Tàu ngầm chưa dựng được'+(st.err?' ('+st.err.slice(0,90)+')':'')+'. Em chụp màn hình báo cô/thầy nhé.',6000)}catch(e){}return}
    try{if(ply.mt)V5.dismount(true)}catch(e){}try{if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}}catch(e){}INT.cur=null;
    try{apStop&&AP.on&&apStop('')}catch(e){}
    PR.l=PR.u=0;st.lt=1;st.shop=0;st.low=0;try{hud.classList.remove('low','crk2')}catch(e){}st.thr=1e9;st.ch=null;st.warned=0;st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;try{MP.sendNow()}catch(e){}
    try{SND.p('splash')}catch(e){}try{say('🚢 Em đã vào tàu ngầm! W/S: tiến-lùi, A/D: rẽ, Space: lặn, Shift: nổi, V: đổi góc nhìn. Về bến rồi bấm F/E để ra.',6000)}catch(e){}},
-  exit(){if(!st.on)return;if(OBS.in){obsAct();return}if(atObs()){obsEnter();return}if(atStn()){stnTalk();return}if(!api.canExit()){const dx=PX-st.x,dy=PY-st.y;try{say('⚓ Hãy đưa tàu về bến (cách khoảng '+Math.round(Math.hypot(dx,dy)/10)+' m, chấm vàng trên sonar) và nổi lên mặt nước rồi mới ra được.',3800)}catch(e){}return}
+  exit(){if(!st.on)return;if(OBS.in){obsAct();return}if(st.pass){if(atObs()||atStn()){try{say('👥 Em là hành khách: chủ tàu sẽ đưa cả đoàn vào trạm.',3200)}catch(e){}return}if(!api.canExit()){try{say('👥 Em là hành khách. Hãy chờ tàu về bến rồi mới rời tàu được nhé.',3600)}catch(e){}return}crewLeaveSelf();leaveSub();return}if(atObs()){obsEnter();if(CR.id){CR.co=1;try{MP.sendNow()}catch(e){}}return}if(atStn()){stnTalk();return}if(!api.canExit()){const dx=PX-st.x,dy=PY-st.y;try{say('⚓ Hãy đưa tàu về bến (cách khoảng '+Math.round(Math.hypot(dx,dy)/10)+' m, chấm vàng trên sonar) và nổi lên mặt nước rồi mới ra được.',3800)}catch(e){}return}
+   if(CR.id){CR.co=2;CR.closing=Date.now()+1500;try{MP.sendNow()}catch(e){}} /* cập bến: cả đoàn cùng rời tàu */
    if(st.hp<100){st.hp=100;try{say('🔧 Trạm thám hiểm đã sửa chữa tàu ngầm. Độ bền: 100%.',3000)}catch(e){}}st.kx=st.ky=0;st.shake=0;
    st.on=0;st.lb=null;if(hlight)hlight.intensity=0;moor();hud.classList.remove('on');snow.visible=false;
    ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}try{MP.sendNow()}catch(e){}
@@ -10513,7 +10609,8 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
        /* độ bền < 30%: kính nứt, đèn đỏ nhấp nháy, còi báo động (nứt nhiều hơn khi < 15%) */
     {const low=st.hp<30;if(low!==!!st.low){st.low=low;hud.classList.toggle('low',low)}hud.classList.toggle('crk2',low&&st.hp<15);
      if(low&&st.t%42==0){try{SND.p('siren')}catch(e){}}}
-place();prop.rotation.x+=.15+Math.abs(st.v)*.4;
+if(st.pass){try{passFollow()}catch(e){}}
+   place();prop.rotation.x+=.15+Math.abs(st.v)*.4;
    const dp=meters(st.d),showB=st.d>4&&!!st.lt;for(const b of beams)b.visible=showB;
    /* giao diện */
    if(st.t%4==0){const q=id=>document.getElementById(id);
