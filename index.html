@@ -3521,6 +3521,8 @@ VR('camapvoi','leeds','Leedsichthys','🐋','prehis',1,{s:8.5,wide:0,dots:0,c1:'
  let R2=Math.random;
  /* ===== THỦY QUÁI DÙNG CHUNG: cùng điểm sinh (hạt giống cố định) + cùng đồng hồ máy chủ => mọi máy thấy quái ở cùng chỗ ===== */
  const SHS=new Set(['megalodon','mosa','mosasea','pliosaurus','dunkle','leeds','elasmo']);
+  /* mọi sinh vật dưới nước cũng dùng hạt giống + đồng hồ chung => mọi người chơi thấy cùng một đàn cá/thủy quái ở cùng chỗ */
+  for(const q of SPS){if(q.m=='swim'||q.m=='glide'||q.m=='school'||q.m=='drift'||q.z=='psea')SHS.add(q.id)}
  const mkRng=seed=>{let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}};
  const hstr=str=>{let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
  const STm=()=>{try{return MP.now()/1000}catch(e){return Date.now()/1000}};
@@ -5598,7 +5600,8 @@ const MP=(()=>{
   if(v.n!=null&&cleanName(v.n)!==r.n){r.n=cleanName(v.n);if(r.g){r.g.remove(r.tg);r.tg=spr(nameT(r.n,r.sub),24,6);r.tg.position.y=25;r.g.add(r.tg)}}
   if(typeof v.l=='string'&&v.l!==r.l){r.l=v.l;if(r.g){scene.remove(r.g);r.g=null}try{const o=JSON.parse(v.l);r.sub=((/^[0-9A-Za-zÀ-ỹ .\-]{1,8}$/.test(String(o.cs||''))&&o.cs?'Lớp '+o.cs:'')+(o.tt&&/^[a-z0-9]{1,10}$/.test(String(o.tt))?' '+(V5.badOf(o.tt)||''):'')).trim();r.gmk=/^[0-9a-z]{3}$/.test(String(o.gm))?String(o.gm):'';r.gpk=/^[0-9a-z]{3}$/.test(String(o.gp))?String(o.gp):''}catch(e){r.gmk=r.gpk='';r.sub=''}}
   if('x'in v)r.x=num(v.x,-30000,30000,r.x);if('y'in v)r.y=num(v.y,-30000,30000,r.y);if('a'in v)r.a=num(v.a,-10,10,r.a);
-  if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);r.sb=v.sb?1:0;r.sd=num(v.sd,0,300,5);r.sh=num(v.sh,-10,10,0);r.sv=num(v.sv,0,5,0);r.sl=v.sl?1:0;
+  if('s'in v)r.s=v.s?1:0;if('d'in v)r.d=num(v.d,0,100,0);if('i'in v)r.i=v.i?1:0;if('c'in v)r.c=v.c?1:0;if('v'in v)r.v=num(v.v,0,2,0);r.sb=v.sb?1:0;r.sd=num(v.sd,0,300,5);r.sh=num(v.sh,-10,10,0);r.sv=num(v.sv,0,5,0);r.sl=v.sl?1:0;r.fb=0;
+   if(!v.sb&&v.i&&v.s){r.sb=1;r.fb=1;r.sd=num(v.d,0,100,5);r.sh=num(v.a,-10,10,0);r.sl=v.c?1:0} /* tàu ngầm mã hóa trong trường cơ bản */
   {const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);r.mt=(typeof v.m=='string'&&V5.mountOk(v.m))?v.m:'';r.pt=(typeof v.p=='string'&&V5.petOk(v.p))?v.p:'';
    const km=typeof v.k=='string'?v.k:'';r.ck=(/^[a-z0-9_]{1,12}$/.test(km)&&km!='cop'&&(has(CARS.SPEC,km)||has(CARS.BIKES,km)))?km:'';r.cc=(typeof v.kc=='string'&&/^#[0-9a-fA-F]{6}$/.test(v.kc))?v.kc:'#d0d0d8'}
   if(typeof v.e=='string'&&v.e!==r.e){r.e=v.e;if(!nw||performance.now()-r.seen<2000){const ix=parseInt(v.e);if(ix>=0&&ix<EMO.length)bubble(r,EMO[ix]);else if(!nw&&ix>=EMO.length&&ix<EMO.length+7)r.act={n:ACT.N[ix-EMO.length],k:0}}}
@@ -5607,7 +5610,9 @@ const MP=(()=>{
  const loadFB=()=>new Promise((ok,no)=>{if(window.firebase&&firebase.database)return ok();const add=(src,cb)=>{const q=document.createElement('script');q.src=src;q.onload=cb;q.onerror=no;document.head.appendChild(q)};
   add('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',()=>add('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js',ok)))});
  const lookJ=()=>JSON.stringify(Object.assign({},LOOK,(()=>{try{return V5.gearCode()}catch(e){return{}}})(),(()=>{try{return{cs:String(EDU.cls||'').slice(0,8),tt:V5.myTt()}}catch(e){return{}}})()));
- const payload=()=>{const c=ply.car,o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((c?c.a:ply.a)*100)/100,s:ply.sw2?1:0,d:(ply.mt&&ply.mt.env=='f')?Math.round(Math.min(95,(ply.z||0)/4)):Math.round(ply.dd||0),i:INT.cur?1:0,c:c?1:0,v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
+ const payload=()=>{const c=ply.car,u=(()=>{try{return SUB.net()}catch(e){return null}})(),wr=a=>Math.atan2(Math.sin(a),Math.cos(a)),
+  /* đang lái tàu ngầm: mã hóa bằng các trường sẵn có (không cần sửa Rules): i=1 & s=1 là cờ tàu ngầm, d = độ sâu, a = hướng tàu, c = đèn pha */
+  o={n:cleanName(EDU.name),l:lookS,x:Math.round(c?c.x:ply.x),y:Math.round(c?c.y:ply.y),a:Math.round((u?wr(u.h):(c?c.a:ply.a))*100)/100,s:u?1:(ply.sw2?1:0),d:u?Math.max(0,Math.min(100,Math.round(u.d))):((ply.mt&&ply.mt.env=='f')?Math.round(Math.min(95,(ply.z||0)/4)):Math.round(ply.dd||0)),i:u?1:(INT.cur?1:0),c:u?(u.l?1:0):(c?1:0),v:(()=>{try{return VOICE.st}catch(e){return 0}})(),h:Date.now()};return o};
  const payX=()=>{const c=ply.car,t=ply.mt;let m='',p='',k='',kc='';if(t&&t.id&&!c)m=String(t.id).slice(0,24);try{if(!c)p=String(V5.petKey()||'').slice(0,30)}catch(e){}if(c&&c.model){k=String(c.model).slice(0,12);kc=/^#[0-9a-fA-F]{6}$/.test(String(c.col))?String(c.col):''}return{m,p,k,kc}};
  const getDb=async()=>{if(db)return db;await loadFB();if(!(firebase.apps&&firebase.apps.length))firebase.initializeApp(MP_CFG);db=firebase.database();return db};
  const getAuth=async()=>{await getDb();return firebase.auth()};
@@ -9930,7 +9935,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   const PHR=NAT.RLx.PH,CX=PHR.x0+PHR.W/2,CY=PHR.y0+PHR.W/2,OFF=[[-130,-90],[-130,90],[130,-90],[130,90],[-300,0],[300,0],[0,-200],[0,200],[-70,160],[200,0],[420,0],[330,170],[330,-170]];
   let bf=null,bs=-1e12,ba=null,bas=-1e12;
   /* quỹ đạo tuần tra của thủy quái tầng sâu (nếu đã sinh ra): trạm đặt gần đó để chắc chắn có quái lướt qua kính */
-  const MON=[];try{for(const o of ANIM.ALL){if(o.s&&OREAL.indexOf(o.s.id)>=0)MON.push([o.hx!=null?o.hx:o.x,o.hy!=null?o.hy:o.y])}}catch(e){}
+  const MON=[]; /* cố ý để trống: vị trí trạm phải giống nhau trên mọi máy */
   for(let pass=0;pass<2&&!bf&&!ba;pass++)for(let n=0;n<3200;n++){
    /* lượt 1: chỉ trong lãnh địa thủy quái (khu nguyên thủy, cách mép 250); lượt 2: nới rộng nếu không có chỗ */
    const x=pass?CX+(hs(n*13+5,29)-.5)*7600:PHR.x0+250+hs(n*13+5,29)*(PHR.W-500),y=pass?CY+(hs(n*17+9,31)-.5)*7600:PHR.y0+250+hs(n*17+9,31)*(PHR.W-500),h=fl(x,y);
@@ -10074,7 +10079,9 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
     /* gom TẤT CẢ sinh vật biển quanh trạm (không phụ thuộc đang hiện hay bị ẩn): [x,z,loại 2 quái/1 cổ đại/0 nhỏ,id,emoji,tên,giả] */
     const pts=[],sp=new Map();
     try{for(const o of ANIM.ALL){const q=o.s;if(!q||!aq(q))continue;const dx=o.x-OBS.x,dz=o.y-OBS.y;if(Math.hypot(dx,dz)>RR+40)continue;
-     const c=MONR(q)?2:(ANIM.SHS.has(q.id)||q.z=='psea')?1:0;pts.push([dx,dz,c,q.id,q.e||'🐟',q.n||q.id,0]);
+     let ex=dx,ez=dz;if(!o.g&&ANIM.SHS.has(q.id)){try{const cn=ANIM.canon(o,q,q.m);ex=cn[1]+(o.ox2||0)-OBS.x;ez=cn[2]+(o.oy2||0)-OBS.y}catch(e){}}
+     if(Math.hypot(ex,ez)>RR+40)continue;
+     const c=MONR(q)?2:(ANIM.SHS.has(q.id)||q.z=='psea')?1:0;pts.push([ex,ez,c,q.id,q.e||'🐟',q.n||q.id,0]);
      const e=sp.get(q.id);if(e)e.n++;else sp.set(q.id,{n:1,c,e:q.e||'🐟',nm:q.n||q.id})}}catch(e){}
     if(OBS.res)for(const r of OBS.res){if(!r.g.visible)continue;const g=r.g.position,c=(r.k=='shark'||r.k=='viper'||r.k=='kraken')?2:(r.k=='squid'||r.k=='leeds')?1:0,I=obsInfo(r.id);pts.push([g.x,g.z,c,r.id,I.e,I.n,1]);
      if(!sp.has(r.id))sp.set(r.id,{n:1,c,e:I.e,nm:I.n})}
@@ -10262,9 +10269,9 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
     if(d0>=R){if(d0>1){o.kx=dx/d0;o.ky=dy/d0}continue}
     let ux,uy;if(d0>25){ux=dx/d0;uy=dy/d0}else{ux=o.kx!=null?o.kx:1;uy=o.ky!=null?o.ky:0} /* sát tâm: đẩy ra phía nó vừa đi tới */
     const nx=z.x+ux*R,ny=z.y+uy*R,ex=nx-o.x,ey=ny-o.y;
-    o.x=nx;o.y=ny;if(o.ox2!=null){o.ox2+=ex;o.oy2+=ey}
+    o.x=nx;o.y=ny;
     g.position.x=nx;g.position.z=ny;
-    for(const[a,b]of[['hx','hy'],['chx','chy']])if(typeof o[a]=='number'&&typeof o[b]=='number'){o[a]+=ux*1.6;o[b]+=uy*1.6}}}};
+    }}};
  const koInstall=()=>{if(KO.on)return;KO.on=1;const u0=ANIM.upd;ANIM.upd=function(){const r=u0.apply(this,arguments);try{koKeep()}catch(e){}return r}};
 
  const ready=()=>{if(!st.ready){st.ready=1;for(const f of[buildDock,buildSub,buildHud,buildScen,buildStation,buildObs,buildAtmo]){try{f()}catch(e){st.err=(st.err||'')+' '+f.name+': '+(e&&e.message);try{ERR(e);console.error('SUB',e)}catch(_){}}}try{if(subG)moor()}catch(e){}try{koInstall()}catch(e){}}};
@@ -10336,7 +10343,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    try{SND.roar(rk(s.id),1,pan)}catch(e){}try{say('😱 '+(s.e||'')+' '+s.n+' bất ngờ lao ra từ bóng tối!',3400)}catch(e){}};
   /* ===== CHƠI CHUNG: tàu của bạn bè + mục tiêu của thủy quái ===== */
   const RSM=new Map();
-  const net=()=>st.on?{d:Math.round(st.d*10)/10,h:Math.round(st.h*100)/100,v:Math.round(Math.abs(st.v)*10)/10,l:st.lt?1:0}:null;
+  const net=()=>st.on?{d:Math.round(st.d*10)/10,h:Math.round(Math.atan2(Math.sin(st.h),Math.cos(st.h))*100)/100,v:Math.round(Math.abs(st.v)*10)/10,l:st.lt?1:0}:null;
   const remotePts=()=>{const a=[];try{for(const r of MP._R.values())if(r.sb)a.push([r.x,r.y])}catch(e){}return a};
   const tagTex=n=>{const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');x.fillStyle='rgba(10,50,90,.85)';x.beginPath();if(x.roundRect)x.roundRect(8,8,240,48,18);else x.rect(8,8,240,48);x.fill();x.fillStyle='#fff';x.font='bold 28px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🚢 '+String(n||'Bạn').slice(0,14),128,33);return new THREE.CanvasTexture(c)};
   const remMk=r=>{const g=subG.clone(true),dl=[],bm=[];g.traverse(o=>{if(o.isLight)dl.push(o);if(o.isMesh&&o.material&&o.material.transparent&&o.material.blending===THREE.AdditiveBlending)bm.push(o)});dl.forEach(o=>o.parent&&o.parent.remove(o));g.visible=true;g.rotation.order='YZX';
@@ -10348,7 +10355,8 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    if(!R.size)return;const now=performance.now(),cam=camera.position;
    for(const r of R.values()){if(!r.sb)continue;
     if(r.px!==r.x||r.py!==r.y){const dt=Math.max(.2,Math.min(2,(now-(r.pt||now))/1000));if(r.px!=null){r.vx=(r.x-r.px)/dt;r.vy=(r.y-r.py)/dt}else{r.vx=r.vy=0}r.px=r.x;r.py=r.y;r.pt=now}
-    const age=Math.min(.9,(now-(r.pt||now))/1000),tx=r.x+(r.vx||0)*age,ty=r.y+(r.vy||0)*age;
+    if(r.fb)r.sv=Math.min(5,Math.hypot(r.vx||0,r.vy||0)/60);
+     const age=Math.min(.9,(now-(r.pt||now))/1000),tx=r.x+(r.vx||0)*age,ty=r.y+(r.vy||0)*age;
     if(r.ux==null||Math.hypot(tx-r.ux,ty-r.uy)>400){r.ux=tx;r.uy=ty;r.ud=r.sd;r.uh=r.sh}
     else{r.ux+=(tx-r.ux)*.25;r.uy+=(ty-r.uy)*.25;r.ud+=(r.sd-r.ud)*.2;r.uh+=(((r.sh-r.uh+Math.PI*3)%(Math.PI*2))-Math.PI)*.25}
     if(INT.cur||Math.hypot(r.ux-cam.x,r.uy-cam.z)>1800){remDrop(r.k);continue}
@@ -10359,7 +10367,10 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   let tgF=-1,tgA=[];
   const tgts=()=>{if(tgF===fc)return tgA;tgF=fc;const a=[];
    if(st.on&&!atStn()&&!atObs())a.push({k:'me',loc:1,x:st.x,y:st.y,d:st.d,v:Math.abs(st.v),l:st.lt});
-   try{for(const r of MP._R.values())if(r.sb)a.push({k:r.k,loc:0,x:r.ux!=null?r.ux:r.x,y:r.uy!=null?r.uy:r.y,d:r.ud!=null?r.ud:r.sd,v:r.sv||0,l:r.sl})}catch(e){}
+   try{for(const r of MP._R.values())if(r.sb){const rx=r.ux!=null?r.ux:r.x,ry=r.uy!=null?r.uy:r.y,rd=r.ud!=null?r.ud:r.sd;
+     if(OBS.ok&&Math.hypot(rx-OBS.x,ry-OBS.y)<340&&Math.abs(rd-OBS.dd)<34)continue;
+     if(STN.ok&&Math.hypot(rx-STN.x,ry-STN.y)<140&&Math.abs(rd-(STN.d-22))<34)continue;
+     a.push({k:r.k,loc:0,x:rx,y:ry,d:rd,v:r.sv||0,l:r.sl})}}catch(e){}
    return tgA=a};
   const hunt=(o,g,s,m)=>{const P=PRED[s.id];if(!P||!HUNT.on)return false;
   if(ANIM.SHS.has(s.id))ANIM.canon(o,s,m);
@@ -10451,12 +10462,12 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   board(force){ready();if(st.on)return;if(!force&&!api.near())return;if(!hud||!subG||!prop){try{say('⚠ Tàu ngầm chưa dựng được'+(st.err?' ('+st.err.slice(0,90)+')':'')+'. Em chụp màn hình báo cô/thầy nhé.',6000)}catch(e){}return}
    try{if(ply.mt)V5.dismount(true)}catch(e){}try{if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}}catch(e){}INT.cur=null;
    try{apStop&&AP.on&&apStop('')}catch(e){}
-   PR.l=PR.u=0;st.lt=1;st.shop=0;st.low=0;try{hud.classList.remove('low','crk2')}catch(e){}st.thr=1e9;st.ch=null;st.warned=0;st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;
+   PR.l=PR.u=0;st.lt=1;st.shop=0;st.low=0;try{hud.classList.remove('low','crk2')}catch(e){}st.thr=1e9;st.ch=null;st.warned=0;st.on=1;st.lb=null;moor();ply.x=st.x;ply.y=st.y;st.view=0;st.hit=0;st.al='';st.seen={};st.zi=null;st.sc=null;st.sa='';st.oxy=100;hud.classList.add('on');hud.classList.remove('ext');snow.visible=true;try{MP.sendNow()}catch(e){}
    try{SND.p('splash')}catch(e){}try{say('🚢 Em đã vào tàu ngầm! W/S: tiến-lùi, A/D: rẽ, Space: lặn, Shift: nổi, V: đổi góc nhìn. Về bến rồi bấm F/E để ra.',6000)}catch(e){}},
   exit(){if(!st.on)return;if(OBS.in){obsAct();return}if(atObs()){obsEnter();return}if(atStn()){stnTalk();return}if(!api.canExit()){const dx=PX-st.x,dy=PY-st.y;try{say('⚓ Hãy đưa tàu về bến (cách khoảng '+Math.round(Math.hypot(dx,dy)/10)+' m, chấm vàng trên sonar) và nổi lên mặt nước rồi mới ra được.',3800)}catch(e){}return}
    if(st.hp<100){st.hp=100;try{say('🔧 Trạm thám hiểm đã sửa chữa tàu ngầm. Độ bền: 100%.',3000)}catch(e){}}st.kx=st.ky=0;st.shake=0;
    st.on=0;st.lb=null;if(hlight)hlight.intensity=0;moor();hud.classList.remove('on');snow.visible=false;
-   ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}
+   ply.x=DX-CA_*30;ply.y=DY-SA_*30;ply.a=AG;try{ply.m.visible=true;V5.light(true)}catch(e){}try{MP.sendNow()}catch(e){}
    try{SND.p('splash')}catch(e){}try{say('Em đã rời tàu ngầm về trạm thám hiểm.',2400)}catch(e){}},
   warp(){ready();try{NATV.pre(PX,PY);SCN.pre(PX,PY)}catch(e){}ply.x=PX;ply.y=PY+60;ply.a=H0;api.board(true)},
   toggleView(){if(OBS.in)return;st.view=st.view?0:1;hud.classList.toggle('ext',!!st.view)},
