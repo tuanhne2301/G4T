@@ -559,6 +559,7 @@ body.full #sbx{top:calc(var(--mm) + 20px)!important}
 /* ===== GLBX: thay ngoại hình bằng mô hình GLB =====
    Các file đặt cùng thư mục với index.html:
      megalodon.glb, pliosaurus.glb, dunkleosteus.glb, leedsichthys.glb, elasmosaurus.glb, mosasaurus.glb, ichthyosaurus.glb
+     (khu thám hiểm) viper_fish.glb, firefly_squid.glb, kraken_v2.glb
    Nếu thiếu file hoặc tải lỗi, game tự dùng lại mô hình cũ (không bị lỗi).
    Độ lớn thực tế = len * k * 1.25 * fx (k, fx lấy từ khai báo loài trong game). */
 window.GLBX=(()=>{
@@ -574,7 +575,14 @@ window.GLBX=(()=>{
   /* Ichthyosaurus: mô hình tĩnh, không xương -> uốn thân bằng shader như cá heo */
   ichthyo:{url:'ichthyosaurus.glb',len:12.5,ctr:null,bake:1,rig:'bend',max:6},
   /* Dunkleosteus: mô hình tĩnh -> uốn phần thân sau/đuôi bằng shader, đầu giáp giữ cứng */
-  dunkle:{url:'dunkleosteus.glb',len:15,ctr:null,bake:1,rig:'bend',max:8}
+  dunkle:{url:'dunkleosteus.glb',len:15,ctr:null,bake:1,rig:'bend',max:8},
+  /* ===== Khu thám hiểm (trạm quan sát vực thẳm): mô hình có sẵn hoạt ảnh trong file =====
+     obsviper: cá viper khổng lồ (viper_fish.glb, hoạt ảnh 'swim'; len = chiều dài, đầu quay về +X)
+     obssquid: mực ống khổng lồ (firefly_squid.glb, hoạt ảnh trong file; thân nằm dọc trục X, tay ở -X nên xoay 180°)
+     obskraken: Kraken (kraken_v2.glb, hoạt ảnh trong file; ctr = độ cao bàn chân để đặt chân đứng sát nền đáy) */
+  obsviper:{url:'viper_fish.glb',len:25,ctr:null,ry:-Math.PI/2,clip:'swim',px:1,em:1,max:2},
+  obssquid:{url:'firefly_squid.glb',len:48,ctr:null,fix:1,clip:'*',ry:Math.PI,glow:.35,max:2},
+  obskraken:{url:'kraken_v2.glb',len:56,ctr:-690,fix:1,clip:'*',glow:.3,max:2}
  };
  /* id loài trong game -> khóa mô hình */
  const ALIAS={mosasea:'mosasaurus'}; /* 'mosa' (hồ khu nguyên thủy) giữ dạng mecha; chỉ 'mosasea' (khu thám hiểm) dùng mô hình thật */
@@ -620,12 +628,15 @@ window.GLBX=(()=>{
    const f=m=>{if(mats.has(m))return mats.get(m);
     const n=new THREE.MeshLambertMaterial({map:m.map||null,side:THREE.DoubleSide,skinning:!!o.isSkinnedMesh});
     n.color.copy(m.color);if(n.color.convertLinearToSRGB)n.color.convertLinearToSRGB();
+    if(cfg.px&&n.map)n.map.magFilter=THREE.NearestFilter; /* mô hình pixel (viper): giữ ô vuông sắc nét */
+    if(cfg.em&&m.emissiveMap&&m.emissive){n.emissiveMap=m.emissiveMap;n.emissive.copy(m.emissive)} /* đốm phát sáng có sẵn trong file */
+    if(cfg.glow&&n.map){n.emissiveMap=n.map;n.emissive.setRGB(cfg.glow,cfg.glow,cfg.glow)} /* tự sáng nhẹ để thấy rõ trong vực tối */
     if(n.map){n.map.encoding=THREE.LinearEncoding;n.map.needsUpdate=true}
     if(m.alphaTest>0)n.alphaTest=m.alphaTest;
     if(m.transparent){n.transparent=true;n.opacity=m.opacity}
     mats.set(m,n);return n};
    o.material=Array.isArray(o.material)?o.material.map(f):f(o.material)});
-  const root=new THREE.Group();root.quaternion.copy(orient(key));root.add(scn);root.updateMatrixWorld(true);
+  const root=new THREE.Group();root.quaternion.copy(cfg.ry!=null?new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),cfg.ry):orient(key));root.add(scn);root.updateMatrixWorld(true);
   const bb=cfg.fix?posedBox(root):new THREE.Box3().setFromObject(root),k=cfg.len/(bb.max.x-bb.min.x);
   const cy=cfg.ctr==null?(bb.min.y+bb.max.y)/2:cfg.ctr;
   root.scale.setScalar(k);root.position.set(-(bb.min.x+bb.max.x)/2*k,-cy*k,-(bb.min.z+bb.max.z)/2*k);
@@ -9804,11 +9815,6 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
     Toạ độ cục bộ (lx,lz) cộng vào (OBS.x,OBS.y) là toạ độ thế giới; trạm không xoay (mặt kính chính hướng +x). */
  const OBS={ok:0,x:0,y:0,fd:100,dk:97,dd:83,m:3000,in:0,px:-70,pz:108,h:-Math.PI/2,eye:17,bob:0,vw:0,hint:0,near:0,n:0,focus:null,jo:0,ob:[],act:[],log:{},ui:null,up:null,dkx:-70,dkz:141,fcT:0,sq:0,alertT:0,shake:0,alm:[]};
  const ORES=[
-  {id:'dumbo',e:'🐙',n:'Bạch tuộc Dumbo',h:'Sát đáy biển sâu 3000–4000 m',w:'Hay lượn sát đáy biển ngay trước kính chính',t:'Bạch tuộc Dumbo có hai chiếc vây tròn như đôi tai voi Dumbo, vỗ nhẹ để lơ lửng sát đáy biển. Chúng nuốt trọn giun, giáp xác nhỏ và hầu như không có kẻ thù trong vực sâu.'},
-  {id:'seapig',e:'🐷',n:'Heo biển (hải sâm)',h:'Đáy bùn của vực sâu',w:'Đi thành đàn chầm chậm trên nền cát đáy biển',t:'Heo biển là loài hải sâm đi bằng những chiếc "chân" ống mềm. Chúng bò thành đàn trên đáy bùn, nhặt chất hữu cơ rơi xuống từ tầng nước phía trên để ăn.'},
-  {id:'angler',e:'🎣',n:'Cá cần câu',h:'Vùng nước tối hàng nghìn mét',w:'Lượn chậm giữa nước, để ý ánh sáng nhử mồi',t:'Cá cần câu có "chiếc cần" mọc trên đầu, đầu cần là mồi phát sáng nhờ vi khuẩn sống chung. Con mồi tò mò bơi lại gần là bị đớp ngay. Con cái lớn hơn con đực rất nhiều.'},
-  {id:'atolla',e:'🪼',n:'Sứa vương miện Atolla',h:'Tầng nước sâu, tối',w:'Trôi lơ lửng gần kính, thỉnh thoảng nháy vòng sáng xanh',t:'Khi bị săn, sứa Atolla nháy vòng sáng xanh quanh chuông như còi báo động, hy vọng gọi một kẻ săn mồi lớn hơn tới ăn kẻ đang tấn công mình. Người ta gọi đó là "chuông báo trộm" của biển sâu.'},
-  {id:'rattail',e:'🐟',n:'Cá chuột đuôi dài',h:'Đáy biển sâu hàng nghìn mét',w:'Bơi tuần sát đáy, đầu chúc xuống tìm thức ăn',t:'Cá chuột có cái đầu to và thân thon dần thành chiếc đuôi dài như đuôi chuột. Chúng bơi sát đáy biển, dùng khứu giác và các giác quan nhạy để tìm xác sinh vật rơi xuống.'},
   {id:'squid',e:'🦑',n:'Mực ống khổng lồ',h:'Biển sâu',w:'Rất hiếm: thỉnh thoảng bơi ngang qua phía xa',t:'Mực ống khổng lồ dài tới hơn chục mét, có đôi mắt to bằng chiếc đĩa ăn, thuộc hàng lớn nhất giới động vật. Kẻ thù chính của chúng là cá nhà táng, còn đời sống của chúng vẫn còn rất nhiều điều bí ẩn.'}];
  ORES.push(
   {id:'viper',e:'🦷',n:'Cá viper khổng lồ',h:'Biển sâu, khu thủy quái',w:'Lao ra từ bóng tối, răng nanh dài sáng loáng',t:'Cá viper ngoài đời chỉ dài chừng 30 cm nhưng có hàm răng nanh dài đến mức không ngậm kín được miệng, cùng hàng đốm phát sáng dọc thân để nhử mồi. Ở khu thủy quái này, một cá thể đột biến đã phình to hơn nhiều lần!'},
@@ -9870,10 +9876,10 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   for(const c of OBS.ob){if(c.r){if(Math.hypot(nx-c.x,nz-c.z)<c.r)return false}else if(Math.abs(nx-c.x)<c.bx&&Math.abs(nz-c.z)<c.bz)return false}
   return true};
  /* quét thủy quái áp sát kính -> báo động đỏ (không tự bật thẻ thông tin) */
- const SZ={shark:130,leeds:140,kraken:110,squid:120,viper:55,angler:45,atolla:35,dumbo:30,seapig:25,rattail:45};
+ const SZ={shark:130,leeds:140,kraken:110,squid:120,viper:55};
  const obsScan=()=>{
   const ex=OBS.x+OBS.px,ez=OBS.y+OBS.pz,ey=-OBS.dk+OBS.eye;let md=1e9;
-  if(OBS.res)for(const r of OBS.res)if((r.k=='shark'||r.k=='viper'||r.k=='kraken')&&r.g.visible){const q=r.k=='kraken'?r.g.userData.segs[1][6].position:r.g.position,ox=r.k=='kraken'?OBS.rx:0;md=Math.min(md,Math.hypot(OBS.x+q.x+ox-ex,-OBS.dk+q.y-ey,OBS.y+q.z-ez))}
+  if(OBS.res)for(const r of OBS.res)if((r.k=='shark'||r.k=='viper'||r.k=='kraken')&&r.g.visible){const q=r.g.position;md=Math.min(md,Math.hypot(OBS.x+q.x-ex,-OBS.dk+q.y-ey,OBS.y+q.z-ez))}
   try{for(const o of ANIM.ALL){const s=o.s,g=o.g;if(!s||OREAL.indexOf(s.id)<0||!g.visible)continue;md=Math.min(md,Math.hypot(o.x-ex,g.position.y-ey,o.y-ez))}}catch(e){}
   if(md<230&&OBS.alertT<60){OBS.alertT=130;if(!OBS.aw||st.t-OBS.aw>700){OBS.aw=st.t;try{say('⚠ CẢNH BÁO: thủy quái áp sát kính trạm! Giữ bình tĩnh, kính chịu được.',3400)}catch(e){}}}};
  /* bấm / chạm vào một sinh vật trên màn hình -> hiện thẻ thông tin + ghi nhật ký */
@@ -9881,7 +9887,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
  const obsPickAt=(cx,cy)=>{
   const cv=renderer.domElement,rc=cv.getBoundingClientRect(),W=rc.width,H=rc.height,f=H/2/Math.tan((camera.fov||54)*Math.PI/360);
   const C0=[];const ex=camera.position.x,ey=camera.position.y,ez=camera.position.z;
-  if(OBS.res)for(const r of OBS.res){if(!r.g.visible)continue;let q=r.g.position,ox=0;if(r.k=='kraken'){q=r.g.userData.segs[1][6].position;ox=OBS.rx}C0.push([r.id,r.k,OBS.x+q.x+ox,-OBS.dk+q.y,OBS.y+q.z])}
+  if(OBS.res)for(const r of OBS.res){if(!r.g.visible)continue;const q=r.g.position;C0.push([r.id,r.k,OBS.x+q.x,-OBS.dk+q.y+(r.cy||0),OBS.y+q.z])}
   try{for(const o of ANIM.ALL){const s=o.s,g=o.g;if(s&&OREAL.indexOf(s.id)>=0&&g.visible)C0.push([s.id,'real',o.x,g.position.y,o.y])}}catch(e){}
   let best=null,bs=1e9;const v=new THREE.Vector3();
   for(const c of C0){const d=Math.hypot(c[2]-ex,c[3]-ey,c[4]-ez);if(d<6||d>760)continue;v.set(c[2],c[3],c[4]).project(camera);if(v.z>1||v.z<-1)continue;
@@ -10112,34 +10118,6 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    SOB.push({t:'c',k:0,x:P.x-20,z:P.y,r:3,y0:-OBS.dk+HH,y1:-OBS.dk+HH+60})}
   /* 8) sinh vật sống quanh trạm (nhìn qua kính chính và kính bên) */
   const FLY=-LEG+.4,rg2=new THREE.Group();og.add(rg2);OBS.res=[];
-  const mkDumbo=()=>{const g=new THREE.Group(),b=LB(0xf0bfd0),e=LB(0xf8dce6,{transparent:true,opacity:.9}),ear=[];
-   S(5.2,4.6,4.6,b,0,0,0,g);
-   for(const z of[-1,1]){const w=new THREE.Group();w.position.set(-.4,1.6,z*3.6);g.add(w);S(3.4,.55,2.8,e,0,0,z*1.8,w);ear.push([w,z])}
-   for(const z of[-1,1])S(.75,.75,.75,BS(0x14101a),3.6,1.1,z*2.2,g);
-   for(let i=0;i<7;i++){const a=i/7*6.283,q=mk(cng,b,Math.cos(a)*2.2-.6,-3.9,Math.sin(a)*2.2,g);q.scale.set(1,3.6,1);q.rotation.z=Math.PI}
-   g.userData.ear=ear;return g};
-  const mkPig=()=>{const g=new THREE.Group(),b=LB(0xf3a9b9);S(5.2,3,3,b,0,0,0,g);
-   for(let i=0;i<3;i++)for(const z of[-1,1])C(.5,2.6,b,-2+i*2.2,-2.5,z*1.9,g);
-   for(const z of[-1,1]){const q=mk(cng,b,5,1.5,z,g);q.scale.set(.7,3.2,.7);q.rotation.z=-1.2;S(.6,.6,.6,BS(0x222030),4,1.4,z*1.2,g)}return g};
-  const mkAngler=()=>{const g=new THREE.Group(),b=LB(0x3a2a22),tw=LB(0xf5f0dc);
-   S(10,8.5,8,b,0,0,0,g);S(6.6,2.2,6.4,LB(0x2d2019),4.6,-4.4,0,g);
-   for(let i=0;i<8;i++){const q=mk(cng,tw,9.2,-.8,(i-3.5)*1.55,g);q.scale.set(.42,2.6,.42);q.rotation.z=Math.PI}
-   for(let i=0;i<7;i++){const q=mk(cng,tw,7.8,-3.2,(i-3)*1.5,g);q.scale.set(.4,2.2,.4)}
-   for(const z of[-1,1])S(1.2,1.2,1.2,BS(0xffe9a0),6.4,2.6,z*3.4,g);
-   const tl=mk(cng,b,-12,0,0,g);tl.scale.set(7,10,2.4);tl.rotation.z=Math.PI/2;
-   const sk=C(.3,10,LB(0x2a1d17),3+Math.sin(.5)*5,7+Math.cos(.5)*5,0,g);sk.rotation.z=-.5;
-   const lx=3+Math.sin(.5)*10,ly=7+Math.cos(.5)*10,bu=S(1.7,1.7,1.7,BS(0xfff4b0,{fog:false}),lx,ly,0,g);
-   const ha=halo(0xfff0a0,30,.8,lx,ly,0,g);g.userData.lure=[bu,ha];return g};
-  const mkAtolla=()=>{const g=new THREE.Group(),bg=new THREE.SphereGeometry(5,16,8,0,6.2832,0,1.5708);bg.scale(1,.8,1);
-   const bell=new THREE.Mesh(bg,new THREE.MeshBasicMaterial({color:0xff3a52,transparent:true,opacity:.6,blending:AD,depthWrite:false,side:THREE.DoubleSide}));g.add(bell);
-   const ring=new THREE.Mesh(new THREE.TorusGeometry(5.1,.38,6,28),new THREE.MeshBasicMaterial({color:0x66e8ff,transparent:true,opacity:.2,blending:AD,depthWrite:false}));ring.rotation.x=Math.PI/2;g.add(ring);
-   const tp=[];for(let k=0;k<10;k++){const a=k/10*6.283;for(let s=0;s<5;s++){const w0=Math.sin(s*1.2+k)*.7,w1=Math.sin((s+1)*1.2+k)*.7;tp.push(Math.cos(a)*3.8+w0,-s*2.6,Math.sin(a)*3.8,Math.cos(a)*3.8+w1,-(s+1)*2.6,Math.sin(a)*3.8)}}
-   const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.Float32BufferAttribute(tp,3));g.add(new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:0xff7a8a,transparent:true,opacity:.55,blending:AD,depthWrite:false})));
-   g.userData={bell,ring};return g};
-  const mkRat=()=>{const g=new THREE.Group(),b=LB(0x77736a),bl=LB(0xa8a39a);S(6,2.8,2.4,b,0,0,0,g);S(3,2.4,2.1,b,5.4,0,0,g);
-   const t1=mk(cng,b,-11,-.3,0,g);t1.scale.set(2.4,14,2);t1.rotation.z=Math.PI/2;
-   const df=mk(cng,bl,-4,3,0,g);df.scale.set(.6,7,.3);df.rotation.z=1.9;
-   for(const z of[-1,1])S(.9,.9,.9,BS(0x050505),7.2,.6,z*1.5,g);return g};
   const mkSquid=()=>{const g=new THREE.Group(),b=LB(0xc24a5c),b2=LB(0xe0707e);
    const m=mk(cng,b,-10,0,0,g);m.scale.set(5.2,24,5.2);m.rotation.z=Math.PI/2;
    for(const z of[-1,1]){const f=B(7,.4,6,b2,-19,0,z*4.2,g);f.rotation.y=z*.5}
@@ -10148,24 +10126,10 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    for(const z of[-1,1]){const t=C(.35,26,b2,20,0,z*1.4,g);t.rotation.z=Math.PI/2;S(1,1,.6,b2,33,0,z*1.4,g)}return g};
   const add=(id,k,g,sc,fn)=>{g.scale.setScalar(sc);rg2.add(g);const r={id,k,g,fn,p:hs(OBS.res.length*5+1,43)*6.28};OBS.res.push(r);return r};
   const hd=(dx,dz)=>Math.atan2(dz,dx);
-  /* 3 con bạch tuộc Dumbo bơi vòng trước kính */
-  [[230,-90,55,1],[300,70,70,-1]].forEach(([cx,cz,rr,d])=>add('dumbo','dumbo',mkDumbo(),3.2,(r,t)=>{const a=t*.1*d+r.p,g=r.g;
-   g.position.set(cx+Math.cos(a)*rr,FLY+13+Math.sin(t*.7+r.p)*3,cz+Math.sin(a)*rr*.8);g.rotation.y=-hd(-d*Math.sin(a),d*Math.cos(a)*.8);
-   for(const[w,z]of g.userData.ear)w.rotation.x=z*Math.sin(t*5+r.p)*.55}));
-  /* đàn heo biển bò trên nền đáy */
-  for(let i=0;i<4;i++){const bx=170+(i%2)*110+hs(i,3)*30,bz=-120+Math.floor(i/2)*200+hs(i,5)*40,sp=.7+hs(i,7)*.6;
-   add('seapig','seapig',mkPig(),2.8,(r,t)=>{const a=t*.045*sp+r.p,b=t*.037+r.p,g=r.g;g.position.set(bx+Math.sin(a)*28,FLY+10.8,bz+Math.cos(b)*20);g.rotation.y=-hd(Math.cos(a)*28*.045*sp,-Math.sin(b)*20*.037)})}
-  /* cá cần câu lượn ellipse, mồi nhấp nháy */
-  add('angler','angler',mkAngler(),3.2,(r,t)=>{const a=t*.07+r.p,g=r.g;g.position.set(250+Math.cos(a)*70,FLY+27+Math.sin(t*.4)*4,Math.sin(a)*150);g.rotation.y=-hd(-Math.sin(a)*70,Math.cos(a)*150);
-   const k=.75+.25*Math.sin(t*3+r.p);g.userData.lure[1].material.opacity=.45+.4*k;g.userData.lure[1].scale.setScalar(24+12*k)});
-  /* 4 con sứa Atolla trôi, thỉnh thoảng nháy vòng báo động */
-  [[180,-130],[330,-40],[260,160],[420,90]].forEach(([cx,cz],i)=>add('atolla','atolla',mkAtolla(),3,(r,t)=>{const g=r.g,p=r.p;g.position.set(cx+Math.sin(t*.05+p)*25,FLY+26+Math.sin(t*.3+p)*10,cz+Math.cos(t*.04+p)*25);g.rotation.y=t*.08+p;
-   const ph=((t*.8+p)%6.283)/6.283,pl=Math.sin(t*1.6+p);g.userData.bell.scale.set(1+.1*pl,1-.16*pl,1+.1*pl);g.userData.ring.material.opacity=ph<.1?.95:.18}));
-  /* cá chuột đuôi dài tuần sát đáy */
-  for(let i=0;i<3;i++){const xc=210+i*70,zc=(i-1)*70,sp=.8+i*.15;
-   add('rattail','rattail',mkRat(),2.6,(r,t)=>{const a=t*.06*sp+r.p,g=r.g;g.position.set(xc+Math.cos(a*.5)*20,FLY+15+Math.sin(t*.8+r.p),zc+Math.sin(a)*130);g.rotation.y=-hd(-Math.sin(a*.5)*10*.06,Math.cos(a)*130*.06);g.rotation.z=-.14})}
+  /* lấy mô hình GLB nếu đã tải xong; chưa xong (hoặc thiếu file) thì dùng tạm mô hình dựng bằng khối và tự thay khi GLB tải xong */
+  const glb=(id,fb)=>{let g=null;try{g=window.GLBX&&GLBX.make(id)}catch(e){}if(g)return g;g=fb();try{if(window.GLBX&&GLBX.want(id))GLBX.pend(g,id)}catch(e){}return g};
   /* mực ống khổng lồ: thỉnh thoảng bơi ngang qua xa phía trước */
-  add('squid','squid',mkSquid(),2.4,(r,t)=>{const T=110,c=Math.floor(t/T),s=(t%T)/55,g=r.g;if(s>1){g.visible=false;r.vis=0;return}
+  add('squid','squid',glb('obssquid',mkSquid),2.4,(r,t)=>{const T=110,c=Math.floor(t/T),s=(t%T)/55,g=r.g;if(s>1){g.visible=false;r.vis=0;return}
    const d=c%2?-1:1,z=d*(-420+s*840);g.visible=true;if(!r.vis){r.vis=1;if(OBS.in)try{say('🦑 Một con mực ống khổng lồ đang bơi ngang qua phía xa! Nhìn ra kính nhé!',4200)}catch(e){}}
    g.position.set(360+Math.sin(s*3)*30,FLY+42+Math.sin(s*5)*6,z);g.rotation.y=-hd(Math.cos(s*3)*30*3/55,d*840/55);g.scale.setScalar(2.4*(1+.05*Math.sin(t*3)))});
 
@@ -10186,8 +10150,11 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    for(let i=0;i<9;i++)S(.45,.45,.45,BS(0x5ae8ff,{fog:false}),6-i*1.6,-2.4,0,g);
    const tl=mk(cng,b,-11.5,0,0,g);tl.scale.set(2,8,1.5);tl.rotation.z=Math.PI/2;
    const th=C(.15,10,LB(0x24323f),9,5.2,0,g);th.rotation.z=-1.1;const lu=halo(0x7affc8,16,.85,13.6,7.4,0,g);S(.9,.9,.9,BS(0x9fffd8,{fog:false}),13.6,7.4,0,g);g.userData.lure=lu;return g};
-  const mkKraken=()=>{const g=new THREE.Group(),m=LB(0x7a2a52),m2=LB(0xc8607a),segs=[];
-   for(let k=0;k<3;k++){const arr=[];for(let i=0;i<10;i++)arr.push(S(1,1,1,i%2?m:m2,0,0,0,g));segs.push(arr)}g.userData.segs=segs;return g};
+  /* mô hình dự phòng (chỉ dùng khi chưa tải được kraken_v2.glb): thân vòm + 8 xúc tu bằng khối cầu */
+  const mkKraken=()=>{const g=new THREE.Group(),m=LB(0x7a2a52),m2=LB(0xc8607a);
+   S(14,16,14,m,-8,32,0,g);
+   for(let k=0;k<8;k++){const a=k/8*6.283;for(let i=0;i<7;i++){const u=i/6,rr=4.6-u*2.6;S(rr,rr,rr,i%2?m:m2,Math.cos(a)*(6+u*30)-6,Math.max(rr,26-u*26),Math.sin(a)*(6+u*30),g)}}
+   return g};
   /* Megalodon canh gác: lượn ngang qua kính, mỗi lượt đi gần sát hơn (id 'megalodon' => ghi nhật ký cùng loài với quái thật) */
   add('megalodon','shark',mkShark(),3,(r,t)=>{const T=85,c=Math.floor(t/T),s=(t%T)/48,g=r.g;if(s>1){g.visible=false;r.vis=0;return}
    const d=c%2?-1:1,z=d*(-440+s*880),x=330-(c%3==2?200:110)*Math.sin(s*Math.PI);g.visible=true;
@@ -10209,16 +10176,17 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    g.position.set(x,FLY+38+Math.sin(s*3)*5,z);g.rotation.y=-hd(Math.cos(s*5)*70/80,d*1040/80);g.rotation.z=Math.sin(t*.9)*.025;
    const w=Math.sin(t*1.3)*.16;g.userData.tail[0].rotation.y=w;g.userData.tail[1].rotation.y=w});
   /* Cá viper khổng lồ: bơi vòng gần kính rồi lao tới */
-  add('viper','viper',mkViper(),3.4,(r,t)=>{const a=t*.09+r.p,g=r.g,lu=1+.2*Math.sin(t*4);g.position.set(215+Math.cos(a)*55,FLY+30+Math.sin(t*.5+r.p)*6,Math.sin(a)*120);g.rotation.y=-hd(-Math.sin(a)*55,Math.cos(a)*120);g.userData.lure.material.opacity=.5+.4*Math.sin(t*3)});
-  /* Kraken: xúc tu khổng lồ vươn lên đập vào kính (mỗi ~2 phút) */
-  add('kraken','kraken',mkKraken(),1,(r,t)=>{const T=130,c=Math.floor(t/T),s=(t%T)/16,g=r.g;g.position.set(0,0,0);if(s>1){g.visible=false;r.vis=0;r.hit=0;return}
-   g.visible=true;const ex=Math.sin(Math.min(1,s)*Math.PI),zc=((c*37)%120)-60;
+  add('viper','viper',glb('obsviper',mkViper),3.4,(r,t)=>{const a=t*.09+r.p,g=r.g;g.position.set(215+Math.cos(a)*55,FLY+30+Math.sin(t*.5+r.p)*6,Math.sin(a)*120);g.rotation.y=-hd(-Math.sin(a)*55,Math.cos(a)*120);const lu=g.userData.lure;if(lu&&lu.material)lu.material.opacity=.5+.4*Math.sin(t*3)});
+  /* Kraken: bước ra từ bóng tối, áp sát kính trạm, đập xuống kính (mỗi ~2 phút) rồi lùi vào bóng tối. Mặt hướng về phía kính (-X) */
+  const rk=add('kraken','kraken',glb('obskraken',mkKraken),1,(r,t)=>{const T=130,c=Math.floor(t/T),s=(t%T)/16,g=r.g;
+   if(s>1){g.visible=false;r.vis=0;r.hit=0;return}
+   g.visible=true;const XF=430,XN=168,zc=((c*37)%120)-60;
    if(!r.vis){r.vis=1;if(OBS.in)try{say('🐙 Có gì đó khổng lồ đang trườn lên từ bóng tối...',3600)}catch(e){}}
-   if(!r.hit&&s>.46){r.hit=1;OBS.shake=5;OBS.alertT=240;if(OBS.in){try{SND.p('crash')}catch(e){}try{say('💥 RẦM! Xúc tu Kraken đập vào kính trạm! Kính vẫn an toàn.',4200)}catch(e){}}}
-   const slam=s>.46&&s<.62?1:0;
-   g.userData.segs.forEach((arr,k)=>{const bz=zc+(k-1)*34,bx=235+k*15;arr.forEach((q,i)=>{const u=i/9,e=Math.max(.001,ex),tx=bx+(121-bx)*u*e+Math.sin(t*2.2+u*5+k)*3*e,ty=FLY+4+Math.sin(u*Math.PI*.9)*30*e+u*10*e,tz=bz+Math.sin(t*1.7+u*4+k*2)*8*e;
-     q.position.set(tx,ty,tz);const rr=(5.4-u*3.6)*3*Math.min(1,e*3+.2);q.scale.set(rr,rr,rr)})});
-   });
+   let x;if(s<.46){const p=s/.46;x=XF-(XF-XN)*(1-(1-p)*(1-p))}else{const q=Math.min(1,(s-.46)/.54);x=XN+(XF-XN)*q*q}
+   const lunge=s>.46&&s<.62?Math.sin((s-.46)/.16*Math.PI):0;
+   g.position.set(x-lunge*8,FLY+2,zc+Math.sin(t*.6)*4);g.rotation.y=Math.PI+Math.sin(t*.5)*.06;
+   if(!r.hit&&s>.46){r.hit=1;OBS.shake=5;OBS.alertT=240;if(OBS.in){try{SND.p('crash')}catch(e){}try{say('💥 RẦM! Xúc tu Kraken đập vào kính trạm! Kính vẫn an toàn.',4200)}catch(e){}}}});
+  rk.cy=34;
   /* 9) giao diện trong trạm */
   {const cs=document.createElement('style');cs.textContent=`
 #obsui{position:absolute;inset:0;pointer-events:none;display:none;font-family:system-ui,sans-serif;color:#d8f4ff}
