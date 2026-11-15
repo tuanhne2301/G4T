@@ -9850,7 +9850,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
  const obsEnter=()=>{if(!OBS.ok||OBS.in||!hud)return;
   OBS.in=1;OBS.vw=st.view;st.view=0;st.shop=0;
   st.x=OBS.x+OBS.dkx;st.y=OBS.y+OBS.dkz;st.d=OBS.dd;st.h=0;st.v=st.w=st.vy=st.kx=st.ky=0;st.thr=1e9;st.sc=null;place();
-  OBS.px=OBS.tx;OBS.pz=OBS.hw+36;OBS.h=-Math.PI/2;OBS.bob=0;OBS.focus=null;OBS.fcT=0;obsHideCard();
+  OBS.px=OBS.tx;OBS.pz=OBS.hw+36;OBS.h=-Math.PI/2;OBS.pt=0;OBS.bob=0;OBS.focus=null;OBS.fcT=0;obsHideCard();
   hud.classList.add('ext','obs');try{const h=document.getElementById('sbhelp');if(h){OBS.helpOld=h.textContent;h.textContent='W/S đi-lùi · A/D quay · BẤM VÀO SINH VẬT để xem thông tin · F/E: tương tác · 📖 nhật ký · U xưởng'}}catch(e){}
   try{scen()}catch(e){}
   let first=1;try{first=!localStorage.getItem('obs_first')}catch(e){}
@@ -9921,7 +9921,7 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    q('sbzn').textContent='🔭 TRẠM QUAN SÁT';q('sbdc').textContent='📖 '+obsCount()+'/'+obsTotal();q('sbdk').textContent='🏛 Đang ở trong trạm '+OBS.m+' m';q('sbal').textContent=''}};
  /* camera đi bộ góc nhìn thứ nhất */
  const obsCam=()=>{const ex=OBS.x+OBS.px,ez=OBS.y+OBS.pz,ey=-OBS.dk+OBS.eye+Math.sin(OBS.bob)*.45;
-  camera.position.set(ex,ey,ez);camera.lookAt(ex+Math.cos(OBS.h)*100,ey-1.5,ez+Math.sin(OBS.h)*100);if(subG)subG.visible=true;
+  const pt=OBS.pt||0,cp=Math.cos(pt);camera.position.set(ex,ey,ez);camera.lookAt(ex+Math.cos(OBS.h)*100*cp,ey-1.5+Math.sin(pt)*100,ez+Math.sin(OBS.h)*100*cp);if(subG)subG.visible=true;
   if(OBS.shake>.05){camera.position.x+=(Math.random()-.5)*OBS.shake;camera.position.y+=(Math.random()-.5)*OBS.shake*.7;camera.position.z+=(Math.random()-.5)*OBS.shake;OBS.shake*=.92}};
 
  const buildObs=()=>{
@@ -10063,21 +10063,34 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
   /* màn hình radar thủy quái trên tường sau (vẽ động) */
   {const rc=document.createElement('canvas');rc.width=512;rc.height=330;const rx=rc.getContext('2d'),rt=new THREE.CanvasTexture(rc);
    plane(48,31,OM(0xffffff,{map:rt}),-HA+4.6,34,-30,0,Math.PI/2);B(50,33,.8,OM(0x0e1822),-HA+4.2,34,-30,og);B(50.6,.5,1,cy,-HA+4.3,50.6,-30,og);B(50.6,.5,1,cy,-HA+4.3,17.4,-30,og);
-   const RR=720;
+   const RR=1500; /* tầm dò: 150 m quanh trạm */
+   const MONR=q=>!!(PRED[q.id]||bigSp(q)||OREAL.indexOf(q.id)>=0);
    OBS.radar=t=>{const cx0=170,cy0=170,R=135;rx.fillStyle='#03121a';rx.fillRect(0,0,512,330);rx.strokeStyle='#2a8a6a';rx.lineWidth=4;rx.strokeRect(2,2,508,326);
     rx.fillStyle='#6ff0c0';rx.font='bold 24px system-ui,sans-serif';rx.textAlign='left';rx.fillText('RADAR THỦY QUÁI',16,32);
     rx.strokeStyle='rgba(60,230,170,.4)';rx.lineWidth=1.5;for(const k of[.33,.66,1]){rx.beginPath();rx.arc(cx0,cy0+8,R*k,0,6.3);rx.stroke()}rx.beginPath();rx.moveTo(cx0,cy0+8-R);rx.lineTo(cx0,cy0+8+R);rx.moveTo(cx0-R,cy0+8);rx.lineTo(cx0+R,cy0+8);rx.stroke();
+    rx.fillStyle='rgba(120,230,190,.7)';rx.font='10px system-ui,sans-serif';rx.textAlign='left';for(const k of[.33,.66,1])rx.fillText(Math.round(RR*k/10)+' m',cx0+3,cy0+8-R*k+11);
     const sw=(t%3)/3*6.283;rx.strokeStyle='rgba(110,255,190,.7)';rx.lineWidth=3;rx.beginPath();rx.moveTo(cx0,cy0+8);rx.lineTo(cx0+Math.cos(sw)*R,cy0+8+Math.sin(sw)*R);rx.stroke();
     rx.fillStyle='#cfeeff';rx.font='13px system-ui,sans-serif';rx.textAlign='center';rx.fillText('KÍNH',cx0,cy0+8-R-4);
-    const pts=[];if(OBS.res)for(const r of OBS.res){if(!r.g.visible)continue;const q=r.g.position;pts.push([q.x,q.z,r.k=='shark'||r.k=='viper'||r.k=='kraken'?2:r.k=='squid'||r.k=='leeds'?1:0,r.k])}
-    try{for(const o of ANIM.ALL){const s=o.s,g=o.g;if(s&&OREAL.indexOf(s.id)>=0&&g.visible)pts.push([o.x-OBS.x,o.y-OBS.y,2,s.id])}}catch(e){}
-    let near=null,nd=1e9;
-    for(const q of pts){const px=cx0+q[1]/RR*R,py=cy0+8-q[0]/RR*R;if(Math.hypot(px-cx0,py-cy0-8)>R+6)continue;const d=Math.hypot(q[0]-OBS.px,q[1]-OBS.pz);if(q[2]==2&&d<nd){nd=d;near=q}
+    /* gom TẤT CẢ sinh vật biển quanh trạm (không phụ thuộc đang hiện hay bị ẩn): [x,z,loại 2 quái/1 cổ đại/0 nhỏ,id,emoji,tên,giả] */
+    const pts=[],sp=new Map();
+    try{for(const o of ANIM.ALL){const q=o.s;if(!q||!aq(q))continue;const dx=o.x-OBS.x,dz=o.y-OBS.y;if(Math.hypot(dx,dz)>RR+40)continue;
+     const c=MONR(q)?2:(ANIM.SHS.has(q.id)||q.z=='psea')?1:0;pts.push([dx,dz,c,q.id,q.e||'🐟',q.n||q.id,0]);
+     const e=sp.get(q.id);if(e)e.n++;else sp.set(q.id,{n:1,c,e:q.e||'🐟',nm:q.n||q.id})}}catch(e){}
+    if(OBS.res)for(const r of OBS.res){if(!r.g.visible)continue;const g=r.g.position,c=(r.k=='shark'||r.k=='viper'||r.k=='kraken')?2:(r.k=='squid'||r.k=='leeds')?1:0,I=obsInfo(r.id);pts.push([g.x,g.z,c,r.id,I.e,I.n,1]);
+     if(!sp.has(r.id))sp.set(r.id,{n:1,c,e:I.e,nm:I.n})}
+    let near=null,nd=1e9,nMon=0,nOth=0;
+    for(const q of pts){const px=cx0+q[1]/RR*R,py=cy0+8-q[0]/RR*R;if(Math.hypot(px-cx0,py-cy0-8)>R+6)continue;if(q[2]==2)nMon++;else nOth++;const d=Math.hypot(q[0]-OBS.px,q[1]-OBS.pz);if(q[2]==2&&d<nd){nd=d;near=q}
      const bl=.5+.5*Math.sin(t*6);rx.fillStyle=q[2]==2?'rgba(255,70,50,'+(.6+.4*bl)+')':q[2]==1?'#ffb040':'#6ff0c0';rx.beginPath();rx.arc(px,py,q[2]==2?7:q[2]==1?5:3,0,6.3);rx.fill();if(q[2]==2){rx.strokeStyle='rgba(255,90,70,.5)';rx.lineWidth=2;rx.beginPath();rx.arc(px,py,12+4*bl,0,6.3);rx.stroke()}}
+    /* trạm (ô vuông xanh ở giữa) + người chơi */
+    rx.strokeStyle='rgba(120,230,255,.8)';rx.lineWidth=1.5;rx.strokeRect(cx0-100/RR*R,cy0+8-170/RR*R,200/RR*R,340/RR*R);
     rx.save();rx.translate(cx0+OBS.pz/RR*R,cy0+8-OBS.px/RR*R);rx.rotate(Math.PI/2+OBS.h);rx.fillStyle='#fff';rx.beginPath();rx.moveTo(0,-7);rx.lineTo(-5,6);rx.lineTo(5,6);rx.closePath();rx.fill();rx.restore();
-    rx.textAlign='left';rx.fillStyle='#8fc4e4';rx.font='15px system-ui,sans-serif';rx.fillText('Tín hiệu quái: '+pts.filter(q=>q[2]==2).length,330,70);rx.fillText('Sinh vật khác: '+pts.filter(q=>q[2]!=2).length,330,96);
-    rx.fillStyle=near&&nd<260?'#ff6a55':'#6ff0c0';rx.font='bold 17px system-ui,sans-serif';rx.fillText(near?(nd<260?'⚠ QUÁI GẦN KÍNH':'Quái ở xa'):'An toàn',330,140);
-    if(near){rx.font='15px system-ui,sans-serif';rx.fillStyle='#cfeeff';rx.fillText('Cách: '+Math.round(nd/10)+' m',330,166)}
+    rx.textAlign='left';rx.fillStyle='#8fc4e4';rx.font='15px system-ui,sans-serif';rx.fillText('Tín hiệu quái: '+nMon,330,58);rx.fillText('Sinh vật khác: '+nOth,330,80);
+    rx.fillStyle=near&&nd<260?'#ff6a55':'#6ff0c0';rx.font='bold 16px system-ui,sans-serif';rx.fillText(near?(nd<260?'⚠ QUÁI GẦN KÍNH':'Quái ở xa'):'An toàn',330,104);
+    if(near){rx.font='14px system-ui,sans-serif';rx.fillStyle='#cfeeff';rx.fillText('Gần nhất: '+Math.round(nd/10)+' m',330,124)}
+    rx.fillStyle='#6ff0c0';rx.font='bold 12px system-ui,sans-serif';rx.fillText('LOÀI DÒ ĐƯỢC ('+sp.size+')',330,148);
+    const L=[...sp.values()].sort((a,b)=>b.c-a.c||b.n-a.n);rx.font='12.5px system-ui,sans-serif';
+    for(let i=0;i<L.length&&i<9;i++){const e=L[i];rx.fillStyle=e.c==2?'#ff8a78':e.c==1?'#ffc060':'#9ff0d0';const nm=String(e.nm);rx.fillText(e.e+' '+(nm.length>17?nm.slice(0,16)+'…':nm)+' ×'+e.n,330,167+i*17)}
+    if(L.length>9){rx.fillStyle='#8fc4e4';rx.fillText('… +'+(L.length-9)+' loài nữa',330,167+9*17)}
     rt.needsUpdate=true};OBS.radar(0)}
   OBS.act.push({k:'hatch',x:TX,z:HW+42,r:22});
   /* 6) bên ngoài: bảng tên, cột ăng-ten, tháp đèn pha, đèn hiệu */
@@ -10212,7 +10225,15 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    const jr=document.createElement('div');jr.id='obsjr';document.body.appendChild(jr);
    OBS.ui={ti:ui.querySelector('#obsti span'),card:ui.querySelector('#obscard'),cn:ui.querySelector('#obscard b'),ch:ui.querySelector('#obscard small'),ct:ui.querySelector('#obscard p'),jr};
    addEventListener('keydown',e=>{if(OBS.jo&&(e.key=='Escape'||e.key=='j'||e.key=='J'))closeJ()});
-   addEventListener('click',e=>{if(!OBS.in||OBS.jo||st.shop)return;const t=e.target;if(t&&t.closest&&t.closest('button,input,a,#obsjr,#sbshop,#sbbt,#obscard'))return;try{obsPickAt(e.clientX,e.clientY)}catch(x){}});obsUiJ()}
+   /* kéo chuột / vuốt ngón tay trên màn hình để xoay góc nhìn (trái-phải: quay, lên-xuống: ngẩng/cúi) */
+   {let pid=null,lx=0,ly=0,mv=0;const cvs=()=>renderer.domElement;
+    addEventListener('pointerdown',e=>{if(!OBS.in||OBS.jo||st.shop||pid!=null||e.target!==cvs())return;if(e.pointerType=='mouse'&&e.button!==0)return;pid=e.pointerId;lx=e.clientX;ly=e.clientY;mv=0;e.stopImmediatePropagation();try{cvs().setPointerCapture(e.pointerId)}catch(_){}},true);
+    addEventListener('pointermove',e=>{if(e.pointerId!==pid)return;const dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;mv+=Math.abs(dx)+Math.abs(dy);if(mv<4)return;e.preventDefault();e.stopImmediatePropagation();
+     OBS.h+=dx*.006;OBS.pt=Math.max(-1.1,Math.min(1.1,(OBS.pt||0)-dy*.005));cvs().style.cursor='grabbing'},true);
+    const up=e=>{if(e.pointerId!==pid)return;pid=null;cvs().style.cursor='';if(mv>=6)OBS.dgT=performance.now();try{cvs().releasePointerCapture(e.pointerId)}catch(_){}};
+    addEventListener('pointerup',up,true);addEventListener('pointercancel',up,true);
+    addEventListener('dblclick',e=>{if(OBS.in&&e.target===cvs())OBS.pt=0})}
+   addEventListener('click',e=>{if(!OBS.in||OBS.jo||st.shop||performance.now()-(OBS.dgT||0)<300)return;const t=e.target;if(t&&t.closest&&t.closest('button,input,a,#obsjr,#sbshop,#sbbt,#obscard'))return;try{obsPickAt(e.clientX,e.clientY)}catch(x){}});obsUiJ()}
   /* 10) hoạt hình mỗi khung hình (gọi từ atmo) */
   OBS.up=t=>{const cp=camera.position,dist=Math.hypot(cp.x-OBS.x,cp.z-OBS.y);
    rg2.visible=dist<1300;if(rg2.visible)for(const r of OBS.res){r.fn(r,t);if(r.g.visible)r.g.position.x+=OBS.rx}
@@ -10224,9 +10245,31 @@ body.insub #chpan:not(.kb){left:calc(1.2vw + 54px)!important;transform:none!impo
    if(OBS.npc&&OBS.in){OBS.npc.rotation.y=-Math.atan2(OBS.pz-OBS.npcZ,OBS.px-OBS.npcX)}
    OBS.lab.visible=dist<1200&&!OBS.in;OBS.lab.material.opacity=Math.max(0,Math.min(1,(1200-dist)/600))}};
 
- const ready=()=>{if(!st.ready){st.ready=1;for(const f of[buildDock,buildSub,buildHud,buildScen,buildStation,buildObs,buildAtmo]){try{f()}catch(e){st.err=(st.err||'')+' '+f.name+': '+(e&&e.message);try{ERR(e);console.error('SUB',e)}catch(_){}}}try{if(subG)moor()}catch(e){}}};
+ /* ===== VÙNG CẤM quanh trạm: thủy quái / sinh vật biển KHÔNG được bơi vào trạm =====
+    Mỗi khung hình (sau ANIM.upd) nếu một sinh vật biển lọt vào vùng tròn quanh trạm thì bị đẩy ra mép vùng,
+    đồng thời tâm quỹ đạo tuần tra của nó được dịch dần ra xa trạm để nó không cố đâm xuyên nữa.
+    Thủy quái lớn / săn mồi: vùng rộng (Rm). Sinh vật nhỏ: chỉ không được chui vào thân trạm (Rs). */
+ const KO={on:0};
+ const koR=o=>{const now=performance.now();if(o.kr==null||now-(o.krT||0)>4000){o.krT=now;try{const g=o.g;g.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(g),L=Math.max(b.max.x-b.min.x,b.max.z-b.min.z)*.45;o.kr=isFinite(L)?Math.max(8,Math.min(90,L)):(o.kr||20)}catch(e){o.kr=o.kr||20}}return o.kr};
+ const koZones=()=>{const z=[];
+  if(OBS.ok)z.push({x:OBS.x,y:OBS.y+36,Rm:300,Rs:240}); /* trạm quan sát: sảnh 340x200 + ống dẫn + bến tàu */
+  if(STN.ok)z.push({x:STN.x,y:STN.y,Rm:175,Rs:100}); /* trạm đáy biển: thân + 3 cánh tay + vòng đèn */
+  return z};
+ const koKeep=()=>{const Z=koZones();if(!Z.length)return;
+  for(const o of ANIM.ALL){const s=o.s,g=o.g;if(!s||!g||!aq(s))continue;
+   for(const z of Z){const dx=o.x-z.x,dy=o.y-z.y,d0=Math.hypot(dx,dy);if(d0>z.Rm+95)continue;
+    const mon=!!(PRED[s.id]||bigSp(s)||ANIM.SHS.has(s.id)),R=(mon?z.Rm:z.Rs)+koR(o);
+    if(d0>=R){if(d0>1){o.kx=dx/d0;o.ky=dy/d0}continue}
+    let ux,uy;if(d0>25){ux=dx/d0;uy=dy/d0}else{ux=o.kx!=null?o.kx:1;uy=o.ky!=null?o.ky:0} /* sát tâm: đẩy ra phía nó vừa đi tới */
+    const nx=z.x+ux*R,ny=z.y+uy*R,ex=nx-o.x,ey=ny-o.y;
+    o.x=nx;o.y=ny;if(o.ox2!=null){o.ox2+=ex;o.oy2+=ey}
+    g.position.x=nx;g.position.z=ny;
+    for(const[a,b]of[['hx','hy'],['chx','chy']])if(typeof o[a]=='number'&&typeof o[b]=='number'){o[a]+=ux*1.6;o[b]+=uy*1.6}}}};
+ const koInstall=()=>{if(KO.on)return;KO.on=1;const u0=ANIM.upd;ANIM.upd=function(){const r=u0.apply(this,arguments);try{koKeep()}catch(e){}return r}};
+
+ const ready=()=>{if(!st.ready){st.ready=1;for(const f of[buildDock,buildSub,buildHud,buildScen,buildStation,buildObs,buildAtmo]){try{f()}catch(e){st.err=(st.err||'')+' '+f.name+': '+(e&&e.message);try{ERR(e);console.error('SUB',e)}catch(_){}}}try{if(subG)moor()}catch(e){}try{koInstall()}catch(e){}}};
  /* quét sonar: cập nhật chấm xanh/đỏ và cảnh báo */
- const sonar=()=>{blips.length=0;bigNear=null;let bd=1e9;const R=uv('sonar');st.thr=1e9;
+ const sonar=()=>{blips.length=0;bigNear=null;let bd=1e9;const R=OBS.in?Math.max(uv('sonar'),1500):uv('sonar');st.thr=1e9;
   for(const o of ANIM.ALL){const s=o.s;if(!s||!aq(s))continue;const dx=o.x-st.x,dy=o.y-st.y,d=Math.hypot(dx,dy);if(d>R)continue;const big=bigSp(s);
    const fx=dx*Math.cos(st.h)+dy*Math.sin(st.h),rz=-dx*Math.sin(st.h)+dy*Math.cos(st.h);blips.push([fx,rz,big]);
    if(big&&d<bd){bd=d;bigNear=[s,d]}
