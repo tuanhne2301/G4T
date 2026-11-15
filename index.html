@@ -715,11 +715,24 @@ window.GLBX=(()=>{
    return g}catch(e){note('lỗi dựng '+id+': '+(e&&e.message));return null}};
  const swap=(g,id)=>{const G=make(id,g);if(!G)return;while(g.children.length)g.remove(g.children[0]);while(G.children.length)g.add(G.children[0]);const k=KEY(id);if(CFG[k].max&&!G.userData.still){const a=live(k);if(a.indexOf(g)<0)a.push(g)}};
  const loaded=key=>{for(let i=PEND.length-1;i>=0;i--)if(KEY(PEND[i][1])==key){swap(PEND[i][0],PEND[i][1]);PEND.splice(i,1)}};
+ /* chẩn đoán: cho biết CHÍNH XÁC vì sao file không tải được (404 / con trỏ Git LFS / nén Draco-Meshopt / hỏng) */
+ const diag=(u,err)=>{const url='models/'+u;
+  fetch(url).then(r=>{if(!r.ok){note(u+': HTTP '+r.status+' (không thấy file tại '+url+')');return}
+   return r.arrayBuffer().then(b=>{const h=new TextDecoder().decode(b.slice(0,60));
+    if(h.indexOf('git-lfs')>=0)note(u+': là con trỏ Git LFS (chưa phải file thật) – hãy commit lại không dùng LFS');
+    else if(b.byteLength<100)note(u+': file rỗng/quá nhỏ ('+b.byteLength+' byte)');
+    else note(u+': lỗi đọc file – '+((err&&err.message)||err||'không rõ')+' ('+Math.round(b.byteLength/1024)+' KB)')})
+  }).catch(e=>note(u+': không tải được – '+(e&&e.message)))};
  const init=()=>{const L=new THREE.GLTFLoader();
+  /* hỗ trợ file nén Draco / Meshopt (nhiều mô hình tải từ Sketchfab, Blender xuất kiểu nén sẽ báo lỗi nếu thiếu) */
+  try{if(THREE.DRACOLoader){const D=new THREE.DRACOLoader();D.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/');L.setDRACOLoader(D)}}catch(e){}
+  try{if(window.MeshoptDecoder&&L.setMeshoptDecoder)L.setMeshoptDecoder(window.MeshoptDecoder)}catch(e){}
   Object.keys(CFG).forEach(key=>{const u=CFG[key].url,ok=gl=>{try{prep(key,gl);loaded(key)}catch(e){note('lỗi xử lý '+u+': '+(e&&e.message))}};
    /* file nằm trong thư mục models/; nếu không có thì thử ở thư mục gốc */
-   L.load('models/'+u,ok,undefined,()=>L.load(u,ok,undefined,()=>note('không tải được '+u)))})};
- loadJS(SRC.gltf,()=>loadJS(SRC.skel,init,()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
+   L.load('models/'+u,ok,undefined,e1=>L.load(u,ok,undefined,()=>diag(u,e1)))})};
+ const EXTRA={draco:['https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js','https://unpkg.com/three@0.128.0/examples/js/loaders/DRACOLoader.js'],
+  meshopt:['https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js','https://unpkg.com/three@0.128.0/examples/js/libs/meshopt_decoder.js']};
+ loadJS(SRC.gltf,()=>loadJS(SRC.skel,()=>loadJS(EXTRA.draco,()=>loadJS(EXTRA.meshopt,init,init),()=>loadJS(EXTRA.meshopt,init,init)),()=>console.warn('GLBX: không tải được SkeletonUtils')),()=>console.warn('GLBX: không tải được GLTFLoader'));
  return{ok:id=>!!T[KEY(id)],make:id=>CFG[KEY(id)]&&T[KEY(id)]?make(id):null,want:id=>!!CFG[KEY(id)]&&!T[KEY(id)],pend:(g,id)=>{PEND.push([g,id])}}
 })();
 </script>
