@@ -6498,7 +6498,7 @@ function render(){fc++;orbKeys();
   cx=hf*2>=X1_-X0_?(X0_+X1_)/2:cl(cx,X0_+hf*.5,X1_-hf*.5);cy=hf*2>=Y1_-Y0_?(Y0_+Y1_)/2:cl(cy,Y0_+hf*.5,Y1_-hf*.5)
   if(MZV.free){MZV.cx=cx;MZV.cy=cy}MZV.k=k;MZV.sz=sz;MZV.px=cx;MZV.py=cy;if(MZV.z>1.001&&!MZV.free)MZV.cx=cx,MZV.cy=cy;if(MZV.z<=1.001)MZV.cx=cx,MZV.cy=cy}
  const Z=MZV.z,CX=MZV.px,CY=MZV.py,mpx=x=>(x+ox-CX)*k*Z+120,mpy=y=>(y+oy-CY)*k*Z+120,dot=(o,c,r)=>{mc.fillStyle=c;mc.beginPath();mc.arc(mpx(o.x),mpy(o.y),r,0,TAU);mc.fill();mc.lineWidth=1.5;mc.strokeStyle='#000c';mc.stroke()};
- if(fc%(PF.lite?4:3)==0||MZV.dirty||MZV.free||AP.on||AP.plan||Z>1.001&&!MZV.free){MZV.dirty=0;mc.setTransform(1.5,0,0,1.5,0,0);mc.fillStyle='#223';mc.fillRect(0,0,240,240);mapBase(mc,CX,CY,k*Z);dot(INT.cur&&INT.out?gg:T,'#'+col.toString(16),7);for(const c of veh)if(c.t=='cop')dot(c,fc%24<12?'#f33':'#36f',4);for(const q of thugs)if(!q.dead)dot(q,'#f33',3.5);for(const q of offs)if(!q.dead)dot(q,q.sw?'#8cf':'#59f',3.5);if(tank)dot(tank,'#9a6',7);for(const d of drops)dot(d,'#7CFC00',3);if(heli)dot({x:heli.x,y:heli.z},fc%24<12?'#f33':'#36f',5);const used=[],free=(x,y,d)=>{if(x<-10||x>250||y<-10||y>250)return false;for(const u of used)if((u[0]-x)*(u[0]-x)+(u[1]-y)*(u[1]-y)<d*d)return false;used.push([x,y]);return true};
+ if(fc%(PF.lite?4:3)==0||MZV.dirty||MZV.free||AP.on||AP.plan||Z>1.001&&!MZV.free){MZV.dirty=0;mc.setTransform(1.5,0,0,1.5,0,0);mc.fillStyle='#223';mc.fillRect(0,0,240,240);mapBase(mc,CX,CY,k*Z);try{CLDK.map(mc,CX,CY,k*Z)}catch(e){};dot(INT.cur&&INT.out?gg:T,'#'+col.toString(16),7);for(const c of veh)if(c.t=='cop')dot(c,fc%24<12?'#f33':'#36f',4);for(const q of thugs)if(!q.dead)dot(q,'#f33',3.5);for(const q of offs)if(!q.dead)dot(q,q.sw?'#8cf':'#59f',3.5);if(tank)dot(tank,'#9a6',7);for(const d of drops)dot(d,'#7CFC00',3);if(heli)dot({x:heli.x,y:heli.z},fc%24<12?'#f33':'#36f',5);const used=[],free=(x,y,d)=>{if(x<-10||x>250||y<-10||y>250)return false;for(const u of used)if((u[0]-x)*(u[0]-x)+(u[1]-y)*(u[1]-y)<d*d)return false;used.push([x,y]);return true};
  if(S*k*Z>=150){const br=Z<14?10:14;for(const s of shops){const bx=mpx(s.x),by=mpy(s.y);if(free(bx,by,br*2+2))badge(mc,bx,by,br,s.type,'#'+s.c.toString(16).padStart(6,'0'),dst(s,g)<350?(fc%90)/90:0)}}for(const s of PLACES){if(!free(mpx(s.x),mpy(s.y),(Z<3?7:10)*2))continue;mc.fillStyle='#fff';mc.strokeStyle='#000c';mc.lineWidth=1.5;mc.beginPath();mc.arc(mpx(s.x),mpy(s.y),Z<3?6:9,0,TAU);mc.fill();mc.stroke();mc.font=(Z<3?9:13)+'px system-ui';mc.textAlign='center';mc.textBaseline='middle';mc.fillStyle='#000';mc.fillText(s.e,mpx(s.x),mpy(s.y)+1)}apDraw(mpx,mpy);mc.save();mc.translate(mpx(gg.x),mpy(gg.y));mc.rotate(gg.a);mc.fillStyle='#ff8a1f';mc.strokeStyle='#fff';mc.lineWidth=2;mc.beginPath();mc.moveTo(10,0);mc.lineTo(-6,-6);mc.lineTo(-2,0);mc.lineTo(-6,6);mc.closePath();mc.fill();mc.stroke();mc.restore();apRing()}
  if(fc%6==0||fc<3){$('cash').textContent='🪙 '+cash+' xu';$('st').textContent='⭐ '+EDU.sao+' sao · Cấp '+lvl()+(EDU.cls?' · Lớp '+EDU.cls:'')+(window.ttlText?window.ttlText():'');
  $('hp').style.width=(EDU.sao%10)*10+'%';{let tt=0,cc=0;for(const k in EDU.stat){tt+=EDU.stat[k].t;cc+=EDU.stat[k].c}$('wp').textContent='Đúng '+cc+'/'+tt+' câu'}
@@ -7826,7 +7826,7 @@ const BM=(()=>{
  const draw=()=>{const r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);if(r.width<2)return;W=r.width;H=r.height;const pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(cv.width!=pw||cv.height!=ph){cv.width=pw;cv.height=ph}
   if(tw){V.cx+=(tw.cx-V.cx)*.2;V.cy+=(tw.cy-V.cy)*.2;V.sc+=(tw.sc-V.sc)*.2;if(Math.abs(tw.sc-V.sc)<V.sc*.003&&Math.hypot(tw.cx-V.cx,tw.cy-V.cy)<2/V.sc)tw=null}
   const c=c2;c.setTransform(dpr,0,0,dpr,0,0);const fs=Math.max(12,Math.min(15,W/60));
-  mapBase(c,V.cx,V.cy,V.sc,W,H,fs);
+  mapBase(c,V.cx,V.cy,V.sc,W,H,fs);try{CLDK.map(c,V.cx,V.cy,V.sc,W,H,fs)}catch(e){};
   /* đường đi tự động */
   if(AP.on&&AP.pts&&AP.pts.length){const g=ply.car||ply;c.save();c.strokeStyle='#ff3d6e';c.lineWidth=3;c.setLineDash([8,5]);c.lineJoin='round';c.beginPath();c.moveTo(mx(g.x),my(g.y));for(let q=Math.max(1,AP.i);q<AP.pts.length;q++)c.lineTo(mx(AP.pts[q][0]),my(AP.pts[q][1]));c.stroke();c.restore()}
   const used=[],t=performance.now()/1000,showCity=V.sc*S>330;
@@ -8274,7 +8274,7 @@ function extra(){
  if(PR.g){PR.g=0;tip()}
  if(PR.b){PR.b=0;openReport()}
  if(PR[' ']){PR[' ']=0;if(!ply.car&&!ply.rp&&!(ply.z>0)&&!(ply.mt&&ply.mt.env=='f')){ply.vz=2.8*(MOD.jump?2.2:1);ply.z=.01;SND.p('jump')}}
- if(ply.mt&&ply.mt.env=='f'&&!ply.car){const af=AP.on&&AP.mode=='fly',up=(K[' ']||(af&&AP.fv>0))?1:0,dn=(K.z||K['control']||(af&&AP.fv<0))?1:0;ply.vz=up&&!dn?Math.min(2.4,(ply.vz||0)+.14):dn&&!up?Math.max(-2.4,(ply.vz||0)-.14):(ply.vz||0)*.82;ply.z=Math.max(0,Math.min(380,(ply.z||0)+ply.vz));if(ply.z<=0&&ply.vz<0)ply.vz=0}
+ if(ply.mt&&ply.mt.env=='f'&&!ply.car){const af=AP.on&&AP.mode=='fly',up=(K[' ']||(af&&AP.fv>0))?1:0,dn=(K.z||K['control']||(af&&AP.fv<0))?1:0;ply.vz=up&&!dn?Math.min(2.4,(ply.vz||0)+.14):dn&&!up?Math.max(-2.4,(ply.vz||0)-.14):(ply.vz||0)*.82;ply.z=Math.max(0,Math.min(520,(ply.z||0)+ply.vz));if(ply.z<=0&&ply.vz<0)ply.vz=0}
  else if(!ply.rp&&(ply.z>0||ply.vz>0)){ply.vz-=.24;if(ply.vz<-6)ply.vz=-6;ply.z+=ply.vz;if(ply.z<=0){ply.z=0;ply.vz=0;SND.p('land')}}
  if(ply.aimT>0)ply.aimT--;
  if(PR.v){PR.v=0;SPI=(SPI+1)%3;say('Tốc độ: '+SPN[SPI],1200)}
@@ -11332,8 +11332,55 @@ const CRE=(()=>{
   else{C.beam.visible=false;C.tr.style.display='none'}};
  return C})();
 
+/* ===== TẦNG MÂY RỘNG LỚN: một lớp mây ở độ cao ~322, hiện trên bản đồ, bay lên bằng thú cưỡi có cánh ===== */
+const CLDK=(()=>{
+ const Y0=322,CELL=460,TH=.42,C={};
+ const hs=(i,j)=>{let h=(i*374761393+j*668265263)|0;h=(h^(h>>>13))*1274126177|0;return((h^(h>>>16))>>>0)/4294967296};
+ const vn=(x,y)=>{const i=Math.floor(x),j=Math.floor(y),u=x-i,v=y-j,a=u*u*(3-2*u),b=v*v*(3-2*v);return(hs(i,j)*(1-a)+hs(i+1,j)*a)*(1-b)+(hs(i,j+1)*(1-a)+hs(i+1,j+1)*a)*b};
+ const dens=(x,z)=>vn(x/3200,z/3200)*.6+vn(x/1300+9,z/1300+4)*.28+vn(x/520+3,z/520+7)*.12;
+ let pool=[],tex=[],grp=null,ci=1e9,cj=1e9,told=0;
+ const mk=seed=>{const c=document.createElement('canvas');c.width=256;c.height=160;const g=c.getContext('2d');let s=seed*7919+13;const R=()=>((s=(s*9301+49297)%233280)/233280),b=[];
+  for(let i=0;i<16;i++){const u=i/15,h=Math.sin(u*Math.PI);b.push({x:36+u*184+(R()-.5)*18,y:96-h*28*R(),r:20+h*24+R()*12})}
+  b.sort((p,q)=>q.y-p.y);
+  for(const o of b){const t=Math.min(1,Math.max(0,(o.y-62)/60)),r=Math.round(255-50*t),gg=Math.round(255-39*t),bb=Math.round(255-23*t),gr=g.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+   gr.addColorStop(0,`rgba(${r},${gg},${bb},.95)`);gr.addColorStop(.55,`rgba(${r},${gg},${bb},.55)`);gr.addColorStop(1,`rgba(${r},${gg},${bb},0)`);g.fillStyle=gr;g.fillRect(o.x-o.r,o.y-o.r,o.r*2,o.r*2)}
+  return new THREE.CanvasTexture(c)};
+ const RAD=()=>PF.lite?2100:3000;
+ function assign(pi,pj){let k=0;const rc=Math.ceil(RAD()/CELL);
+  for(let di=-rc;di<=rc;di++)for(let dj=-rc;dj<=rc;dj++){
+   if(di*di+dj*dj>rc*rc)continue;
+   const i=pi+di,j=pj+dj,x=(i+.5)*CELL,z=(j+.5)*CELL,d=dens(x,z);if(d<TH)continue;
+   for(let q=0;q<2&&k<pool.length;q++){
+    const s=pool[k++],h1=hs(i*3+q,j*5+1),h2=hs(i*7+2,j*3+q),w=(620+(d-TH)*2200)*(.8+h1*.5);
+    s.position.set(x+(h1-.5)*CELL,Y0+(d-TH)*90+q*18+(h2-.5)*24,z+(h2-.5)*CELL);
+    s.scale.set(w,w*.5,1);s.userData.o=Math.min(.95,.55+(d-TH)*3);s.visible=true}}
+  for(;k<pool.length;k++)pool[k].visible=false}
+ function tick(){requestAnimationFrame(tick);
+  if(!grp)return;
+  const show=!(INT&&INT.cur)&&!(V5&&V5.uw)&&!window.__ABY;grp.visible=show;if(!show)return;
+  const px=ply.x,pz=ply.y,pi=Math.floor(px/CELL),pj=Math.floor(pz/CELL);
+  if(pi!=ci||pj!=cj){ci=pi;cj=pj;assign(pi,pj)}
+  const ey=GHy(px,pz)+(ply.z||0)+8,b=scene.background,l=b&&b.isColor?Math.min(1,.25+(b.r+b.g+b.b)/3*.85):1;
+  for(const s of pool){if(!s.visible)continue;const p=s.position,d=Math.hypot(p.x-px,p.y-ey,p.z-pz);
+   s.material.opacity=s.userData.o*Math.min(1,Math.max(0,(d-150)/450));s.material.color.setScalar(l)}
+  if(!told&&ply.mt&&ply.mt.env=='f'&&ey>Y0-60){told=1;try{say('☁️ Em đã bay tới tầng mây rộng lớn! Bay cao thêm chút nữa để lên trên mặt mây nhé.',5200)}catch(e){}}}
+ C.start=()=>{grp=new THREE.Group();grp.visible=false;scene.add(grp);for(let i=0;i<3;i++)tex.push(mk(i+5));
+  const n=PF.lite?150:300;for(let i=0;i<n;i++){const m=new THREE.SpriteMaterial({map:tex[i%3],transparent:true,depthWrite:false,opacity:0}),s=new THREE.Sprite(m);s.visible=false;grp.add(s);pool.push(s)}
+  requestAnimationFrame(tick)};
+ /* vẽ tầng mây lên bản đồ (cùng hàm mật độ với mây 3D nên khớp nhau) */
+ C.map=(c,CX,CY,sc,W,H)=>{W=W||240;H=H||240;const N=NAT,st=Math.max(CELL*.5,7/sc),
+  x0=Math.max(N.XMIN,CX-W/2/sc),x1=Math.min(N.XMAX,CX+W/2/sc),y0=Math.max(N.YMIN,CY-H/2/sc),y1=Math.min(N.YMAX,CY+H/2/sc);
+  c.save();
+  for(let y=Math.floor(y0/st)*st;y<y1;y+=st)for(let x=Math.floor(x0/st)*st;x<x1;x+=st){
+   const mx=x+st/2,my=y+st/2;if(mx<N.XMIN||mx>N.XMAX||my<N.YMIN||my>N.YMAX)continue;
+   const d=dens(mx,my);if(d<TH)continue;
+   c.fillStyle='rgba(255,255,255,'+Math.min(.62,(d-TH)*2.6+.14).toFixed(2)+')';
+   c.fillRect((x-CX)*sc+W/2,(y-CY)*sc+H/2,st*sc+.6,st*sc+.6)}
+  c.restore()};
+ return C})();
+
 try{SUB.init()}catch(e){ERR(e)}
-init();V5.init();requestAnimationFrame(frame);
+init();V5.init();try{CLDK.start()}catch(e){ERR(e)}requestAnimationFrame(frame);
 })();
 
 /* ---- bố cục: bản đồ (trái trên) cao bằng khối thông tin + nhiệm vụ ---- */
