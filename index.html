@@ -2351,6 +2351,7 @@ const NAT=(()=>{
    rect('hut',1850,2150,70,50,26,0,0);rect('hut',2380,1900,70,50,26,1,0);
    deco('ibridge',510,2000,0,0,0);deco('jetty',3440,2000,0,0,0);
    rect('flagp',3695,1995,10,10,170,0,0);ST.island=[X(2100),Y(2000)];ST.dock=[X(150),Y(2000)];ST.spratly=[X(3700),Y(2060)];
+   ST.itree=[X(2100),Y(2070)];ST.iw=[X(1850),Y(2085)];ST.ie=[X(2380),Y(1835)];ST.ign=[X(2100),Y(1350)];addC(R,ST.itree[0],ST.itree[1],30); /* Cụ Cây cổ thụ ở khoảng đất trống giữa đảo + các trạm nhiệm vụ */
   }
   if(R===RE){ /* rạn san hô vòng: đê san hô, vịnh cạn, tảng san hô, tảo, tàu đắm, đảo cát nhỏ */
    const pl=(n,fn)=>{let k=0;for(let i=0;i<n*40&&k<n;i++){const u=300+rd()*3400,v=300+rd()*3400;if(fn(u,v,raw(R,u,v),Math.hypot(u-2000,v-2000)))k++}};
@@ -2363,7 +2364,7 @@ const NAT=(()=>{
    deco('wreck',2900,2700,.6,0,0);deco('chest',2950,2770,.4,0,0);deco('wreck',900,1200,2.2,0,0);
    for(let i=0;i<5;i++){const a=i/5*6.28+.3,d=40+rd()*50;tree('palm',1150+Math.cos(a)*d,2250+Math.sin(a)*d,110+rd()*50,3)}
    rect('hut',1210,2150,70,50,26,0,0);
-   ST.reef=[X(1150),Y(2250)];ST.reefd=[X(1020),Y(2250)];
+   ST.reef=[X(1150),Y(2250)];ST.reefd=[X(1020),Y(2250)];ST.reefc=[X(2000),Y(2000)];ST.rhut=[X(1210),Y(2095)];ST.rpost=[X(1085),Y(2310)]; /* tâm vịnh (nơi cá mập tuần tra) + trạm nhiệm vụ trên đảo cát */
   }
   if(R===SW){ /* đầm lầy: rừng ngập nước, cây bách, liễu, lau sậy, súng, làng nhà sàn */
    for(let a=0;a<62;a++)for(let b=0;b<62;b++){const u=30+a*64+(rd()-.5)*50,v=30+b*64+(rd()-.5)*50;if(rd()<.6||Math.hypot(u-2000,v-2000)<300||!ok(u,v)||(Math.abs(u-2000)<110&&v<2000)||Math.hypot(u-3000,v-1000)<130||Math.hypot(u-1100,v-2900)<200)continue;
@@ -5114,12 +5115,13 @@ function INT_SOLID(x,y,v){if(v)return false;
    const a=x-r.x0,b=y-r.y0;if(a<8||a>r.w-8||b<8||b>r.d-8)return true;for(const o of r.obs)if(a>o[0]&&a<o[0]+o[2]&&b>o[1]&&b<o[1]+o[3])return true;return false}}
  return true}
 const nearDoor=()=>{if(ply.car)return null;if(INT.cur){const r=ROOMS[INT.cur];for(const h of r.hot)if(Math.hypot(ply.x-(r.x0+h.x),ply.y-(r.y0+h.y))<h.r)return h;return null}
- let b=null,bd=1e9;for(const d of DOORS){const dd=Math.hypot(ply.x-d.x,ply.y-d.y);const sc=dd-(d.fn=='qst'?1e5:0);/* trạm nhiệm vụ đang hoạt động luôn được ưu tiên hơn cửa NPC/khu vực trùng vị trí */if(dd<d.r&&sc<bd&&(d.up?!!ply.rb:!(ply.z>=8))){b=d;bd=sc}}return b};
+ let b=null,bd=1e9;for(const d of DOORS){const rw=Math.hypot(ply.x-d.x,ply.y-d.y),dd=rw-(d.fn=='qst'||d.fn=='qx'?1e4:0);if(rw<d.r&&dd<bd&&(d.up?!!ply.rb:!(ply.z>=8))){b=d;bd=dd}}return b};
 const fadeEl=(()=>{const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9';document.body.appendChild(d);return d})();
 function fadeDo(fn){fadeEl.style.opacity=1;setTimeout(()=>{fn();fadeEl.style.opacity=0},270)}
 document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('button');if(!b||b.id=='snd')return;if(typeof qs!=='undefined'&&qs&&qs.ans<0&&qz.contains(b)&&!qs.fin)return;SND.p('click')},true);
 function useDoor(d){
  if(d.fn=='qst'){QL.act(d);return}
+ if(d.fn=='qx'){CRE.act(d);return}
  if(d.fn=='spot'||d.fn=='act'){V5.act(d);return}
  if(d.room){SND.p('door');const r=ROOMS[d.room];try{if(d.room=='c'+EDU.cls)V5.ev('cls')}catch(e){}fadeDo(()=>{INT.out={x:ply.x,y:ply.y,a:ply.a};ply.rb=0;ply.rmp=0;ply.rp=0;INT.cur=d.room;ply.x=r.x0+r.spawn[0];ply.y=r.y0+r.spawn[1];ply.a=-PI/2;ply.z=0;ply.vz=0;cy=-PI/2;say('Em đang ở: '+r.name+'. Nhấn F ở cửa để ra ngoài.',3500)});return}
  if(d.fn=='go'){const r=ROOMS[d.to],sx=d.sx!==undefined?d.sx:r.spawn[0],sy=d.sy!==undefined?d.sy:r.spawn[1];try{if(d.to=='c'+EDU.cls)V5.ev('cls')}catch(e){}SND.p(d.stair?'stairs':'door');fadeDo(()=>{INT.cur=d.to;ply.x=r.x0+sx;ply.y=r.y0+sy;ply.a=-PI/2;ply.z=0;ply.vz=0;cy=-PI/2;say(d.stair?'Em đã lên/xuống cầu thang. Đang ở: '+r.name:'Em đang ở: '+r.name,2600)});return}
@@ -6522,7 +6524,7 @@ let _ec=0,_ed=null;function ERR(e){try{console.error(e);if(++_ec>3&&_ec%200)retu
 function frame(now){acc=Math.min(acc+now-last,60);last=now;
  if(PR.o&&(state=='play'||state=='mod')){PR.o=0;toggleMod()}
  const stp=MOD.slow?33.4:16.67;while(acc>=stp){acc-=stp;if(state=='play'){try{update()}catch(e){ERR(e)}}else{SND.engine(-1);pressE=0;for(const k in PR)PR[k]=0;if((state=='dead'||state=='busted')&&--tm<=0)respawn()}}
- if(!window.__ABY&&(!PF.cap||now-PF.lr>=29)){PF.lr=now;try{LEV.tick(now)}catch(e){}try{QL.tick(now)}catch(e){}try{render()}catch(e){ERR(e)}}msgEl.style.display=now<mu?'block':'none';requestAnimationFrame(frame)}
+ if(!window.__ABY&&(!PF.cap||now-PF.lr>=29)){PF.lr=now;try{LEV.tick(now)}catch(e){ERR(e)}try{QL.tick(now)}catch(e){ERR(e)}try{CRE.tick(now)}catch(e){ERR(e)}try{render()}catch(e){ERR(e)}}msgEl.style.display=now<mu?'block':'none';requestAnimationFrame(frame)}
 const pr=new THREE.WebGLRenderer({canvas:$('pv'),antialias:true,alpha:true});pr.setPixelRatio(Math.min(devicePixelRatio,2));pr.setSize(220,280,false);
 const ps=new THREE.Scene(),pc=new THREE.PerspectiveCamera(30,220/280,1,300);pc.position.set(0,9,54);pc.lookAt(0,8.4,0);
 ps.add(new THREE.HemisphereLight(0xffffff,0x888899,1.1));const pdl=new THREE.DirectionalLight(0xffffff,.8);pdl.position.set(30,50,40);ps.add(pdl);
@@ -8128,7 +8130,7 @@ function finQ(){qs.fin=1;SND.p('fin');let bonus=0;if(qs.n>=5&&qs.ok>=4){bonus=20
  if(qs.wrong.length){const w=el('div','ex','Cần ôn lại:');for(const q of qs.wrong.slice(0,5)){w.appendChild(el('div','','• '+q.q+' → '+q.o[q.c]))}b.appendChild(w)}
  if(qs.n>=5){const a=el('button','bt','Học tiếp môn này');a.type='button';a.onclick=()=>openQuiz(qs.sub);b.appendChild(a)}
  const c=el('button','bt g','Về thành phố (Esc)');c.type='button';c.onclick=closeQuiz;b.appendChild(c)}
-function closeQuiz(){SND.mode(null);qz.style.display='none';if(state!='quiz'&&state!='rep')return;state='play';const q=qs;qs=null;saveEdu();try{QL.quizEnd(q)}catch(e){}
+function closeQuiz(){SND.mode(null);qz.style.display='none';if(state!='quiz'&&state!='rep')return;state='play';const q=qs;qs=null;saveEdu();try{QL.quizEnd(q)}catch(e){}try{CRE.quizEnd(q)}catch(e){}
  if(q&&q.fin&&q.n>=5&&mission&&mission.ty=='learn'&&mission.sub==q.sub)done('Hoàn thành nhiệm vụ học tập!')}
 function eduText(){const L=['Báo cáo học tập – GAME 4 TEEN','Học sinh: '+(EDU.name||'(chưa nhập tên)'),'Ngày: '+new Date().toLocaleDateString('vi-VN'),'Cấp '+lvl()+' · '+EDU.sao+' sao · '+cash+' xu'];let T=0,C=0;const weak=[];
  for(const k in SUBJ){const s=EDU.stat[k]||{c:0,t:0};T+=s.t;C+=s.c;L.push(SUBJ[k].n+': '+s.c+'/'+s.t+(s.t?' ('+Math.round(s.c/s.t*100)+'%)':''));if(s.t>=5&&s.c/s.t<.6)weak.push(SUBJ[k].n)}
@@ -10879,21 +10881,21 @@ if(st.pass){try{passFollow()}catch(e){}}
 /* ===== LEVIATHAN HYDRA 3 ĐẦU BỊ XÍCH Ở TÂM NÚI LỬA (chỉ 1 con, dạng khối/blocky) ===== */
 const LEV=(()=>{
  const S=7,A={built:0,told:0};
- let root,gW,chainM,chains=[],att=[],mats,heads=[],necks=[],torso=[],tails=[],limbs=[],cx=0,cz=0,lavaY=0;
+ let halo=null,root,gW,chainM,chains=[],att=[],mats,heads=[],necks=[],torso=[],tails=[],limbs=[],cx=0,cz=0,lavaY=0;
  const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c},o||{}));
  const blk=(w,h,d,m,x,y,z,p)=>{const k=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);k.position.set(x,y,z);p.add(k);return k};
  const grp=(p,own)=>{const g=new THREE.Group();if(own)g.userData.own=1;if(p)p.add(g);return g};
  const bake=o=>{const B=new Map(),nm=new THREE.Matrix3(),v=new THREE.Vector3();
-  const add=(b,g,m)=>{const P=g.attributes.position,N=g.attributes.normal,I=g.index;nm.getNormalMatrix(m);for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);b.p.push(v.x,v.y,v.z);v.fromBufferAttribute(N,i).applyMatrix3(nm).normalize();b.n.push(v.x,v.y,v.z)}for(let i=0;i<I.count;i++)b.i.push(I.getX(i)+b.o);b.o+=P.count};
-  const walk=(n,pm)=>{for(const c of n.children){if(c.userData.own||c.userData.keep)continue;c.updateMatrix();const m=pm.clone().multiply(c.matrix);if(c.isMesh){let b=B.get(c.material);if(!b)B.set(c.material,b={p:[],n:[],i:[],o:0});add(b,c.geometry,m)}else walk(c,m)}};
+  const add=(b,g,m,f)=>{const P=g.attributes.position,N=g.attributes.normal,I=g.index;nm.getNormalMatrix(m);for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i);if(f)v.multiplyScalar(f);v.applyMatrix4(m);b.p.push(v.x,v.y,v.z);v.fromBufferAttribute(N,i).applyMatrix3(nm).normalize();b.n.push(v.x,v.y,v.z)}for(let i=0;i<I.count;i++)b.i.push(I.getX(i)+b.o);b.o+=P.count};
+  const walk=(n,pm)=>{for(const c of n.children){if(c.userData.own||c.userData.keep)continue;c.updateMatrix();const m=pm.clone().multiply(c.matrix);if(c.isMesh){let b=B.get(c.material);if(!b)B.set(c.material,b={p:[],n:[],i:[],o:0});add(b,c.geometry,m);const hh=halo&&halo.get(c.material);if(hh)for(const[hm,f]of hh){let q=B.get(hm);if(!q)B.set(hm,q={p:[],n:[],i:[],o:0});add(q,c.geometry,m,f)}}else walk(c,m)}};
   walk(o,new THREE.Matrix4());
   for(const c of o.children.slice())if(!c.userData.own&&!c.userData.keep)o.remove(c);
-  B.forEach((b,m)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(b.p,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(b.n,3));g.setIndex(new THREE.BufferAttribute(b.o<65000?new Uint16Array(b.i):new Uint32Array(b.i),1));o.add(new THREE.Mesh(g,m))})};
+  B.forEach((b,m)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(b.p,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(b.n,3));g.setIndex(new THREE.BufferAttribute(b.o<65000?new Uint16Array(b.i):new Uint32Array(b.i),1));const ms=new THREE.Mesh(g,m);if(m.userData&&m.userData.o)ms.renderOrder=2;o.add(ms)})};
  const owners=[];
  const own=(p)=>{const g=grp(p,1);owners.push(g);return g};
  const lug=(p,x,y,z)=>{const o=new THREE.Object3D();o.position.set(x,y,z);o.userData.keep=1;p.add(o);att.push(o);return o};
  /* vòng sắt trói buộc (khóa ma thuật phát sáng) quanh một khối thân */
- const band=(p,w,h,d,x,y,z,sides)=>{const t=.42;blk(w+t*2,t,d+.5,mats.iron,x,y+h/2+t/2,z,p);blk(w+t*2,t,d+.5,mats.iron,x,y-h/2-t/2,z,p);
+ const band=(p,w,h,d,x,y,z,sides)=>{const t=.2;blk(w+t*2,t,d+.5,mats.iron,x,y+h/2+t/2,z,p);blk(w+t*2,t,d+.5,mats.iron,x,y-h/2-t/2,z,p);
   for(const s of[-1,1]){blk(t,h+t*2,d+.5,mats.iron,x+s*(w/2+t/2),y,z,p);blk(t*1.4,h*.5,d*.5,mats.rune,x+s*(w/2+t*1.1),y,z,p);if(sides)lug(p,x+s*(w/2+t*2.2),y,z)}
   blk(w*.5,t*1.4,d*.5,mats.rune,x,y+h/2+t*1.1,z,p)};
  function head(idx,sc){const hg=own(null);hg.scale.setScalar(sc);const m=mats;
@@ -10908,9 +10910,13 @@ const LEV=(()=>{
   return{hg,jw}}
  function build(){
   mats={dark:M(0x110b12,{roughness:.35,metalness:.75}),mid:M(0x24131d,{roughness:.45,metalness:.6}),flesh:M(0x6e0814,{roughness:.25,metalness:.1}),blood:M(0xb80016,{emissive:0x330005,emissiveIntensity:.5,roughness:.15}),
-   tooth:M(0xd9cbb8,{roughness:.3,metalness:.1}),crim:M(0xff1e38,{emissive:0xff0022,emissiveIntensity:2.4,roughness:.2}),void:M(0xb5179e,{emissive:0x7209b7,emissiveIntensity:2,roughness:.2}),
-   eye:M(0xffbe0b,{emissive:0xff5400,emissiveIntensity:3,roughness:.1}),fin:M(0x9e0022,{emissive:0x660014,emissiveIntensity:1.3,roughness:.3,transparent:true,opacity:.9}),
+   tooth:M(0xd9cbb8,{roughness:.3,metalness:.1}),crim:M(0xff1e38,{emissive:0xff0022,emissiveIntensity:2.86,roughness:.2}),void:M(0xb5179e,{emissive:0x7209b7,emissiveIntensity:2.42,roughness:.2}),
+   eye:M(0xffbe0b,{emissive:0xff5400,emissiveIntensity:3.5,roughness:.1}),fin:M(0x9e0022,{emissive:0x660014,emissiveIntensity:1.5,roughness:.3,transparent:true,opacity:.88}),
    iron:M(0x2a2d33,{roughness:.4,metalness:.85}),rune:M(0xff8a1a,{emissive:0xff5a00,emissiveIntensity:2.2,roughness:.3}),obs:M(0x15121a,{roughness:.5,metalness:.35})};
+  /* bản gốc dùng UnrealBloom (strength 1.8, radius .45, ngưỡng .2): ở đây giả lập bằng 2 lớp quầng cộng sáng quanh mọi khối phát sáng */
+  const hl=(c,o)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false});
+  halo=new Map();A.halos=[];
+  for(const[k,c]of[[mats.crim,0xff1030],[mats.void,0xa020ff],[mats.eye,0xff6a10]]){const h1=hl(c,.34),h2=hl(c,.14);h1.userData={o:.34};h2.userData={o:.14};A.halos.push(h1,h2);halo.set(k,[[h1,1.7],[h2,2.7]])}
   const m=mats;root=new THREE.Group();root.scale.setScalar(S);
   /* 3 cổ + 3 đầu (có vòng xích ở đốt thứ 2) */
   [{id:'C',bx:0,by:.7,bz:3.6,sx:0,ly:.35,hs:1.05,ph:0},{id:'L',bx:-1.35,by:.4,bz:3.3,sx:-.75,ly:.1,hs:.88,ph:2.1},{id:'R',bx:1.35,by:.4,bz:3.3,sx:.75,ly:.1,hs:.88,ph:4.2}].forEach((nc,ni)=>{
@@ -10919,7 +10925,7 @@ const LEV=(()=>{
     blk(w,h,d*.88,m.dark,0,0,.5,sp);blk(w*.92,h*.85,d*.98,m.flesh,0,-.04,.5,sp);blk(w+.12,h*.25,d*.35,ni?m.void:m.crim,0,.1,.5,sp);
     const spn=grp(sp);spn.position.set(0,h*.5,.5);spn.rotation.x=-.35;blk(.2,1.1*nc.hs,.26,m.tooth,0,.45*nc.hs,0,spn);blk(.22,.3*nc.hs,.28,m.blood,0,.88*nc.hs,0,spn);
     if(s==1){band(sp,w,h,d*.7,0,0,.5,false);lug(sp,0,h*.5+.9,.5)}
-    sp.userData.base=-.16-s*.07;segs.push(sp);par=sp}
+    sp.userData.base=0;segs.push(sp);par=sp}
    const hh=head(nc.id,nc.hs);hh.hg.position.set(nc.sx*.4,nc.ly*.5,1.15);par.add(hh.hg);hh.hg.userData.ph=nc.ph;necks.push({segs,ph:nc.ph});heads.push(hh)});
   /* thân 4 đốt + tứ chi; có đai sắt ở đốt 1 và đốt 3 */
   const tc=[{w:3.6,h:2.8,d:1.7,f:2,l:'f'},{w:3.5,h:2.8,d:1.7,f:2.4},{w:3.2,h:2.6,d:1.7,f:2.5},{w:2.9,h:2.3,d:1.7,f:2.1,l:'b'}];let cz0=2.6;
@@ -10932,7 +10938,7 @@ const LEV=(()=>{
    if(c.l){const fr=c.l=='f',sc=fr?1.2:.95;for(const s of[-1,1]){const lg=own(sg);lg.position.set(s*c.w*.48,-c.h*.25,0);
      const ua=grp(lg);ua.rotation.set(.35,0,s*.48);blk(.9*sc,1.7*sc,.9*sc,m.mid,0,-.7*sc,0,ua);blk(.98*sc,.55*sc,.55*sc,m.crim,0,-.3*sc,0,ua);blk(.25*sc,1.1*sc,.25*sc,m.tooth,s*.45*sc,.2*sc,0,ua);
      const la=grp(ua);la.position.set(0,-1.5*sc,0);la.rotation.set(-.65,0,-s*.22);blk(.8*sc,1.6*sc,.8*sc,m.dark,0,-.6*sc,0,la);blk(.84*sc,.7*sc,.84*sc,m.flesh,0,-.5*sc,0,la);
-     blk(.96*sc,.34,.96*sc,m.iron,0,-.2*sc,0,la);blk(.5*sc,.2,.5*sc,m.rune,s*.4*sc,-.2*sc,0,la);
+     blk(.16,1.3*sc,.8*sc,m.fin,s*.42*sc,-.5*sc,-.35*sc,la);
      const pw=grp(la);pw.position.set(0,-1.4*sc,.2*sc);blk(sc,.45*sc,sc,m.mid,0,0,0,pw);for(const o of[-.36,-.12,.12,.36]){blk(.16*sc,.24*sc,.85*sc,m.tooth,o*sc,-.05,.65*sc,pw);blk(.18*sc,.26*sc,.38*sc,m.blood,o*sc,-.06,.98*sc,pw)}
      limbs.push({g:lg,s,fr})}}
    cz0-=c.d*.95});
@@ -10967,21 +10973,25 @@ const LEV=(()=>{
   let tot=0;att.forEach(a=>{const w=new THREE.Vector3();a.getWorldPosition(w);let b=0,bd=9;pil.forEach((p,i)=>{let d=Math.abs(Math.atan2(p.z-cz,p.x-cx)-Math.atan2(w.z-cz,w.x-cx));d=Math.min(d,6.283-d);if(d<bd){bd=d;b=i}});
    const A0=new THREE.Vector3(pil[b].x,pil[b].top-2,pil[b].z),len=A0.distanceTo(w),n=Math.max(6,Math.round(len/8.2));chains.push({a:a,A:A0,n:n,o:tot});tot+=n});
   chainM=new THREE.InstancedMesh(lg,m.iron,tot);chainM.frustumCulled=false;gW.add(chainM);
+  A.light=new THREE.PointLight(0xff1133,0,28*S*1.6,2);gW.add(A.light);
   scene.add(gW);A.built=1};
  const _p=new THREE.Vector3(),_q=new THREE.Vector3(),_d=new THREE.Vector3(),_m=new THREE.Matrix4(),_r=new THREE.Matrix4(),_z=new THREE.Matrix4().makeRotationZ(Math.PI/2),_u=new THREE.Vector3(0,1,0),_o=new THREE.Vector3();
  A.tick=now=>{const cam=camera.position;const nv=NAT.ST&&NAT.ST.vcen;if(!nv)return;const dx=cam.x-nv[0],dz=cam.z-nv[1],d2=dx*dx+dz*dz;
-  if(!A.built){if(d2>2200*2200)return;try{build()}catch(e){console.error('LEV',e);A.built=-1;return}}
+  if(!A.built){if(d2>5200*5200)return;try{build()}catch(e){console.error('LEV',e);try{ERR(e)}catch(_){}A.built=-1;return}}
   if(A.built<0)return;
-  const vis=d2<1100*1100;gW.visible=vis;if(!vis)return;
+  const vis=d2<2800*2800;gW.visible=vis;if(A.light&&!vis)A.light.intensity=0;if(!vis)return;
   if(!A.told&&d2<650*650){A.told=1;try{say('⚠ Thủy quái Leviathan 3 đầu bị xích giữa hồ dung nham ở tâm núi lửa. Đừng lại gần!',5200)}catch(e){}}
-  const t=now*.001,burst=Math.max(Math.pow(Math.max(0,Math.sin(t*.45)),3),(A.rt||0)>now?1:0),k=1+burst*1.6,hb=1+Math.pow(Math.sin(t*3.2),4)*.45;
-  root.position.y=lavaY+1+Math.sin(t*1.6)*.35+burst*Math.sin(t*11)*.22;root.rotation.z=Math.sin(t*1.2)*.025+burst*Math.sin(t*9)*.02;
-  torso.forEach(s=>{const ph=t*2.2-s.i*.4;s.g.position.x=Math.sin(ph)*(.08+s.i*.03)*k;s.g.rotation.y=Math.cos(ph)*.05*k});
-  necks.forEach(nc=>nc.segs.forEach((sg,i)=>{const w=t*2.1+nc.ph-i*.45;sg.rotation.y=Math.sin(w)*(.1+i*.03)*k;sg.rotation.x=sg.userData.base+Math.cos(w*.85)*.07*k}));
-  heads.forEach(h=>{const p=h.hg.userData.ph;h.hg.rotation.y=Math.sin(t*2.4+p)*.2*k;h.hg.rotation.x=.12+Math.cos(t*2+p)*.1;h.jw.rotation.x=.3+Math.sin(t*2.8+p)*.2+burst*.45});
-  tails.forEach(tc=>tc.segs.forEach((sg,i)=>{const w=t*2.6-i*.42+(tc.sd>0?0:.85);sg.rotation.y=Math.sin(w)*(.1+i*.03)*k;sg.rotation.x=Math.cos(w*.9)*(.04+i*.012)}));
-  limbs.forEach(l=>{const o=l.fr?0:Math.PI,so=l.s>0?0:1.57;l.g.rotation.x=Math.sin(t*2.2+o+so)*.35*k;l.g.rotation.z=Math.cos(t*2.2+o)*.15});
-  mats.crim.emissiveIntensity=2.2*hb;mats.void.emissiveIntensity=1.8*hb;mats.rune.emissiveIntensity=1.8+.6*Math.sin(t*2)+burst*.8;
+  const e=now*.001*1.3,burst=(A.rt||0)>now?1:0,k=1+burst*1.2,hb=1+Math.pow(Math.sin(e*3.5),4)*.45;
+  root.position.y=lavaY+1+Math.sin(e*2)*.45;root.rotation.z=Math.sin(e*1.4)*.05;
+  torso.forEach(s=>{const ph=e*2.6-s.i*.4;s.g.position.x=Math.sin(ph)*(.12+s.i*.04)*k;s.g.rotation.y=Math.cos(ph)*.06*k});
+  necks.forEach(nc=>nc.segs.forEach((sg,i)=>{const w=e*2.5+nc.ph-i*.45;sg.rotation.y=Math.sin(w)*(.09+i*.025)*k;sg.rotation.x=Math.cos(w*.85)*.06*k}));
+  heads.forEach(h=>{const p=h.hg.userData.ph;h.hg.rotation.y=Math.sin(e*2.8+p)*.18*k;h.hg.rotation.x=Math.cos(e*2.2+p)*.09;h.jw.rotation.x=.28+Math.sin(e*3.2+p)*.24+burst*.4});
+  tails.forEach(tc=>tc.segs.forEach((sg,i)=>{const w=e*3-i*.42+(tc.sd>0?0:.85);sg.rotation.y=Math.sin(w)*(.11+i*.032)*k;sg.rotation.x=Math.cos(w*.9)*(.04+i*.012)}));
+  limbs.forEach(l=>{const o=l.fr?0:Math.PI,so=l.s>0?0:Math.PI*.5;l.g.rotation.x=Math.sin(e*2.5+o+so)*.45;l.g.rotation.z=Math.cos(e*2.5+o)*.2});
+  /* nhịp tim huyết quang: đúng công thức gốc (glow 2.2 × hệ số) */
+  mats.crim.emissiveIntensity=2.2*1.3*hb;mats.void.emissiveIntensity=2.2*1.1*hb;
+  for(const h of A.halos)h.opacity=h.userData.o*(.75+.25*hb);
+  if(A.light){A.light.intensity=2.2*3*hb*.62;A.light.position.set(cx,lavaY+S*1.3,cz-S*2)}
   root.updateMatrixWorld(true);
   for(const c of chains){c.a.getWorldPosition(_q);const A0=c.A,len=A0.distanceTo(_q),sag=Math.max(2,len*.05)*(1-burst*.6);
    for(let i=0;i<c.n;i++){const u=(i+.5)/c.n,u2=Math.min(1,u+.04),f=(x,out)=>out.set(A0.x+(_q.x-A0.x)*x,A0.y+(_q.y-A0.y)*x-sag*4*x*(1-x),A0.z+(_q.z-A0.z)*x);
@@ -11021,7 +11031,7 @@ const QL=(()=>{
   const S=NAT.ST,vc=S.vcen,pl=S.lpil,P=(k,dx,dy)=>[S[k][0]+dx,S[k][1]+dy];
   const sp=nsolid(vc[0]+70*VER,vc[1]-950*VER);
   Q.pos=[P('volc',-20,20),sp,P('crater',-20,20),pl[4],pl[1],[vc[0],vc[1]],[pl[3][0]+30,pl[3][1]+30],P('volc',-20,20)];
-  const rs=[52,45,52,60,60,140,50,52];
+  const rs=[48,44,48,60,60,150,56,48];
   Q.pos.forEach((p,i)=>{const d={fn:'qst',id:'qst'+i,x:p[0],y:p[1],r:0,R:rs[i],txt:''};Q.doors.push(d);DOORS.push(d)});
   Q.reg=1;refresh()}
  function refresh(){const c=cur();Q.doors.forEach((d,i)=>{const on=c&&i==Q.s;d.r=on?d.R:0;d.txt=on?'❗ F: '+ST8[i].v:''})}
@@ -11062,9 +11072,265 @@ const QL=(()=>{
   if(!Q.stele&&dv<3200)Q.stele=stele(Q.pos[1]);
   if(!Q.beam){const m=new THREE.MeshBasicMaterial({color:0xffa030,transparent:true,opacity:.4,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}),g=new THREE.Mesh(new THREE.BoxGeometry(5,170,5),m);g.frustumCulled=false;g.renderOrder=4;g.visible=false;scene.add(g);Q.beam=g}
   if(c){const p=Q.pos[Q.s],d=Math.hypot(ply.x-p[0],ply.y-p[1]);Q.beam.visible=d>60&&d<2600;if(Q.beam.visible){Q.beam.position.set(p[0],NAT.gh(p[0],p[1])+85,p[1]);Q.beam.material.opacity=.3+.15*Math.sin(now*.004)}
-   if(now-Q.tt>250){Q.tt=now;if(dv<3600||Q.s>0){Q.tr.style.display=(typeof state=='undefined'||state=='play')&&!window.__ABY?'block':'none';Q.tr.textContent='🌋 Phá xích Leviathan '+(Q.s)+'/8 · Trạm '+(Q.s+1)+': '+c.n+' · '+(d<Q.doors[Q.s].R?'đã tới nơi, bấm F':'hướng '+cmp(p[0]-ply.x,p[1]-ply.y)+', cách ~'+Math.round(d/10)+' m')}else Q.tr.style.display='none'}}
+   if(now-Q.tt>250){Q.tt=now;if(dv<3600||Q.s>0){Q.tr.style.display=(typeof state=='undefined'||state=='play')&&!window.__ABY?'block':'none';Q.tr.textContent='🌋 Phá xích Leviathan '+(Q.s)+'/8 · Trạm '+(Q.s+1)+': '+c.n+' · '+(d<60?'đã tới nơi, bấm F':'hướng '+cmp(p[0]-ply.x,p[1]-ply.y)+', cách ~'+Math.round(d/10)+' m')}else Q.tr.style.display='none'}}
   else{Q.beam.visible=false;Q.tr.style.display='none'}};
  return Q})();
+
+/* ===== CỤ CÂY CỔ THỤ BLOCKY (đảo hoang) + CÁ MẬP BLOCKY (rạn san hô) + 2 NHIỆM VỤ CỐT TRUYỆN ===== */
+const CRE=(()=>{
+ const C={T:null,H:null,tb:0,hb:0,pend:null,mod:null,key:null,beam:null,tr:null,tt:0,ui:null,reg:0,wave:0,night:0,rage:0,ci:0,last:0};
+ const PAL=[{main:0x00f3ff,emissive:0x00b8ff,name:'Xanh Băng'},{main:0xff1e42,emissive:0xd90026,name:'Đỏ Huyết'},{main:0xa855f7,emissive:0x7e22ce,name:'Tím Vực Thẳm'},{main:0x10b981,emissive:0x059669,name:'Xanh Độc Tố'}];
+ const BM=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,flatShading:true},o||{}));
+ const vox=(w,h,d,m,x,y,z,p)=>{const k=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);k.position.set(x||0,y||0,z||0);if(p)p.add(k);return k};
+ const grp=(p,own)=>{const g=new THREE.Group();if(own)g.userData.own=1;if(p)p.add(g);return g};
+ const keep=o=>{o.userData.keep=1;return o};
+ /* gộp các khối cứng của một bộ phận thành ít mesh nhất (giữ nguyên vật liệu & hình dạng) */
+ const bake=o=>{const B=new Map(),nm=new THREE.Matrix3(),v=new THREE.Vector3();
+  const add=(b,g,m)=>{const P=g.attributes.position,N=g.attributes.normal,I=g.index;nm.getNormalMatrix(m);for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(m);b.p.push(v.x,v.y,v.z);v.fromBufferAttribute(N,i).applyMatrix3(nm).normalize();b.n.push(v.x,v.y,v.z)}for(let i=0;i<I.count;i++)b.i.push(I.getX(i)+b.o);b.o+=P.count};
+  const walk=(n,pm)=>{for(const c of n.children){if(c.userData.own||c.userData.keep)continue;c.updateMatrix();const m=pm.clone().multiply(c.matrix);if(c.isMesh){let b=B.get(c.material);if(!b)B.set(c.material,b={p:[],n:[],i:[],o:0});add(b,c.geometry,m)}else walk(c,m)}};
+  walk(o,new THREE.Matrix4());
+  for(const c of o.children.slice())if(!c.userData.own&&!c.userData.keep)o.remove(c);
+  B.forEach((b,m)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(b.p,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(b.n,3));g.setIndex(new THREE.BufferAttribute(b.o<65000?new Uint16Array(b.i):new Uint32Array(b.i),1));o.add(new THREE.Mesh(g,m))})};
+ const cam=()=>camera.position;
+ /* ============ CỤ CÂY CỔ THỤ BLOCKY HIỀN LÀNH ============ */
+ function buildTree(){
+  const S=8,own=[],T={S,own,birds:[],sp:[],t:0},st=NAT.ST,cx=st.itree[0],cz=st.itree[1],yaw=-Math.PI/2;
+  const gy=NAT.gh(cx,cz);T.cx=cx;T.cz=cz;T.gy=gy;T.yaw=yaw;
+  const mt={bark:BM(0x5c4033,{roughness:.9,metalness:.02}),barkD:BM(0x432d23,{roughness:.92}),moss:BM(0x4a7c59,{roughness:.85}),leaf:BM(0x386641,{roughness:.8}),
+   blos:BM(0xffccd5,{emissive:0x591c27,emissiveIntensity:.3,roughness:.55}),beard:BM(0xa3b18a,{roughness:.85}),
+   eye:new THREE.MeshStandardMaterial({color:0xffb703,emissive:0xfb8500,emissiveIntensity:1.5,roughness:.2}),bird:BM(0xf4a261,{roughness:.6})};
+  const O=p=>{const g=grp(p,1);own.push(g);return g};
+  const G=new THREE.Group();G.position.set(cx,gy,cz);G.rotation.y=yaw;G.scale.setScalar(S);T.G=G;
+  const R=O(G);T.root=R;
+  /* 1. bộ rễ khối bậc thang */
+  [0,.75,1.5,2.25,3,3.85,4.65,5.45].forEach((a,i)=>{const g=grp(R);g.rotation.y=a;vox(1.1,1.3,1.5,mt.bark,0,.65,2.2,g);vox(.9,.85,1.4,mt.barkD,0,.42,3.3,g);vox(.7,.45,1.2,mt.bark,0,.22,4.3,g);if(i%2==0){vox(1.15,.25,1.3,mt.moss,0,1.35,2.2,g);vox(.85,.2,1,mt.moss,0,.9,3.3,g)}});
+  /* 2. thân cây */
+  vox(4.2,2.4,3.8,mt.bark,0,1.2,0,R);vox(4.5,1.6,3.2,mt.barkD,0,1,0,R);vox(3.6,2.4,4.2,mt.barkD,0,1.2,0,R);
+  vox(3.8,2.4,3.5,mt.bark,0,3.4,.1,R);vox(4.1,1.8,2.8,mt.barkD,0,3.4,.1,R);
+  vox(4.2,2.4,3.6,mt.bark,0,5.5,.35,R);vox(4.6,1.6,3,mt.bark,0,5.7,.35,R);
+  vox(1.6,.45,2.4,mt.moss,1.7,6.65,.35,R);vox(1.6,.45,2.4,mt.moss,-1.7,6.65,.35,R);vox(2.2,.4,1.8,mt.moss,0,6.75,-.5,R);
+  /* 3. gương mặt */
+  const H=O(R);H.position.set(0,5.3,2.15);T.head=H;
+  vox(.75,1.15,.85,mt.bark,0,.1,.35,H);vox(.95,.55,.75,mt.barkD,0,-.2,.42,H);vox(.95,.65,.55,mt.bark,1.05,-.15,.1,H);vox(.95,.65,.55,mt.bark,-1.05,-.15,.1,H);
+  vox(.75,.65,.25,mt.barkD,.85,.55,.05,H);vox(.75,.65,.25,mt.barkD,-.85,.55,.05,H);
+  vox(.42,.42,.25,mt.eye,.85,.52,.14,H);vox(.42,.42,.25,mt.eye,-.85,.52,.14,H);
+  T.lidL=keep(vox(.48,.46,.28,mt.bark,.85,.78,.16,H));T.lidR=keep(vox(.48,.46,.28,mt.bark,-.85,.78,.16,H));
+  const bl=vox(.95,.32,.42,mt.moss,.9,.98,.22,H);bl.rotation.z=-.16;const br=vox(.95,.32,.42,mt.moss,-.9,.98,.22,H);br.rotation.z=.16;
+  vox(.9,.22,.3,mt.barkD,0,-.68,.18,H);vox(.32,.22,.3,mt.barkD,.58,-.54,.18,H);vox(.32,.22,.3,mt.barkD,-.58,-.54,.18,H);
+  const BD=O(H);BD.position.set(0,-.95,.22);T.beard=BD;
+  vox(.95,1.2,.45,mt.beard,0,-.55,.08,BD);vox(.75,1.1,.4,mt.beard,0,-1.55,.05,BD);vox(.5,.8,.35,mt.beard,0,-2.35,.02,BD);
+  vox(.75,1,.4,mt.beard,.68,-.45,.02,BD);vox(.55,.9,.35,mt.beard,.65,-1.25,0,BD);vox(.75,1,.4,mt.beard,-.68,-.45,.02,BD);vox(.55,.9,.35,mt.beard,-.65,-1.25,0,BD);
+  vox(.65,.26,.38,mt.beard,.42,.12,.16,BD);vox(.65,.26,.38,mt.beard,-.42,.12,.16,BD);
+  /* 4. đôi tay cành cây */
+  const arm=isL=>{const sg=isL?1:-1,A=O(R);A.position.set(sg*2.3,5.5,.35);
+   vox(1.7,1.05,1.05,mt.bark,sg*.85,-.1,.1,A);vox(1.2,.3,1.1,mt.moss,sg*.85,.52,.1,A);
+   const F=grp(A);F.position.set(sg*1.7,-.15,.2);F.rotation.y=sg*-.48;F.rotation.z=sg*.12;vox(1.8,.85,.85,mt.barkD,sg*.9,0,0,F);
+   [{y:.32,z:.28,l:1},{y:.1,z:.35,l:1.15},{y:-.15,z:.28,l:1.05},{y:-.35,z:-.25,l:.85}].forEach((f,k)=>{vox(f.l,.24,.24,mt.bark,sg*(1.8+f.l*.45),f.y,f.z,F);if(k<2)vox(.45,.45,.45,mt.leaf,sg*(1.9+f.l*.8),f.y+.22,f.z,F)});return A};
+  T.aL=arm(true);T.aR=arm(false);
+  /* 5. vương miện tán lá & hoa */
+  const CN=O(R);CN.position.set(0,7.2,.1);T.canopy=CN;
+  vox(1.2,2.2,1.2,mt.barkD,0,.8,0,CN);vox(.85,1.8,.85,mt.bark,1.6,.6,.6,CN);vox(.85,1.8,.85,mt.bark,-1.6,.6,.6,CN);vox(.85,1.8,.85,mt.bark,0,.6,-1.5,CN);
+  [[0,1.8,0,7.4,1.6,6.8,'leaf'],[2.6,1.5,1.4,3.4,1.5,3.4,'moss'],[-2.6,1.5,1.4,3.4,1.5,3.4,'moss'],[2.4,1.6,-1.8,3.6,1.6,3.4,'leaf'],[-2.4,1.6,-1.8,3.6,1.6,3.4,'leaf'],
+   [0,3.1,-.2,5.8,1.6,5.4,'moss'],[1.8,2.8,.8,3,1.4,3,'leaf'],[-1.8,2.8,.8,3,1.4,3,'leaf'],[0,4.3,-.2,3.6,1.4,3.4,'leaf']].forEach(b=>vox(b[3],b[4],b[5],mt[b[6]],b[0],b[1],b[2],CN));
+  [[3.6,2.1,2.2],[-3.5,2,2.1],[2.8,2.3,-2.5],[-2.9,2.2,-2.4],[1.9,3.6,1.8],[-2,3.5,1.7],[.5,3.8,-2.2],[-.8,4.9,.8],[1.2,4.7,-.6],[3.9,1.6,-.4],[-3.8,1.7,.3]].forEach(p=>vox(.65,.55,.65,mt.blos,p[0],p[1],p[2],CN));
+  /* 6. chim blocky */
+  const beak=new THREE.MeshBasicMaterial({color:0xffd166});
+  const bird=(x,y,z,par)=>{const b=O(par);b.position.set(x,y,z);vox(.36,.32,.46,mt.bird,0,.16,0,b);vox(.28,.28,.28,mt.bird,0,.38,.16,b);vox(.12,.1,.16,beak,0,.36,.36,b);vox(.22,.12,.24,mt.bird,0,.22,-.32,b);T.birds.push({m:b,y:y,ph:Math.random()*6.2832})};
+  bird(1.9,6.88,.35,R);bird(-1.85,6.88,.45,R);bird(1.1,.68,.1,T.aL);
+  /* 7. tinh linh thực vật: 10 bạn chạy lon ton quanh gốc */
+  const SP=O(G),pal=[{b:0x74c69d,bl:0xd8f3dc,l:0x40916c,f:0xffb5a7},{b:0x95d5b2,bl:0xfff3b0,l:0x52b788,f:0xffd166},{b:0xa3b18a,bl:0xfefae0,l:0x588157,f:0xffccd5},{b:0x80ed99,bl:0xe9edc9,l:0x38b000,f:0x90e0ef}];
+  const eyeD=new THREE.MeshBasicMaterial({color:0x1b263b}),blush=new THREE.MeshBasicMaterial({color:0xff8fa3});
+  for(let i=0;i<10;i++){const p=pal[i%4],sg=O(SP),bm=BM(p.b,{emissive:p.l,emissiveIntensity:.18,roughness:.75}),be=BM(p.bl,{roughness:.8}),lf=BM(p.l,{emissive:p.l,emissiveIntensity:.25,roughness:.65}),fl=BM(p.f,{emissive:p.f,emissiveIntensity:.35,roughness:.5});
+   const sc=.78+(i%3)*.18,lL=keep(vox(.16,.24,.18,lf,.14,.12,0,sg)),lR=keep(vox(.16,.24,.18,lf,-.14,.12,0,sg));
+   vox(.56,.52,.52,bm,0,.48,0,sg);vox(.38,.34,.08,be,0,.44,.25,sg);vox(.48,.36,.46,bm,0,.88,.02,sg);
+   vox(.08,.11,.05,eyeD,.12,.9,.26,sg);vox(.08,.11,.05,eyeD,-.12,.9,.26,sg);vox(.08,.05,.05,blush,.18,.83,.26,sg);vox(.08,.05,.05,blush,-.18,.83,.26,sg);
+   const aL=keep(vox(.14,.26,.14,lf,.35,.54,.04,sg)),aR=keep(vox(.14,.26,.14,lf,-.35,.54,.04,sg));
+   if(i%2==0){vox(.08,.22,.08,lf,0,1.15,0,sg);const a=vox(.3,.08,.18,lf,.15,1.25,0,sg);a.rotation.z=.35;const b=vox(.3,.08,.18,lf,-.15,1.25,0,sg);b.rotation.z=-.35}
+   else{vox(.08,.18,.08,lf,0,1.14,0,sg);vox(.34,.14,.34,fl,0,1.24,0,sg);vox(.14,.16,.14,be,0,1.26,0,sg)}
+   const tl=vox(.16,.12,.24,lf,0,.34,-.32,sg);tl.rotation.x=-.4;sg.scale.setScalar(sc);
+   const ch=i<6;T.sp.push({m:sg,lL,lR,aL,aR,mat:bm,ch,or:ch?5.4+(i%3)*1.1:7.2+(i%2)*1.5,os:ch?.52:-.38,ba:ch?i*.42:i*1.5,hs:7.5+(i%3)*1.2,hh:.28+(i%2)*.14,ph:i*.9})}
+  /* 8. nấm rừng + bụi hoa dại quanh gốc (đặt theo độ cao thật của mặt đất) */
+  const EN=O(G),mc=BM(0xe76f51,{roughness:.6}),ms=BM(0xfefae0,{roughness:.8});
+  for(let i=0;i<32;i++){const a=Math.random()*6.2832,d=4.6+Math.random()*10,x=Math.sin(a)*d,z=Math.cos(a)*d;
+   const wx=cx+(x*Math.cos(yaw)+z*Math.sin(yaw))*S,wz=cz+(-x*Math.sin(yaw)+z*Math.cos(yaw))*S,dy=(NAT.gh(wx,wz)-gy)/S;
+   if(i%3==0){vox(.18,.36,.18,ms,x,.18+dy,z,EN);vox(.48,.26,.48,mc,x,.42+dy,z,EN)}else{vox(.45,.25,.45,mt.moss,x,.12+dy,z,EN);vox(.28,.24,.28,mt.blos,x,.3+dy,z,EN)}}
+  /* 9. đom đóm */
+  const fg=new THREE.BufferGeometry(),fp=new Float32Array(540);for(let i=0;i<180;i++){fp[i*3]=(Math.random()-.5)*26;fp[i*3+1]=.8+Math.random()*14;fp[i*3+2]=(Math.random()-.5)*26}
+  fg.setAttribute('position',new THREE.BufferAttribute(fp,3));T.ff=new THREE.Points(fg,new THREE.PointsMaterial({color:0xffe66d,size:.22*S,transparent:true,opacity:.85}));T.ff.frustumCulled=false;G.add(T.ff);
+  /* ánh sáng ấm từ trái tim cụ cây */
+  T.lamp=new THREE.PointLight(0xffb703,1,12*S);T.lamp.position.set(0,2.5+3.8,2.5);G.add(T.lamp);
+  own.forEach(bake);scene.add(G);T.mt=mt;return T}
+ function tickTree(t,dt){const T=C.T,S=T.S;
+  T.root.scale.y=1+Math.sin(t*1.1)*.012;
+  T.head.rotation.x=Math.sin(t*.9)*.04;T.head.rotation.y=Math.cos(t*.6)*.05;
+  const bc=t%4.2,tl=(bc>3.92&&bc<4.12)?.52:.78;T.lidL.position.y+=(tl-T.lidL.position.y)*.4;T.lidR.position.y+=(tl-T.lidR.position.y)*.4;
+  T.beard.rotation.z=Math.sin(t*1.4)*.045;T.beard.rotation.x=Math.cos(t*1.1)*.03;
+  T.canopy.rotation.z=Math.sin(t*.8)*.025;T.canopy.rotation.y=Math.cos(t*.5)*.02;
+  if(C.wave>0){C.wave+=dt;T.aL.rotation.z=.45+Math.sin(C.wave*6)*.25;T.aL.rotation.x=-.2;if(C.wave>2.6)C.wave=0}
+  else{T.aL.rotation.z+=(Math.sin(t)*.04-T.aL.rotation.z)*.08;T.aL.rotation.x+=(0-T.aL.rotation.x)*.08}
+  T.aR.rotation.z=-Math.sin(t)*.04;
+  for(const b of T.birds){b.m.position.y=b.y+Math.abs(Math.sin(t*3.5+b.ph))*.08;b.m.rotation.y=Math.sin(t*1.8+b.ph)*.4}
+  const cy=Math.cos(T.yaw),sy=Math.sin(T.yaw);
+  for(const s of T.sp){const an=s.ba+t*s.os,nx=an+(s.os>=0?.06:-.06),r=s.or+Math.sin(t*2.2+s.ph)*.45,x=Math.sin(an)*r,z=Math.cos(an)*r,hc=Math.sin(t*s.hs+s.ph);
+   const wx=T.cx+(x*cy+z*sy)*S,wz=T.cz+(-x*sy+z*cy)*S,dy=(NAT.gh(wx,wz)-T.gy)/S;
+   s.m.position.set(x,dy+Math.abs(hc)*s.hh,z);s.m.rotation.set(0,Math.atan2(Math.sin(nx)*r-x,Math.cos(nx)*r-z),Math.cos(t*s.hs+s.ph)*.14);
+   const sd=Math.sin(t*s.hs*1.4+s.ph);s.lL.rotation.x=sd*.65;s.lR.rotation.x=-sd*.65;s.aL.rotation.x=-sd*.55;s.aR.rotation.x=sd*.55;s.aL.rotation.z=.25+Math.abs(sd)*.2;s.aR.rotation.z=-.25-Math.abs(sd)*.2}
+  T.ff.rotation.y=t*.05;T.ff.position.y=Math.sin(t*.7)*.3}
+ function setNight(on){C.night=on;const T=C.T;if(!T)return;T.lamp.intensity=on?2.4:1;T.ff.material.size=(on?.35:.22)*T.S;T.ff.material.color.setHex(on?0xbef264:0xffe66d);for(const s of T.sp)s.mat.emissiveIntensity=on?.65:.18}
+ /* ============ QUÁI VẬT CÁ MẬP BLOCKY (LEVIATHAN BLOCKY SHARK) ============ */
+ function buildShark(){
+  const S=14,own=[],H={S,own},st=NAT.ST,cx=st.reefc[0],cz=st.reefc[1];H.cx=cx;H.cz=cz;
+  const m={skin:BM(0x2b3a4a,{roughness:.75,metalness:.15}),belly:BM(0x52657a,{roughness:.8,metalness:.1}),bone:BM(0xe2dcd0,{roughness:.6,metalness:.05}),blood:BM(0x9e0b16,{emissive:0x3b0004,roughness:.35,metalness:.2}),
+   fin:new THREE.MeshStandardMaterial({color:PAL[0].main,emissive:PAL[0].emissive,emissiveIntensity:1.6,roughness:.2,metalness:.1,transparent:true,opacity:.92}),edge:new THREE.MeshBasicMaterial({color:0xbffcff})};
+  H.m=m;const O=p=>{const g=grp(p,1);own.push(g);return g};
+  const G=new THREE.Group();G.scale.setScalar(S);H.G=G;const RT=O(G);H.root=RT;const BD=O(RT);H.body=BD;
+  vox(2.6,2.5,3.2,m.skin,0,.1,.5,BD);vox(2.4,.6,3,m.belly,0,-1.25,.5,BD);vox(2.2,2.1,2.6,m.skin,0,.05,-2.2,BD);vox(2,.5,2.4,m.belly,0,-1.05,-2.2,BD);vox(1.5,1.5,2,m.skin,0,0,-4.3,BD);
+  for(let i=0;i<3;i++){const z=1.6-i*.45;vox(.15,1.2,.15,m.fin,1.32,0,z,BD);vox(.15,1.2,.15,m.fin,-1.32,0,z,BD);vox(.18,.4,.25,m.blood,1.33,-.5,z-.1,BD);vox(.18,.4,.25,m.blood,-1.33,-.5,z-.1,BD)}
+  const HD=O(RT);HD.position.set(0,.2,2.1);H.head=HD;
+  vox(2.4,1.5,2.4,m.skin,0,.45,1.1,HD);vox(2,1.1,1.4,m.skin,0,.35,2.7,HD);
+  const bL=vox(.5,.35,1.1,m.skin,1.15,.85,1.5,HD);bL.rotation.z=-.25;bL.rotation.x=.2;const bR=vox(.5,.35,1.1,m.skin,-1.15,.85,1.5,HD);bR.rotation.z=.25;bR.rotation.x=.2;
+  const eM=new THREE.MeshBasicMaterial({color:0xff1122});vox(.25,.35,.45,eM,1.18,.55,1.55,HD);vox(.25,.35,.45,eM,-1.18,.55,1.55,HD);
+  H.eL=keep(new THREE.PointLight(0xff0022,1.5,5*S));H.eL.position.set(1.5,.55,1.6);HD.add(H.eL);H.eR=keep(new THREE.PointLight(0xff0022,1.5,5*S));H.eR.position.set(-1.5,.55,1.6);HD.add(H.eR);
+  for(let i=-3;i<=3;i++){const x=i*.27;vox(.14,.38,.14,m.bone,x,-.25,3.25,HD);if(Math.abs(i)%2==1)vox(.16,.18,.16,m.blood,x,-.15,3.26,HD)}
+  for(let z=1.2;z<=3.0001;z+=.45){vox(.14,.35,.14,m.bone,.92,-.22,z,HD);vox(.14,.35,.14,m.bone,-.92,-.22,z,HD);vox(.2,.25,.35,m.blood,.98,-.1,z,HD);vox(.2,.25,.35,m.blood,-.98,-.1,z,HD)}
+  const JW=O(HD);JW.position.set(0,-.35,.8);H.jaw=JW;
+  vox(1.9,.65,2.4,m.belly,0,-.25,1.2,JW);vox(1.8,.3,2.2,m.blood,0,.08,1.2,JW);
+  for(let i=-2;i<=2;i++)vox(.14,.36,.14,m.bone,i*.32,.22,2.25,JW);
+  for(let z=.6;z<=2.1001;z+=.45){vox(.14,.32,.14,m.bone,.82,.2,z,JW);vox(.14,.32,.14,m.bone,-.82,.2,z,JW)}
+  /* xương sườn, cột sống, sọ gắn thân, vết máu */
+  [1.2,.4,-.4,-1.2,-2,-2.8].forEach((z,idx)=>{const sc=1-idx*.08;
+   const rl=vox(.9*sc,.24,.24,m.bone,1.35*sc,.45,z,BD);rl.rotation.z=.45;rl.rotation.y=-.2;const rr=vox(.9*sc,.24,.24,m.bone,-1.35*sc,.45,z,BD);rr.rotation.z=-.45;rr.rotation.y=.2;
+   const sp=vox(.26,.85*sc,.26,m.bone,0,1.45*sc,z,BD);sp.rotation.x=-.35;vox(.45,.35,.45,m.blood,1.15*sc,.35,z,BD);vox(.45,.35,.45,m.blood,-1.15*sc,.35,z,BD);vox(.5,.25,.5,m.blood,0,1.25*sc,z,BD)});
+  const sock=new THREE.MeshBasicMaterial({color:0x110505});
+  const skull=(x,y,z,a,b,c)=>{const k=grp(BD);k.position.set(x,y,z);k.rotation.set(a,b,c);vox(.65,.6,.65,m.bone,0,0,0,k);vox(.16,.16,.1,sock,-.16,.05,.31,k);vox(.16,.16,.1,sock,.16,.05,.31,k);vox(.75,.2,.75,m.blood,0,-.28,0,k)};
+  skull(.6,1.35,1.3,.2,.4,-.2);skull(-.85,1.1,-.8,-.1,-.6,.35);skull(.75,.95,-2.6,.3,.8,-.3);
+  [[1.31,-.2,.8,.12,.9,1.1],[-1.31,.1,-.3,.12,1.1,1.3],[.4,1.36,.1,.9,.12,1.4],[-.5,1.25,-1.8,.8,.12,1.2],[1.11,-.3,-2.3,.12,.8,1],[-1.11,.2,-3.1,.12,.7,.9],[0,-1.56,.2,1.3,.12,1.6],[.8,.8,2.8,.5,.4,.8]].forEach(p=>vox(p[3],p[4],p[5],m.blood,p[0],p[1],p[2],BD));
+  /* vây phát sáng */
+  const FD=grp(BD);FD.position.set(0,1.3,-.5);
+  vox(.28,.8,1.8,m.skin,0,.3,0,FD);vox(.24,.9,1.3,m.fin,0,1,-.25,FD);vox(.2,.8,.8,m.fin,0,1.7,-.5,FD);vox(.16,.6,.45,m.edge,0,2.3,-.7,FD);vox(.32,.9,.3,m.bone,0,.7,.65,FD);vox(.34,.5,.6,m.blood,0,.4,.3,FD);
+  H.pec=[];const pf=isL=>{const sg=isL?1:-1,F=O(BD);F.position.set(sg*1.25,-.7,1.1);
+   vox(1.2,.24,1.1,m.skin,sg*.6,-.1,-.1,F);vox(1.3,.2,.85,m.fin,sg*1.6,-.35,-.35,F);vox(1.1,.16,.55,m.fin,sg*2.5,-.6,-.6,F);vox(.7,.14,.35,m.edge,sg*3.2,-.8,-.8,F);vox(.8,.26,.5,m.blood,sg*1.1,-.2,-.2,F);
+   F.rotation.z=sg*-.25;F.rotation.y=sg*-.2;return F};
+  H.pL=pf(true);H.pR=pf(false);
+  const pv=vox(.9,.18,.6,m.fin,1.1,-.85,-2.6,BD);pv.rotation.z=-.45;const pw=vox(.9,.18,.6,m.fin,-1.1,-.85,-2.6,BD);pw.rotation.z=.45;vox(.18,.65,.6,m.fin,0,1.1,-3.5,BD);
+  H.bf=[];[{z:1.4,y:-1.55,h:.55,d:.5},{z:.6,y:-1.55,h:.7,d:.55},{z:-.2,y:-1.55,h:.8,d:.55},{z:-1,y:-1.45,h:.75,d:.5},{z:-1.8,y:-1.35,h:.7,d:.5},{z:-2.6,y:-1.25,h:.65,d:.45},{z:-3.4,y:-.95,h:.6,d:.45},{z:-4.2,y:-.85,h:.5,d:.4}].forEach(c=>{
+   const f=O(BD);f.position.set(0,c.y,c.z);vox(.24,c.h*.45,c.d,m.skin,0,-c.h*.2,0,f);vox(.26,c.h*.25,c.d*.8,m.blood,0,-c.h*.1,.04,f);vox(.18,c.h*.65,c.d*.75,m.fin,0,-c.h*.65,-.08,f);vox(.14,c.h*.4,c.d*.45,m.edge,0,-c.h*1.05,-.16,f);f.rotation.x=.28;H.bf.push(f)});
+  /* 2 đuôi lưỡi liềm */
+  const tail=(ox,ay)=>{const t=O(BD);t.position.set(ox,0,-5.1);t.rotation.y=ay;
+   vox(.65,1,1.3,m.skin,0,0,-.5,t);vox(.7,.4,.8,m.blood,0,.35,-.4,t);vox(.26,1.1,1,m.skin,0,.8,-1.3,t);vox(.22,1.2,.85,m.fin,0,1.7,-1.8,t);vox(.18,1.1,.65,m.fin,0,2.6,-2.3,t);vox(.14,.8,.45,m.edge,0,3.4,-2.7,t);
+   vox(.24,.9,.85,m.skin,0,-.7,-1.2,t);vox(.2,.95,.65,m.fin,0,-1.45,-1.65,t);vox(.15,.7,.45,m.edge,0,-2.1,-2,t);vox(.28,.5,.5,m.blood,0,1.2,-1.5,t);vox(.22,.45,.22,m.bone,0,2.1,-1.9,t);return t};
+  H.tL=tail(.58,.22);H.tR=tail(-.58,-.22);
+  own.forEach(bake);
+  /* môi trường đáy biển: bong bóng, hạt phù du bay quanh con cá mập */
+  const E=new THREE.Group();E.scale.setScalar(S);H.E=E;
+  const bm=new THREE.InstancedMesh(new THREE.BoxGeometry(.18,.18,.18),new THREE.MeshBasicMaterial({color:0x7dd3fc,transparent:true,opacity:.55}),85);bm.frustumCulled=false;E.add(bm);H.bub=bm;H.bd=[];
+  for(let i=0;i<85;i++)H.bd.push({x:(Math.random()-.5)*26,y:(Math.random()-.5)*24,z:(Math.random()-.5)*28,sp:.02+Math.random()*.05,w:Math.random()*6.2832});
+  const pg=new THREE.BufferGeometry(),pp=new Float32Array(750);for(let i=0;i<750;i++)pp[i]=(Math.random()-.5)*45;pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  H.amb=new THREE.Points(pg,new THREE.PointsMaterial({color:0x38bdf8,size:.18*S,transparent:true,opacity:.6}));H.amb.frustumCulled=false;E.add(H.amb);
+  /* cột đá bazan + tinh thể xanh quanh đường tuần tra */
+  const rock=BM(0x0b192c,{roughness:.9}),crys=new THREE.MeshBasicMaterial({color:0x00d8ff}),PG=grp(null,1),Sp=3.5;
+  for(let i=0;i<24;i++){const a=i/24*6.2832,d=700+(Math.random()-.5)*260,x=cx+Math.cos(a)*d,z=cz+Math.sin(a)*d,gh=NAT.gh(x,z),dep=-gh;if(dep<10)continue;
+   const h=Math.min((4+Math.random()*12)*Sp,Math.max(8,dep-7)),w=(1.5+Math.random()*2.5)*Sp;vox(w,h,w,rock,x,gh+h/2,z,PG);if(Math.random()>.65)vox(.4*Sp,.4*Sp,.4*Sp,crys,x+w*.45,gh+h*.7,z,PG)}
+  bake(PG);H.PG=PG;scene.add(PG);
+  H.a=Math.random()*6.2832;H.R=700;H.y=-20;H.rot=0;H.t=0;H.pos=[cx+Math.cos(H.a)*H.R,cz+Math.sin(H.a)*H.R];
+  scene.add(G);scene.add(E);return H}
+ function setFin(i){C.ci=i%4;const m=C.H&&C.H.m;if(!m)return;m.fin.color.setHex(PAL[C.ci].main);m.fin.emissive.setHex(PAL[C.ci].emissive)}
+ function setRage(on){C.rage=on?1:0;const H=C.H;if(!H)return;H.eL.intensity=H.eR.intensity=on?4:1.5}
+ const _o=new THREE.Object3D();
+ function tickShark(t,dt){const H=C.H,S=H.S,sm=C.rage?2.4:1,sf=t*2.8*sm;
+  H.t+=dt;const v=(C.rage?38:22);H.a+=v/H.R*dt;const x=H.cx+Math.cos(H.a)*H.R,z=H.cz+Math.sin(H.a)*H.R,vx=-Math.sin(H.a),vz=Math.cos(H.a);
+  const ty=Math.max(-42,Math.min(-12,NAT.gh(x,z)+20));H.y+=(ty-H.y)*.02;H.pos=[x,z];
+  H.G.position.set(x,H.y,z);H.G.rotation.y=Math.atan2(vx,vz);H.E.position.set(x,H.y,z);
+  H.root.position.y=Math.sin(t*1.5*sm)*.35;H.root.rotation.y=Math.sin(sf)*.06;H.root.rotation.z=Math.cos(sf)*.04;
+  H.head.rotation.y=-Math.sin(sf)*.05;H.jaw.rotation.x=C.rage?.38+Math.sin(t*10)*.14:.22+Math.sin(t*2.2)*.08;
+  H.tL.rotation.y=Math.sin(sf-.8)*.42;H.tR.rotation.y=Math.sin(sf-1.1)*.42;
+  const fl=Math.sin(t*2.2*sm)*.15;H.pL.rotation.z=-.25+fl;H.pR.rotation.z=.25-fl;
+  H.bf.forEach((f,i)=>{f.rotation.z=Math.sin(sf-i*.35)*.18});
+  H.m.fin.emissiveIntensity=(C.rage?2.2:1.5)+Math.sin(t*4)*.35;
+  for(let i=0;i<85;i++){const b=H.bd[i];b.y+=b.sp*sm;b.z-=.04*sm;b.x+=Math.sin(t*2+b.w)*.01;if(b.y>12)b.y=-12;if(b.z<-14)b.z=14;_o.position.set(b.x,b.y,b.z);_o.updateMatrix();H.bub.setMatrixAt(i,_o.matrix)}
+  H.bub.instanceMatrix.needsUpdate=true;H.amb.rotation.y=t*.03}
+ /* ============ NÚT ĐIỀU KHIỂN TÍNH NĂNG (như bản xem 3D gốc) ============ */
+ function mkUI(){if(C.ui)return;const d=document.createElement('div');d.style.cssText='position:fixed;top:100px;left:50%;transform:translateX(-50%);z-index:9;display:none;gap:6px;flex-wrap:wrap;justify-content:center;max-width:96vw';
+  const mk=(txt,cb,col)=>{const b=document.createElement('button');b.type='button';b.textContent=txt;b.style.cssText='font:700 12px system-ui,sans-serif;padding:7px 10px;border-radius:12px;border:1px solid '+col+';background:rgba(10,18,26,.82);color:#fff;cursor:pointer;backdrop-filter:blur(6px)';b.addEventListener('click',e=>{e.stopPropagation();cb()});for(const n of['pointerdown','touchstart','mousedown'])b.addEventListener(n,e=>e.stopPropagation());return b};
+  C.ui={d,tree:[mk('🌿 Vẫy tay chào',()=>{C.wave=.001;try{SND.p('ok')}catch(e){}},'#facc15'),mk('☀️ Đổi Nắng / Đom Đóm',()=>{setNight(!C.night);try{say(C.night?'🌙 Đom đóm thắp sáng quanh cụ cây':'☀️ Trời nắng ấm trở lại',1800)}catch(e){}},'#86efac')],
+   shark:[mk('🔥 Chế độ Cuồng Nộ',()=>{setRage(!C.rage);try{say(C.rage?'🔥 Cá mập cuồng nộ!':'Cá mập đã bình tĩnh lại',1600)}catch(e){}},'#f87171'),mk('⚡ Đổi màu Vây',()=>{setFin(C.ci+1);try{say('Màu vây: '+PAL[C.ci].name,1600)}catch(e){}},'#22d3ee')]};
+  for(const b of C.ui.tree.concat(C.ui.shark))d.appendChild(b);document.body.appendChild(d)}
+ function showUI(nt,ns){mkUI();const on=(typeof state=='undefined'||state=='play')&&!window.__ABY&&!C.mod;C.ui.tree.forEach(b=>b.style.display=nt&&on?'block':'none');C.ui.shark.forEach(b=>b.style.display=ns&&on?'block':'none');C.ui.d.style.display=(nt||ns)&&on?'flex':'none'}
+ /* ============ HAI NHIỆM VỤ CỐT TRUYỆN ============ */
+ const TQ=[
+  {n:'Cụ Cây Cổ Thụ (gốc cây, đảo hoang)',v:'chào Cụ Cây và nhận nhiệm vụ',ic:'🌳',R:75,
+   t:['Cụ Mộc, cụ cây cổ thụ hiền lành, chớp đôi mắt vàng ấm áp: "Ôi, lâu lắm rồi mới có khách tới đảo! Ta đã đứng đây hàng nghìn năm để trông coi hòn đảo hoang này."','"Mười tinh linh thực vật nhỏ chạy quanh gốc ta đang buồn. Năm nay mùa mưa tới muộn, đất khô, hạt giống không chịu nảy mầm. Em giúp ta tìm ra nguyên nhân và cách chữa nhé?"','Em sẽ đi qua 6 trạm trên đảo: hai túp lều, lùm cây phía bắc, rồi quay về gốc cây. Xong việc em nhận 250 xu! Nhớ vẫy tay chào cụ nhé.'],btn:'🌿 Vẫy tay chào & nhận việc',done:()=>{C.wave=.001}},
+  {n:'Túp lều gỗ phía tây',v:'đọc nhật ký người đi biển',ic:'📔',R:50,q:'dia',
+   t:['Trong lều có cuốn nhật ký ố vàng của một người đi biển: "Đảo nhiệt đới nằm giữa đại dương nên mưa nhiều nhờ gió mang hơi nước từ biển vào."','Nước biển bốc hơi thành hơi nước, hơi nước ngưng tụ thành mây, mây gặp lạnh thì rơi xuống thành mưa. Đó là vòng tuần hoàn của nước. Mùa mưa tới muộn tức là gió mang mây chưa tới đảo.','Thử thách Địa lí: trả lời đúng ít nhất 2 trong 3 câu để hiểu mưa và gió!']},
+  {n:'Lùm cây phía bắc đảo',v:'quan sát lá cây nơi lùm cây',ic:'🍃',R:70,q:'sinh',
+   t:['Em ngắm những chiếc lá xanh. Lá cây hấp thụ ánh nắng, hút khí các-bon-níc từ không khí và nước từ rễ để làm ra chất dinh dưỡng. Quá trình đó gọi là quang hợp.','Khi quang hợp, cây nhả ra khí ô-xi cho chúng ta thở. Cây khô héo vì thiếu nước thì không quang hợp tốt, hạt giống cũng khó nảy mầm.','Thử thách Sinh học: trả lời đúng ít nhất 2 trong 3 câu để hiểu cây cối lớn lên thế nào!']},
+  {n:'Túp lều gỗ phía đông',v:'xem hũ nước và chất lỏng trong lều',ic:'🧪',R:50,q:'hoa',
+   t:['Trong lều có mấy hũ chứa nước ngọt, nước biển và nước pha đường. Nước ngọt dùng để tưới cây, còn nước biển quá mặn nên cây thường bị héo nếu tưới bằng nó.','Chất tan trong nước như muối hay đường tạo thành dung dịch. Muối tan trong nước biển làm nước có vị mặn. Hạt giống cần nước ngọt để nảy mầm.','Thử thách Hóa học: trả lời đúng ít nhất 2 trong 3 câu để chọn đúng loại nước tưới cây!']},
+  {n:'Cụ Cây (đêm đom đóm)',v:'báo cụ cây khi đêm đom đóm đã thắp sáng',ic:'✨',R:75,
+   need:()=>!!C.night,needMsg:'Cụ Mộc thì thầm: "Ta cần thấy đom đóm thắp sáng nhé. Hãy bấm nút ☀️ Đổi Nắng / Đom Đóm để chuyển sang đêm rồi gặp ta lại!"',
+   t:['Cụ Mộc nhìn những chú đom đóm bay lượn và mỉm cười: "Đẹp quá! Ban đêm đom đóm thắp sáng giúp các tinh linh tìm đường và thụ phấn cho hoa trên đảo."','"Cây cối, chim chóc, đom đóm và tinh linh sống nhờ nhau, giống như một chuỗi thức ăn và một mạng lưới sự sống. Mất một mắt xích là cả khu rừng yếu đi."','Em đã gom đủ 3 manh mối: gió và mưa, ánh nắng và lá, nước ngọt. Giờ quay lại gốc cây báo cho cụ nhé.'],btn:'Ghi lại và đi tiếp'},
+  {n:'Cụ Cây (báo cáo)',v:'báo cáo kết quả với Cụ Cây',ic:'🏅',R:75,
+   t:['Em kể lại ba manh mối cho Cụ Mộc. Cụ vẫy cánh tay cành cây: "Ta hiểu rồi! Gió đổi hướng nên mây mưa tới muộn, chứ không phải đất đảo hết sức sống."','Mười tinh linh thực vật reo lên và nhảy múa quanh gốc cây. Mây đen bắt đầu kéo tới từ phía biển.','Em đã hoàn thành nhiệm vụ LỜI HỨA CỦA CỤ MỘC và nhận 250 xu!'],btn:'Nhận thưởng',done:()=>{C.wave=.001}}];
+ const SQ=[
+  {n:'Cô Thủy (cảng đảo cát, rạn san hô)',v:'gặp Cô Thủy nhận nhiệm vụ',ic:'🤿',R:55,
+   t:['Cô Thủy chỉ ra vịnh nước xanh: "Em thấy chú cá mập khổng lồ vây phát sáng kia không? Dân lặn gọi nó là Vua Vịnh."','"Bình thường vây nó sáng xanh băng và nó bơi rất bình tĩnh. Nhưng mấy hôm nay nó trở nên cuồng nộ, vây đỏ rực. Nó ít khi tấn công người, chắc chắn có điều gì làm nó hoảng sợ."','Em hãy đi qua 6 trạm để tìm nguyên nhân và làm dịu Vua Vịnh nhé. Xong việc em nhận 250 xu!'],btn:'Nhận nhiệm vụ',done:()=>{setRage(true);setFin(1)}},
+  {n:'Chòi ghi chép của ngư dân',v:'đọc sổ ghi chép của ngư dân',ic:'📓',R:50,q:'sinh',
+   t:['Sổ ghi chép viết: "Cá mập là cá, nhưng bộ xương làm bằng sụn mềm chứ không phải xương cứng. Chúng có thể thay hàng nghìn chiếc răng trong đời."','"Cá mập đóng vai trò bác sĩ của rạn san hô: chúng bắt những con cá yếu hoặc bệnh, giúp quần thể cá khỏe mạnh và cân bằng."','Thử thách Sinh học: trả lời đúng ít nhất 2 trong 3 câu để hiểu về cá mập!']},
+  {n:'Cọc đo chất lượng nước',v:'đọc cọc đo nước',ic:'🧪',R:50,q:'hoa',
+   t:['Cọc đo nước báo: nhiều mảnh rác nhựa trôi vào vịnh. Nhựa không tan trong nước và rất lâu mới phân hủy, rùa và cá hay ăn nhầm.','Nước ô nhiễm chứa chất độc làm san hô bị tẩy trắng và làm cá mập khó chịu, vây có thể đổi màu xanh độc tố.','Thử thách Hóa học: trả lời đúng ít nhất 2 trong 3 câu để hiểu về chất và ô nhiễm!']},
+  {n:'Cá mập Vua Vịnh (trên mặt nước)',v:'quan sát cá mập từ mặt nước',ic:'🦈',R:170,q:'ly',follow:1,
+   t:['Em bơi lại gần Vua Vịnh. Con cá mập khổng lồ lượn vòng chậm rãi, hai cái đuôi quẫy mạnh, vây rực sáng.','Tiếng động lớn như động cơ tàu làm cá mập hoảng sợ. Âm thanh truyền trong nước nhanh hơn trong không khí và đi rất xa, nên cá nghe được tiếng động từ xa.','Thử thách Vật lí: trả lời đúng ít nhất 2 trong 3 câu để hiểu về âm thanh!']},
+  {n:'Cá mập Vua Vịnh (làm dịu)',v:'làm dịu Vua Vịnh',ic:'💙',R:170,follow:1,
+   need:()=>!C.rage&&C.ci==0,needMsg:'Hãy làm dịu cá mập: bấm 🔥 Chế độ Cuồng Nộ để tắt cuồng nộ và ⚡ Đổi màu Vây cho tới khi vây sáng Xanh Băng, rồi bấm F lại nhé!',
+   t:['Em nhẹ nhàng bơi cạnh Vua Vịnh. Cá mập thôi cuồng nộ, hàm khép dần và vây trở lại màu xanh băng dịu mát.','Nó nhìn em như muốn cảm ơn rồi lặng lẽ bơi ra giữa vịnh. Cô Thủy đang đợi em ở cảng đảo cát.'],btn:'Quay về báo Cô Thủy'},
+  {n:'Cô Thủy (báo cáo)',v:'báo cáo kết quả với Cô Thủy',ic:'🏅',R:55,
+   t:['Cô Thủy ôm chầm lấy em: "Em giỏi lắm! Nhờ em, Vua Vịnh bình tĩnh trở lại rồi."','"Cô sẽ báo cho đội bảo vệ vớt rác nhựa và giữ yên tĩnh cho rạn san hô. Cá mập, san hô và cả chúng ta đều cần một đại dương sạch."','Em đã hoàn thành nhiệm vụ NỖI BUỒN CỦA VUA VỊNH và nhận 250 xu!'],btn:'Nhận thưởng'}];
+ const QS=[{id:'tree',key:'qx_tree',ti:'Lời hứa của Cụ Mộc',ic:'🌳',st:TQ,rw:250,col:0x9be564,pos:()=>{const S=NAT.ST,T=C.T,x=S.itree[0],z=S.itree[1];return[[x-62,z],S.iw,S.ign,S.ie,[x-62,z],[x-62,z]]},ar:'itree'},
+  {id:'shark',key:'qx_shark',ti:'Nỗi buồn của Vua Vịnh',ic:'🦈',st:SQ,rw:250,col:0x38d6ff,pos:()=>{const S=NAT.ST;return[[S.reef[0]-22,S.reef[1]+20],S.rhut,S.rpost,C.H?C.H.pos:S.reefc,C.H?C.H.pos:S.reefc,[S.reef[0]-22,S.reef[1]+20]]},ar:'reefc'}];
+ QS.forEach(q=>{q.s=0;try{q.s=Math.min(q.st.length,Math.max(0,+localStorage.getItem(q.key)||0))}catch(e){}});
+ const nsolid=(x,y)=>{let k=0;while(typeof solid=='function'&&solid(x,y)&&k++<50){x+=(Math.random()-.5)*16;y+=(Math.random()-.5)*16}return[x,y]};
+ function reg(){QS.forEach((q,qi)=>{q.doors=[];q.P=q.pos().map((p,i)=>i==3&&q.id=='shark'||i==4&&q.id=='shark'?p:nsolid(p[0],p[1]));
+   q.st.forEach((s,i)=>{const d={fn:'qx',id:'qx:'+qi+':'+i,x:q.P[i][0],y:q.P[i][1],r:0,R:s.R,txt:''};q.doors.push(d);DOORS.push(d)})});C.reg=1;refresh()}
+ function refresh(){QS.forEach(q=>q.doors.forEach((d,i)=>{const on=q.s<q.st.length&&i==q.s;d.r=on?d.R:0;d.txt=on?'❗ F: '+q.st[i].v:''}))}
+ function box(title,paras,btns){close();const o=document.createElement('div');o.style.cssText='position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:12px;font-family:system-ui,sans-serif';
+  const c=document.createElement('div');c.style.cssText='max-width:480px;width:100%;max-height:88vh;overflow:auto;background:linear-gradient(160deg,#10261c,#08121a);border:2px solid #6ee7b7;border-radius:16px;color:#fff;padding:14px 16px;box-shadow:0 0 28px rgba(80,220,170,.4)';
+  const h=document.createElement('div');h.textContent=title;h.style.cssText='font-weight:800;font-size:16px;color:#a7f3d0;margin-bottom:8px';c.appendChild(h);
+  for(const t of paras){const p=document.createElement('p');p.textContent=t;p.style.cssText='margin:7px 0;font-size:14px;line-height:1.5';c.appendChild(p)}
+  const r=document.createElement('div');r.style.cssText='display:flex;gap:8px;justify-content:flex-end;margin-top:12px';
+  btns.forEach((b,i)=>{const e=document.createElement('button');e.type='button';e.textContent=b[0];e.style.cssText='font:inherit;font-weight:700;padding:9px 14px;border-radius:12px;border:1px solid #6ee7b7;cursor:pointer;color:#fff;background:'+(i==btns.length-1?'#0f9f76':'#1a3a30');e.onclick=()=>{close();b[1]&&b[1]()};r.appendChild(e);b[2]=e});
+  c.appendChild(r);o.appendChild(c);document.body.appendChild(o);C.mod=o;
+  for(const n of['pointerdown','pointerup','click','touchstart','mousedown'])o.addEventListener(n,e=>e.stopPropagation());
+  for(const k in K)K[k]=0;for(const k in PR)PR[k]=0;
+  C.key=e=>{if(e.key=='Escape')close();else if(e.key=='Enter'||e.key==' '||e.key=='f'||e.key=='F'){const b=btns[btns.length-1];if(b&&b[2])b[2].click()}e.stopImmediatePropagation();e.preventDefault()};addEventListener('keydown',C.key,true)}
+ function close(){if(C.mod){C.mod.remove();C.mod=null}if(C.key){removeEventListener('keydown',C.key,true);C.key=null}}
+ function advance(q,i){const s=q.st[i];q.s=i+1;try{localStorage.setItem(q.key,String(q.s))}catch(e){}refresh();try{if(s.done)s.done()}catch(e){}try{SND.p('gift')}catch(e){}
+  if(q.s>=q.st.length){cash+=q.rw;try{EDU.sao+=5}catch(e){}try{saveEdu()}catch(e){}try{SND.p('level')}catch(e){}box('🏅 HOÀN THÀNH NHIỆM VỤ!',['Em đã hoàn thành "'+q.ti+'".','Phần thưởng: +'+q.rw+' xu 🪙 và +5 ⭐'],[['Tuyệt vời!',null]])}
+  else say('✅ Trạm '+q.s+'/'+q.st.length+' xong! Tiếp theo: '+q.st[q.s].n,4600)}
+ C.act=d=>{const a=d.id.split(':'),q=QS[+a[1]],i=+a[2];if(!q||i!=q.s)return;const s=q.st[i];if(typeof state!='undefined'&&state!='play')return;
+  if(s.need&&!s.need()){try{say(s.needMsg,5200)}catch(e){}return}
+  const title=s.ic+' '+q.ti+' · Trạm '+(i+1)+'/'+q.st.length+' · '+s.n;
+  if(s.q)box(title,s.t,[['Để sau',null],['⚔️ Làm thử thách',()=>{C.pend={q:q,i:i,sub:s.q};openQuiz(s.q,3)}]]);
+  else box(title,s.t,[[s.btn||'Ghi lại và đi tiếp',()=>advance(q,i)]])};
+ C.quizEnd=qz=>{const p=C.pend;if(!p)return;C.pend=null;const ok=qz&&qz.fin&&qz.sub==p.sub&&qz.ok>=2;
+  if(ok&&p.i==p.q.s)advance(p.q,p.i);else say(qz&&qz.fin?'Em đúng '+qz.ok+'/'+qz.n+', cần ít nhất 2 câu. Quay lại trạm thử lại nhé!':'Em chưa làm xong thử thách. Quay lại trạm để thử lại nhé!',4200)};
+ const cmp=(dx,dz)=>['Đông','Đông Nam','Nam','Tây Nam','Tây','Tây Bắc','Bắc','Đông Bắc'][((Math.round(Math.atan2(dz,dx)/(Math.PI/4))%8)+8)%8];
+ C.tick=now=>{const S=NAT.ST;if(!S||!S.itree||!S.reefc)return;const t=now*.001,dt=Math.min(.1,Math.max(0,t-C.last));C.last=t;const cp=cam();
+  const dT=Math.hypot(cp.x-S.itree[0],cp.z-S.itree[1]),dH=Math.hypot(cp.x-S.reefc[0],cp.z-S.reefc[1]);
+  if(!C.T&&C.tb>=0&&dT<5200){try{C.T=buildTree()}catch(e){C.tb=-1;try{ERR(e)}catch(_){}}}
+  if(!C.H&&C.hb>=0&&dH<5200){try{C.H=buildShark();if(QS[1].s>0&&QS[1].s<4){setRage(true);setFin(1)}}catch(e){C.hb=-1;try{ERR(e)}catch(_){}}}
+  if(C.T){const v=dT<2600;C.T.G.visible=v;if(C.T.lamp&&!v)C.T.lamp.intensity=0;if(v){C.T.lamp.intensity=C.night?2.4:1;tickTree(t,dt)}}
+  if(C.H){const v=dH<3400;C.H.G.visible=v;C.H.E.visible=v;C.H.PG.visible=v;if(!v){C.H.eL.intensity=C.H.eR.intensity=0}else{C.H.eL.intensity=C.H.eR.intensity=C.rage?4:1.5;tickShark(t,dt)}}
+  if(!C.reg)reg();
+  if(C.H)for(const q of QS)if(q.id=='shark'){for(const i of[3,4]){const d=q.doors[i];d.x=C.H.pos[0];d.y=C.H.pos[1];q.P[i]=C.H.pos}}
+  showUI(C.T&&dT<650,C.H&&Math.hypot(cp.x-C.H.pos[0],cp.z-C.H.pos[1])<1100);
+  /* thanh nhiệm vụ + đèn hiệu */
+  if(!C.tr){const e=document.createElement('div');e.style.cssText='position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:8;max-width:92vw;padding:5px 12px;border-radius:99px;background:rgba(8,36,28,.82);border:1px solid #6ee7b7;color:#c7f9e3;font:700 12px system-ui,sans-serif;pointer-events:none;display:none;text-align:center';document.body.appendChild(e);C.tr=e}
+  if(!C.beam){const g=new THREE.Mesh(new THREE.BoxGeometry(5,170,5),new THREE.MeshBasicMaterial({color:0x9be564,transparent:true,opacity:.4,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));g.frustumCulled=false;g.renderOrder=4;g.visible=false;scene.add(g);C.beam=g}
+  let best=null,bd=1e9;for(const q of QS){if(q.s>=q.st.length)continue;const p=q.P[q.s],d=Math.hypot(cp.x-p[0],cp.z-p[1]),near=Math.hypot(cp.x-S[q.ar][0],cp.z-S[q.ar][1]);if((q.s>0||near<3600)&&d<bd){best=q;bd=d}}
+  if(best){const p=best.P[best.s],y=NAT.gh(p[0],p[1]);C.beam.visible=bd>60&&bd<2600;C.beam.material.color.setHex(best.col);C.beam.position.set(p[0],Math.max(y,0)+85,p[1]);C.beam.material.opacity=.3+.15*Math.sin(now*.004);
+   if(now-C.tt>250){C.tt=now;const on=(typeof state=='undefined'||state=='play')&&!window.__ABY&&!C.mod;C.tr.style.display=on?'block':'none';C.tr.textContent=best.ic+' '+best.ti+' '+best.s+'/'+best.st.length+' · Trạm '+(best.s+1)+': '+best.st[best.s].n+' · '+(bd<60?'đã tới nơi, bấm F':'hướng '+cmp(p[0]-cp.x,p[1]-cp.z)+', cách ~'+Math.round(bd/10)+' m')}}
+  else{C.beam.visible=false;C.tr.style.display='none'}};
+ return C})();
 
 try{SUB.init()}catch(e){ERR(e)}
 init();V5.init();requestAnimationFrame(frame);
