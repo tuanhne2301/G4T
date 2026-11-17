@@ -6452,8 +6452,8 @@ function render(){fc++;orbKeys();
   if(fc%30==0){const rg=INT.cur||MOD.norg?null:NAT.realmAt(g.x,g.y);SND.region(rg?rg.music||null:null);
    if(rg&&rg.id&&state=='play'){const xx=EDU.x||(EDU.x=cleanX(null));if(!xx.vr)xx.vr={};if(!xx.vr[rg.id]){xx.vr[rg.id]=1;saveEdu();say('📍 Em vừa đặt chân tới '+rg.n+'!',3200);setTimeout(()=>{try{V5.bchk()}catch(e){}},900)}}}}
  const cx0=g.x-ca*cdist+sx,cz0=g.y-sa*cdist;
- camera.position.set(cx0,Math.max(hg*(.4+.6*cdist/dist)+sy+(car?0:(ply.z||0)*(ply.mt&&ply.mt.env=='f'?.9:.5))+gY,(INT.cur?0:(dv>1?Math.max(NAT.seaFloor(cx0,cz0),-100)+4:GHy(cx0,cz0)))+5),cz0);
- camera.lookAt(g.x+ca*12,(car?8:9)+gY+(car?0:(ply.mt&&ply.mt.env=='f'?(ply.z||0):0)),g.y+sa*12);
+ camera.position.set(cx0,Math.max(hg*(.4+.6*cdist/dist)+sy+(car?0:(ply.z||0)*((ply.mt&&ply.mt.env=='f')||CLDK.on()?.9:.5))+gY,(INT.cur?0:(dv>1?Math.max(NAT.seaFloor(cx0,cz0),-100)+4:GHy(cx0,cz0)))+5),cz0);
+ camera.lookAt(g.x+ca*12,(car?8:9)+gY+(car?0:((ply.mt&&ply.mt.env=='f')||CLDK.on()?(ply.z||0):0)),g.y+sa*12);
  const FPon=FPV&&!car;
  if(FPon){const eh=gY+(ply.z||0)+14,cp=Math.cos(FPP),sp=Math.sin(FPP),ex=g.x+ca*2.2,ez=g.y+sa*2.2;camera.position.set(ex,eh,ez);camera.lookAt(ex+ca*cp*100,eh+sp*100,ez+sa*cp*100)}
  try{DIVE.fx(camera.position.y,inN&&!inC)}catch(e){}
