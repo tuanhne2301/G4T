@@ -5561,7 +5561,7 @@ function walk(){const l=(K.a||K.arrowleft)?1:0,r=(K.d||K.arrowright)?1:0,f=(K.w|
  if(jr){const th=cy+orbY,c0=Math.cos(th),s0=Math.sin(th),vx=c0*(-jy)-s0*jx,vz=s0*(-jy)+c0*jx,d=ad(ply.a,Math.atan2(vz,vx));ply.a+=d*(MOD.cam0?.28:.4);s=2.4*SPL[SPI]*jm*(K.shift&&!JR?1.5:1)*(MOD.cam0?(Math.abs(d)<1.3?1:.25):(Math.abs(d)<2?1:.5))}
  else{ply.a+=((MOD.cls||ply.car)&&!(JR&&!ply.car)?(r-l)*.032:0);s=(f-b)*(K.shift?3.6:2.4)*SPL[SPI];if(b&&!f)s*=.6;if(!ply.car&&!MOD.cls&&!JR)s=0}
  if(!jr&&JR&&!ply.car&&(l||r)){/* bàn phím vẫn xoay được */}ply.mv=Math.abs(s);if(s&&!(ply.z>0&&!ply.rp)){SND.fs=(SND.fs||0)+Math.abs(s);if(SND.fs>(K.shift?20:15)){SND.fs=0;if(!ply.sw2)SND.p('step')}}
- if(s){const bt=ply.boat,mt=ply.mt,wt=!ply.car&&!bt&&!mt&&NAT.waterAt(ply.x,ply.y);if(wt){s*=.6;if(!ply.swm){ply.swm=1;try{say('🏊 Em đang bơi! Cứ đi tiếp để qua sông hoặc ra biển.',2200)}catch(e){}}}else ply.swm=0;if(bt)s*=1.9;if(mt)s*=mt.k;const x=Math.cos(ply.a)*s,y=Math.sin(ply.a)*s;if(bt||(mt&&mt.env=='w')){const nx=ply.x+x,ny=ply.y+y;if(!solidS(nx,ply.y)&&NAT.waterAt(nx,ply.y))ply.x=nx;if(!solidS(ply.x,ny)&&NAT.waterAt(ply.x,ny))ply.y=ny}else if(mt&&mt.env=='f'){const nx=ply.x+x,ny=ply.y+y,fo=(a,b)=>a>NAT.XMIN&&a<NAT.XMAX&&b>NAT.YMIN&&b<NAT.YMAX,hi=ply.z>45;if(fo(nx,ply.y)&&(hi||!solidS(nx,ply.y)))ply.x=nx;if(fo(ply.x,ny)&&(hi||!solidS(ply.x,ny)))ply.y=ny}else if(mt){const nx=ply.x+x,ny=ply.y+y;if(!solidS(nx,ply.y)&&!NAT.waterAt(nx,ply.y))ply.x=nx;if(!solidS(ply.x,ny)&&!NAT.waterAt(ply.x,ny))ply.y=ny}else{if(!solidS(ply.x+x,ply.y))ply.x+=x;if(!solidS(ply.x,ply.y+y))ply.y+=y}}
+ if(s){const bt=ply.boat,mt=ply.mt,wt=!ply.car&&!bt&&!mt&&NAT.waterAt(ply.x,ply.y);if(wt){s*=.6;if(!ply.swm){ply.swm=1;try{say('🏊 Em đang bơi! Cứ đi tiếp để qua sông hoặc ra biển.',2200)}catch(e){}}}else ply.swm=0;if(bt)s*=1.9;if(mt)s*=mt.k;const x=Math.cos(ply.a)*s,y=Math.sin(ply.a)*s;if(bt||(mt&&mt.env=='w')){const nx=ply.x+x,ny=ply.y+y;if(!solidS(nx,ply.y)&&NAT.waterAt(nx,ply.y))ply.x=nx;if(!solidS(ply.x,ny)&&NAT.waterAt(ply.x,ny))ply.y=ny}else if(mt&&mt.env=='f'){const nx=ply.x+x,ny=ply.y+y,fo=(a,b)=>a>NAT.XMIN&&a<NAT.XMAX&&b>NAT.YMIN&&b<NAT.YMAX,hi=ply.z>45;if(fo(nx,ply.y)&&(hi||!solidS(nx,ply.y)))ply.x=nx;if(fo(ply.x,ny)&&(hi||!solidS(ply.x,ny)))ply.y=ny}else if(mt){const oc=CLDK.on(),nx=ply.x+x,ny=ply.y+y;if(oc||(!solidS(nx,ply.y)&&!NAT.waterAt(nx,ply.y)))ply.x=nx;if(oc||(!solidS(ply.x,ny)&&!NAT.waterAt(ply.x,ny)))ply.y=ny}else{const oc=CLDK.on();if(oc||!solidS(ply.x+x,ply.y))ply.x+=x;if(oc||!solidS(ply.x,ply.y+y))ply.y+=y}}
  for(const c of veh){const d=dst(c,ply);if(d<26&&d>.1&&!(ply.z>9)){ply.x+=(ply.x-c.x)/d*(26-d);ply.y+=(ply.y-c.y)/d*(26-d)}}}
 function die(){if(ply.car){ply.car.t='parked';ply.car=null}state='dead';tm=170;endScr('WASTED')}
 function busted(){if(ply.car){const c=ply.car;ply.car=null;cull(o=>o!==c)}state='busted';tm=170;endScr('BỊ BẮT!')}
@@ -8273,9 +8273,10 @@ function extra(){
  if(PR.f){PR.f=0;interact()}
  if(PR.g){PR.g=0;tip()}
  if(PR.b){PR.b=0;openReport()}
- if(PR[' ']){PR[' ']=0;if(!ply.car&&!ply.rp&&!(ply.z>0)&&!(ply.mt&&ply.mt.env=='f')){ply.vz=2.8*(MOD.jump?2.2:1);ply.z=.01;SND.p('jump')}}
- if(ply.mt&&ply.mt.env=='f'&&!ply.car){const af=AP.on&&AP.mode=='fly',up=(K[' ']||(af&&AP.fv>0))?1:0,dn=(K.z||K['control']||(af&&AP.fv<0))?1:0;ply.vz=up&&!dn?Math.min(2.4,(ply.vz||0)+.14):dn&&!up?Math.max(-2.4,(ply.vz||0)-.14):(ply.vz||0)*.82;ply.z=Math.max(0,Math.min(520,(ply.z||0)+ply.vz));if(ply.z<=0&&ply.vz<0)ply.vz=0}
- else if(!ply.rp&&(ply.z>0||ply.vz>0)){ply.vz-=.24;if(ply.vz<-6)ply.vz=-6;ply.z+=ply.vz;if(ply.z<=0){ply.z=0;ply.vz=0;SND.p('land')}}
+ if(PR[' ']){PR[' ']=0;if(!ply.car&&!ply.rp&&!(ply.z>CLDK.lo(ply.x,ply.y,ply.z)+.05)&&!(ply.mt&&ply.mt.env=='f')){ply.vz=2.8*(MOD.jump?2.2:1);ply.z=CLDK.lo(ply.x,ply.y,ply.z)+.01;SND.p('jump')}}
+ if(ply.mt&&ply.mt.env=='f'&&!ply.car){const af=AP.on&&AP.mode=='fly',up=(K[' ']||(af&&AP.fv>0))?1:0,dn=(K.z||K['control']||(af&&AP.fv<0))?1:0;ply.vz=up&&!dn?Math.min(2.4,(ply.vz||0)+.14):dn&&!up?Math.max(-2.4,(ply.vz||0)-.14):(ply.vz||0)*.82;{const f=CLDK.lo(ply.x,ply.y,ply.z||0);ply.z=Math.max(f,Math.min(520,(ply.z||0)+ply.vz));if(ply.z<=f&&ply.vz<0)ply.vz=0}}
+ else if(!ply.rp&&(ply.z>CLDK.lo(ply.x,ply.y,ply.z)+.001||ply.vz>0)){const f=CLDK.lo(ply.x,ply.y,ply.z);ply.vz-=.24;if(ply.vz<-6)ply.vz=-6;ply.z+=ply.vz;if(ply.z<=f){const hd=ply.vz<-1.5;ply.z=f;ply.vz=0;if(hd)SND.p('land')}}
+ CLDK.post();
  if(ply.aimT>0)ply.aimT--;
  if(PR.v){PR.v=0;SPI=(SPI+1)%3;say('Tốc độ: '+SPN[SPI],1200)}
  if(PR.c){PR.c=0;fpSet(!FPV)}
@@ -11332,55 +11333,143 @@ const CRE=(()=>{
   else{C.beam.visible=false;C.tr.style.display='none'}};
  return C})();
 
-/* ===== TẦNG MÂY RỘNG LỚN: một lớp mây ở độ cao ~322, hiện trên bản đồ, bay lên bằng thú cưỡi có cánh ===== */
+/* ===== KHOẢNG MÂY TRÊN TRỜI: một mảng mây đặc, đi bộ được như mặt đất, hiện trên bản đồ ===== */
 const CLDK=(()=>{
- const Y0=322,CELL=460,TH=.42,C={};
+ const CX=1300,CZ=1330,CY=300,R=700,NR=26,NS=72,TP=Math.PI*2,C={g:0,air:0};
  const hs=(i,j)=>{let h=(i*374761393+j*668265263)|0;h=(h^(h>>>13))*1274126177|0;return((h^(h>>>16))>>>0)/4294967296};
- const vn=(x,y)=>{const i=Math.floor(x),j=Math.floor(y),u=x-i,v=y-j,a=u*u*(3-2*u),b=v*v*(3-2*v);return(hs(i,j)*(1-a)+hs(i+1,j)*a)*(1-b)+(hs(i,j+1)*(1-a)+hs(i+1,j+1)*a)*b};
- const dens=(x,z)=>vn(x/3200,z/3200)*.6+vn(x/1300+9,z/1300+4)*.28+vn(x/520+3,z/520+7)*.12;
- let pool=[],tex=[],grp=null,ci=1e9,cj=1e9,told=0;
- const mk=seed=>{const c=document.createElement('canvas');c.width=256;c.height=160;const g=c.getContext('2d');let s=seed*7919+13;const R=()=>((s=(s*9301+49297)%233280)/233280),b=[];
-  for(let i=0;i<16;i++){const u=i/15,h=Math.sin(u*Math.PI);b.push({x:36+u*184+(R()-.5)*18,y:96-h*28*R(),r:20+h*24+R()*12})}
+ const rad=a=>R*(1+.14*Math.sin(3*a+1)+.09*Math.sin(5*a+2)+.05*Math.sin(8*a));
+ const bump=(x,z)=>2.5*Math.sin(x/90)*Math.cos(z/110)+1.8*Math.sin((x+z)/55);
+ const top=(x,z,t)=>CY+bump(x,z)*(1-t**4)-14*t**8;
+ /* độ cao mặt mây so với mặt đất tại (x,y); 0 nếu ngoài khoảng mây */
+ C.fl=(x,y)=>{if(Math.abs(x-CX)>1100||Math.abs(y-CZ)>1100)return 0;const t=Math.hypot(x-CX,y-CZ)/rad(Math.atan2(y-CZ,x-CX));if(t>1)return 0;const f=top(x,y,t)-GHy(x,y);return f>0?f:0};
+ C.lo=(x,y,z)=>{const f=C.fl(x,y);return f>0&&z>=f-.5?f:0};
+ C.on=()=>{const f=C.fl(ply.x,ply.y);return f>0&&(ply.z||0)>=f-.5};
+ /* chạy sau phần bay/nhảy/trọng lực của người chơi */
+ C.post=()=>{const f=C.fl(ply.x,ply.y);
+  if(f>0&&C.g&&ply.vz<=.01&&ply.z<=f+.6&&ply.z>=f-.6)ply.z=f;
+  C.g=f>0&&ply.z<=f+.05&&ply.z>f-.6&&ply.vz<=.01;
+  if(ply.z>40)C.air=1;
+  if(C.air&&ply.z<=.01&&!(ply.mt&&ply.mt.env=='f')){C.air=0;
+   if(solidS(ply.x,ply.y)){o:for(let r=12;r<=500;r+=12)for(let k=0;k<16;k++){const a=k*Math.PI/8,x=ply.x+Math.cos(a)*r,y=ply.y+Math.sin(a)*r;if(!solidS(x,y)){ply.x=x;ply.y=y;break o}}}}};
+ let grp=null,mat=null,pool=[],told=0,stood=0;
+ const mkTex=seed=>{const c=document.createElement('canvas');c.width=256;c.height=160;const g=c.getContext('2d');let s=seed*7919+13;const Rn=()=>((s=(s*9301+49297)%233280)/233280),b=[];
+  for(let i=0;i<16;i++){const u=i/15,h=Math.sin(u*Math.PI);b.push({x:36+u*184+(Rn()-.5)*18,y:96-h*28*Rn(),r:20+h*24+Rn()*12})}
   b.sort((p,q)=>q.y-p.y);
-  for(const o of b){const t=Math.min(1,Math.max(0,(o.y-62)/60)),r=Math.round(255-50*t),gg=Math.round(255-39*t),bb=Math.round(255-23*t),gr=g.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+  for(const o of b){const t=Math.min(1,Math.max(0,(o.y-62)/60)),r=Math.round(255-40*t),gg=Math.round(255-30*t),bb=Math.round(255-18*t),gr=g.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
    gr.addColorStop(0,`rgba(${r},${gg},${bb},.95)`);gr.addColorStop(.55,`rgba(${r},${gg},${bb},.55)`);gr.addColorStop(1,`rgba(${r},${gg},${bb},0)`);g.fillStyle=gr;g.fillRect(o.x-o.r,o.y-o.r,o.r*2,o.r*2)}
   return new THREE.CanvasTexture(c)};
- const RAD=()=>PF.lite?2100:3000;
- function assign(pi,pj){let k=0;const rc=Math.ceil(RAD()/CELL);
-  for(let di=-rc;di<=rc;di++)for(let dj=-rc;dj<=rc;dj++){
-   if(di*di+dj*dj>rc*rc)continue;
-   const i=pi+di,j=pj+dj,x=(i+.5)*CELL,z=(j+.5)*CELL,d=dens(x,z);if(d<TH)continue;
-   for(let q=0;q<2&&k<pool.length;q++){
-    const s=pool[k++],h1=hs(i*3+q,j*5+1),h2=hs(i*7+2,j*3+q),w=(620+(d-TH)*2200)*(.8+h1*.5);
-    s.position.set(x+(h1-.5)*CELL,Y0+(d-TH)*90+q*18+(h2-.5)*24,z+(h2-.5)*CELL);
-    s.scale.set(w,w*.5,1);s.userData.o=Math.min(.95,.55+(d-TH)*3);s.visible=true}}
-  for(;k<pool.length;k++)pool[k].visible=false}
+ function build(){
+  const P=[],Cl=[],I=[],B=(NR+1)*NS;
+  for(let k=0;k<=NR;k++)for(let s=0;s<NS;s++){const a=s/NS*TP,t=k/NR,r=rad(a)*t,x=CX+Math.cos(a)*r,z=CZ+Math.sin(a)*r,m=.93+.07*Math.sin(x/37)*Math.sin(z/43);P.push(x,top(x,z,t),z);Cl.push(m,m,m)}
+  for(let k=0;k<=NR;k++)for(let s=0;s<NS;s++){const a=s/NS*TP,t=k/NR,r=rad(a)*t,q=Math.sqrt(Math.max(0,1-t*t)),m=.9+.1*Math.sin(a*5+t*4);
+   P.push(CX+Math.cos(a)*r,CY-14-110*q*(.85+.15*Math.sin(a*5+t*4)),CZ+Math.sin(a)*r);const w=.78+.22*(1-q);Cl.push(w*m,(.84+.16*(1-q))*m,(.93+.07*(1-q))*m)}
+  for(const o of[0,B])for(let k=0;k<NR;k++)for(let s=0;s<NS;s++){const a=o+k*NS+s,b=o+k*NS+(s+1)%NS,c=o+(k+1)*NS+s,d=o+(k+1)*NS+(s+1)%NS;I.push(a,c,b,b,c,d)}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('color',new THREE.Float32BufferAttribute(Cl,3));g.setIndex(I);g.computeBoundingSphere();
+  mat=new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide});const me=new THREE.Mesh(g,mat);me.frustumCulled=false;grp.add(me);
+  const tex=[mkTex(5),mkTex(6),mkTex(7)],puff=(x,y,z,w,o)=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex[(Math.random()*3)|0],transparent:true,depthWrite:false,opacity:0}));s.scale.set(w,w*.5,1);s.position.set(x,y,z);s.userData.o=o;grp.add(s);pool.push(s)};
+  for(let i=0;i<34;i++){const a=i/34*TP+hs(i,1)*.15,r=rad(a)*(.9+hs(i,2)*.12);puff(CX+Math.cos(a)*r,CY+8+hs(i,4)*30,CZ+Math.sin(a)*r,300+hs(i,3)*220,.92)}
+  for(let i=0;i<16;i++){const a=hs(i,7)*TP,r=rad(a)*(.15+hs(i,8)*.7);puff(CX+Math.cos(a)*r,CY-75-hs(i,9)*30,CZ+Math.sin(a)*r,520,.85)}}
  function tick(){requestAnimationFrame(tick);
   if(!grp)return;
-  const show=!(INT&&INT.cur)&&!(V5&&V5.uw)&&!window.__ABY;grp.visible=show;if(!show)return;
-  const px=ply.x,pz=ply.y,pi=Math.floor(px/CELL),pj=Math.floor(pz/CELL);
-  if(pi!=ci||pj!=cj){ci=pi;cj=pj;assign(pi,pj)}
-  const ey=GHy(px,pz)+(ply.z||0)+8,b=scene.background,l=b&&b.isColor?Math.min(1,.25+(b.r+b.g+b.b)/3*.85):1;
-  for(const s of pool){if(!s.visible)continue;const p=s.position,d=Math.hypot(p.x-px,p.y-ey,p.z-pz);
-   s.material.opacity=s.userData.o*Math.min(1,Math.max(0,(d-150)/450));s.material.color.setScalar(l)}
-  if(!told&&ply.mt&&ply.mt.env=='f'&&ey>Y0-60){told=1;try{say('☁️ Em đã bay tới tầng mây rộng lớn! Bay cao thêm chút nữa để lên trên mặt mây nhé.',5200)}catch(e){}}}
- C.start=()=>{grp=new THREE.Group();grp.visible=false;scene.add(grp);for(let i=0;i<3;i++)tex.push(mk(i+5));
-  const n=PF.lite?150:300;for(let i=0;i<n;i++){const m=new THREE.SpriteMaterial({map:tex[i%3],transparent:true,depthWrite:false,opacity:0}),s=new THREE.Sprite(m);s.visible=false;grp.add(s);pool.push(s)}
-  requestAnimationFrame(tick)};
- /* vẽ tầng mây lên bản đồ (cùng hàm mật độ với mây 3D nên khớp nhau) */
- C.map=(c,CX,CY,sc,W,H)=>{W=W||240;H=H||240;const N=NAT,st=Math.max(CELL*.5,7/sc),
-  x0=Math.max(N.XMIN,CX-W/2/sc),x1=Math.min(N.XMAX,CX+W/2/sc),y0=Math.max(N.YMIN,CY-H/2/sc),y1=Math.min(N.YMAX,CY+H/2/sc);
-  c.save();
-  for(let y=Math.floor(y0/st)*st;y<y1;y+=st)for(let x=Math.floor(x0/st)*st;x<x1;x+=st){
-   const mx=x+st/2,my=y+st/2;if(mx<N.XMIN||mx>N.XMAX||my<N.YMIN||my>N.YMAX)continue;
-   const d=dens(mx,my);if(d<TH)continue;
-   c.fillStyle='rgba(255,255,255,'+Math.min(.62,(d-TH)*2.6+.14).toFixed(2)+')';
-   c.fillRect((x-CX)*sc+W/2,(y-CY)*sc+H/2,st*sc+.6,st*sc+.6)}
-  c.restore()};
- return C})();
+  const px=ply.x,pz=ply.y,near=Math.hypot(px-CX,pz-CZ)<4500,show=near&&!(INT&&INT.cur)&&!(V5&&V5.uw)&&!window.__ABY;grp.visible=show;if(!show)return;
+  const ey=GHy(px,pz)+(ply.z||0)+8,b=scene.background,l=b&&b.isColor?Math.min(1,.25+(b.r+b.g+b.b)/3*.85):1;mat.color.setScalar(l);
+  for(const s of pool){const p=s.position,d=Math.hypot(p.x-px,p.y-ey,p.z-pz);s.material.opacity=s.userData.o*Math.min(1,Math.max(0,(d-70)/330));s.material.color.setScalar(l)}
+  if(!told&&typeof state!='undefined'&&state=='play'&&Math.hypot(px-CX,pz-CZ)<1800){told=1;try{say('☁️ Trên trời có một khoảng mây rộng! Cưỡi thú có cánh (giữ ⬆ / Space để bay lên) rồi hạ xuống mặt mây để đi bộ trên đó nhé.',6000)}catch(e){}}
+  if(!stood&&C.g&&ply.z>100){stood=1;try{say('☁️ Em đang đứng trên mây! Cứ đi bộ thoải mái nhé.',3500)}catch(e){}}}
+ C.start=()=>{grp=new THREE.Group();grp.visible=false;scene.add(grp);build();requestAnimationFrame(tick)};
+ /* vẽ khoảng mây lên bản đồ (nhỏ và lớn) */
+ C.map=(c,mx,my,sc,W,H)=>{W=W||240;H=H||240;const X=x=>(x-mx)*sc+W/2,Y=y=>(y-my)*sc+H/2;
+  c.save();c.beginPath();for(let i=0;i<=64;i++){const a=i/64*TP,r=rad(a),x=X(CX+Math.cos(a)*r),y=Y(CZ+Math.sin(a)*r);i?c.lineTo(x,y):c.moveTo(x,y)}c.closePath();
+  c.fillStyle='rgba(255,255,255,.82)';c.fill();c.lineWidth=2;c.strokeStyle='rgba(140,190,255,.95)';c.stroke();
+  c.font=Math.max(12,Math.min(34,R*sc*.5))+'px system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#3a6ea8';c.fillText('☁️',X(CX),Y(CZ));c.restore()};
+ C.geo={CX,CZ,CY,R,rad,top};return C})();
+/* ===== BA RỒNG (Hoàng Kim, Ngọc Bích, Hắc Long): 30s bay lượn trên mây, 30s đáp xuống mây ===== */
+const DRG=(()=>{
+ const G=CLDK.geo,S=7,N=32,CYC=60,FLY=30,TK=4,LD=4,LAG=.042,DS=5.25,TP=Math.PI*2,D={};
+ const TH=[{n:'Hoàng Kim',scaleColor:0xeab308,bellyColor:0xfef08a,maneColor:0xdc2626,hornColor:0xf8fafc,eyeColor:0xff2a00},
+  {n:'Ngọc Bích',scaleColor:0x10b981,bellyColor:0xa7f3d0,maneColor:0xf59e0b,hornColor:0xfef3c7,eyeColor:0xef4444},
+  {n:'Hắc Long',scaleColor:0x334155,bellyColor:0x94a3b8,maneColor:0xe11d48,hornColor:0xe2e8f0,eyeColor:0x38bdf8}];
+ const W=[.30,-.27,.24],PH=[0,2.1,4.2],RF=[400,470,540],ANG=[.5,2.594,4.688];
+ const sm=x=>x*x*(3-2*x),cl=x=>x<0?0:x>1?1:x,UP=new THREE.Vector3(0,1,0);
+ const a1=new THREE.Vector3(),a2=new THREE.Vector3(),bx=new THREE.Vector3(),by=new THREE.Vector3(),bz=new THREE.Vector3(),mm=new THREE.Matrix4();
+ let grp=null,bump=null,dr=[],t0=0,lastPh=-1;
+ /* vị trí đáp: mỗi rồng một chỗ trên mặt mây, đầu hướng về tâm */
+ const Z=ANG.map(a=>{const psi=a+Math.PI;return{x:G.CX+Math.cos(a)*230,z:G.CZ+Math.sin(a)*230,hx:Math.sin(psi),hz:Math.cos(psi),px:Math.cos(psi),pz:-Math.sin(psi)}});
+ const surf=(x,z)=>G.top(x,z,Math.min(1,Math.hypot(x-G.CX,z-G.CZ)/G.rad(Math.atan2(z-G.CZ,x-G.CX))));
+ function scaleTex(){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.fillStyle='#9ca3af';g.fillRect(0,0,128,128);
+  for(let y=0;y<8;y++)for(let x=0;x<8;x++){g.fillStyle=(x+y)%2?'#6b7280':'#ffffff';g.fillRect(x*16+2,y*16+2,12,12);g.strokeStyle='#18181b';g.lineWidth=2;g.strokeRect(x*16+1,y*16+1,14,14)}
+  const t=new THREE.CanvasTexture(c);t.magFilter=t.minFilter=THREE.NearestFilter;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t}
+ const blk=(w,h,d,m,x=0,y=0,z=0,rx=0,ry=0,rz=0)=>{const me=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);me.position.set(x,y,z);me.rotation.set(rx,ry,rz);return me};
+ function build(th){
+  const st=(o)=>new THREE.MeshStandardMaterial(o);
+  const M={scales:st({color:th.scaleColor,bumpMap:bump,bumpScale:.08,roughness:.4,metalness:.2}),belly:st({color:th.bellyColor,roughness:.5,metalness:.1}),mane:st({color:th.maneColor,roughness:.55}),
+   spine:st({color:th.maneColor,emissive:th.maneColor,emissiveIntensity:1.2,roughness:.3}),horn:st({color:th.hornColor,roughness:.35}),claw:st({color:0x1e293b,roughness:.3,metalness:.4}),
+   eye:st({color:th.eyeColor,emissive:th.eyeColor,emissiveIntensity:1.8,roughness:.1})};
+  const segs=[],limbs=[],spines=[];
+  for(let i=0;i<N;i++){const t=i/(N-1),g=new THREE.Group();let r;
+   if(t<.14)r=.85+(t/.14)*.55;else if(t<.42)r=1.4-((t-.14)/.28)*.25;else r=Math.max(.18,1.15*Math.pow(1-(t-.42)/.58,.82));
+   const tw=r*1.9,th_=r*1.75,td=.95;
+   g.add(blk(tw,th_,td,M.scales));
+   if((t>.14&&t<.26)||(t>.52&&t<.62))g.add(blk(tw*1.24,th_*.82,td*.9,M.scales,0,.05,0));
+   g.add(blk(tw*.78,r*.42,td*1.06,M.belly,0,-th_*.46,0));
+   if(i%2===0&&t<.94){const sh=r*.85+.25,m=blk(r*.26,sh,.5,M.spine,0,th_*.5+sh*.42,0);g.add(m);g.add(blk(r*.14,sh*.45,.3,M.horn,0,th_*.5+sh*.95,0));spines.push({m,t})}
+   if(t<.16&&i%2===0)for(const s of[-1,1])g.add(blk(.35,.95,.35,M.mane,s*(tw*.55),.25,0,0,0,-s*.45));
+   if(t>.92){const f=(t-.92)*14+.6;g.add(blk(.55*f,.75*f,.55,M.mane,0,.15,0))}
+   if(i===6||i===18){const fr=i===6,ls=fr?1.05:.95;
+    for(const s of[-1,1]){const p=new THREE.Group();p.position.set(s*(tw*.48),-th_*.15,0);
+     p.add(blk(.75*ls,1.35*ls,.75*ls,M.scales,s*.35,-.55*ls,.1,.25,0,s*.28));
+     p.add(blk(.22,.85*ls,.35,M.mane,s*.65,-.75*ls,-.35,-.4,0,0));
+     p.add(blk(.55*ls,1.25*ls,.55*ls,M.scales,s*.5,-1.55*ls,.35,-.35,0,0));
+     const fy=-2.15*ls,fz=.55;p.add(blk(.68*ls,.32*ls,.72*ls,M.scales,s*.5,fy,fz));
+     for(let c=-1;c<=1;c++)p.add(blk(.12,.14,.48,M.claw,s*.5+c*.2,fy-.05,fz+.45,.25,c*.15,0));
+     g.add(p);limbs.push({m:p,s,fr})}}
+   g.scale.setScalar(S);grp.add(g);segs.push({g,t})}
+  const h=new THREE.Group();
+  h.add(blk(1.75,1.35,1.85,M.scales,0,.15,.2));h.add(blk(1.45,.65,1.2,M.scales,0,.85,.1));h.add(blk(1.32,.72,1.65,M.scales,0,-.05,1.65));h.add(blk(.75,.35,1.35,M.scales,0,.38,1.55));
+  h.add(blk(.28,.26,.32,M.mane,-.42,.25,2.35));h.add(blk(.28,.26,.32,M.mane,.42,.25,2.35));
+  for(const s of[-1,1]){h.add(blk(.16,.42,.16,M.horn,s*.48,-.52,2.15));h.add(blk(.14,.32,.14,M.horn,s*.52,-.46,1.55))}
+  const jaw=new THREE.Group();jaw.position.set(0,-.38,.65);jaw.add(blk(1.12,.42,1.65,M.belly,0,-.1,.85));jaw.add(blk(.32,.75,.32,M.mane,0,-.52,1.45,.35,0,0));
+  for(const s of[-1,1])jaw.add(blk(.14,.36,.14,M.horn,s*.42,.24,1.42));h.add(jaw);
+  for(const s of[-1,1]){h.add(blk(.22,.32,.42,M.eye,s*.86,.28,.85));h.add(blk(.32,.24,.85,M.mane,s*.88,.58,.75,-.2,0,-s*.25))}
+  for(const s of[-1,1]){const hg=new THREE.Group();hg.position.set(s*.55,.95,-.25);hg.rotation.set(-.48,0,-s*.22);
+   hg.add(blk(.24,2.4,.24,M.horn,0,1.1,0));hg.add(blk(.18,1.1,.18,M.horn,s*.32,1.15,.25,.35,0,-s*.45));hg.add(blk(.16,.95,.16,M.horn,-s*.25,1.75,-.2,-.35,0,s*.4));h.add(hg)}
+  for(const s of[-1,1]){h.add(blk(.12,.12,1.45,M.mane,s*.78,-.05,1.45,.15,s*.35,0));h.add(blk(.1,.1,1.35,M.mane,s*1.25,-.25,.35,.25,s*.45,0))}
+  for(let m=0;m<6;m++){const an=(m/5-.5)*1.6;h.add(blk(.32,1.25,.35,M.mane,Math.sin(an)*.95,Math.cos(an)*.85+.2,-.75,-.55,0,-an*.6))}
+  h.scale.setScalar(S);grp.add(h);
+  return{M,segs,limbs,spines,h,jaw,P:Array.from({length:N+1},()=>new THREE.Vector3())}}
+ /* đường bay lượn trên mây (toạ độ thế giới) */
+ const fly=(d,tau,o)=>{const a=tau*W[d]+PH[d];return o.set(G.CX+Math.sin(a)*RF[d]+Math.cos(a*2)*60,G.CY+175+d*38+36*Math.sin(tau*.5+d*2.1),G.CZ+Math.cos(a)*RF[d])};
+ /* tư thế nằm đáp: thân uốn trên mặt mây, cổ ngẩng cao */
+ const rest=(d,s,time,o)=>{const q=Z[d],k=Math.min(1,s/50),lat=(34*Math.sin(s/42+d)+4*Math.sin(time*1.1-s/30))*k,bk=s*.8,
+  x=q.x-q.hx*bk+q.px*lat,z=q.z-q.hz*bk+q.pz*lat;return o.set(x,surf(x,z)+14+60*Math.exp(-(s/34)*(s/34))+1.2*Math.sin(time*1.4-s/25),z)};
+ /* trọng số "đang bay" theo thời điểm trong chu kỳ (đầu đổi trước, đuôi đổi sau) */
+ const fAt=(u,t)=>u<TK?sm(cl(u/TK*1.3-t*.3)):u<FLY-LD?1:u<FLY?1-sm(cl((u-(FLY-LD))/LD*1.3-t*.3)):0;
+ function upd(d,o,u,time){
+  const P=o.P;
+  for(let j=0;j<=N;j++){const t=j?(j-1)/(N-1):0,f=fAt(u,t),ts=time-j*LAG;
+   fly(d,ts,a1);fly(d,ts+.04,a2);a2.sub(a1).normalize();bx.crossVectors(a2,UP).normalize();by.crossVectors(bx,a2).normalize();
+   const am=(.35+t*.85)*S;a1.addScaledVector(bx,Math.sin(time*4.5-t*10.5)*.55*am).addScaledVector(by,Math.cos(time*3.8-t*9)*.35*am);
+   rest(d,j*DS,time,bz);P[j].copy(bz).lerp(a1,f)}
+  for(let i=0;i<N;i++){const sg=o.segs[i],j=i+1,f=fAt(u,sg.t);
+   bz.subVectors(P[Math.min(N,j+1)],P[j-1]).normalize();bx.crossVectors(UP,bz);if(bx.lengthSq()<1e-6)bx.set(1,0,0);bx.normalize();by.crossVectors(bz,bx);
+   mm.makeBasis(bx,by,bz);sg.g.position.copy(P[j]);sg.g.quaternion.setFromRotationMatrix(mm);sg.g.rotateZ(Math.cos((time-j*LAG)*.55)*.35*f)}
+  const f0=fAt(u,0);o.h.position.copy(P[0]);bz.subVectors(P[0],P[1]).normalize();a1.copy(P[0]).add(bz);o.h.lookAt(a1);
+  o.h.rotateZ(Math.cos(time*.55)*.32*f0);o.h.rotateY(Math.sin(time*.6+d)*.25*(1-f0));o.jaw.rotation.x=.26+Math.sin(time*2.8)*.1;
+  const fm=fAt(u,.3);for(const l of o.limbs){const ph=l.fr?0:Math.PI*.8;l.m.rotation.x=Math.sin(time*3.6+ph+l.s*.3)*.32*fm;l.m.rotation.z=Math.cos(time*3.6+ph)*.12*fm}
+  o.M.spine.emissiveIntensity=1.2+Math.sin(time*6)*.8;for(const s of o.spines){const w=Math.sin(time*7-s.t*14);s.m.scale.y=1+w*.22;s.m.rotation.z=w*.08}}
+ function tick(){requestAnimationFrame(tick);
+  if(!grp)return;
+  const near=Math.hypot(ply.x-G.CX,ply.y-G.CZ)<6500,show=near&&!(INT&&INT.cur)&&!(V5&&V5.uw)&&!window.__ABY;grp.visible=show;if(!show)return;
+  const time=performance.now()/1000-t0,u=(time+5)%CYC;
+  for(let d=0;d<3;d++)upd(d,dr[d],u,time);
+  const ph=u<FLY-LD?0:u<FLY?1:2;
+  if(ph!==lastPh){lastPh=ph;if(Math.hypot(ply.x-G.CX,ply.y-G.CZ)<2500&&typeof state!='undefined'&&state=='play')try{say(ph==1?'🐉 Ba rồng Hoàng Kim, Ngọc Bích, Hắc Long đang hạ cánh xuống mây...':ph==2?'🐉 Ba rồng đã đáp xuống mây, nghỉ ngơi một lát.':'🐉 Ba rồng vỗ cánh lên trời, bay lượn trên mây!',4000)}catch(e){}}}
+ D.start=()=>{grp=new THREE.Group();grp.visible=false;scene.add(grp);bump=scaleTex();dr=TH.map(build);t0=performance.now()/1000;requestAnimationFrame(tick)};
+ return D})();
+
 
 try{SUB.init()}catch(e){ERR(e)}
-init();V5.init();try{CLDK.start()}catch(e){ERR(e)}requestAnimationFrame(frame);
+init();V5.init();try{CLDK.start();DRG.start()}catch(e){ERR(e)}requestAnimationFrame(frame);
 })();
 
 /* ---- bố cục: bản đồ (trái trên) cao bằng khối thông tin + nhiệm vụ ---- */
